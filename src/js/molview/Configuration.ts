@@ -17,7 +17,6 @@ module molview
         pdbUrl:string;
         pdbData:string;
 
-
         constructor(parameters) {
 
             if (parameters) {

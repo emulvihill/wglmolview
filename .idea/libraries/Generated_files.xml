@@ -2,48 +2,52 @@
   <library name="Generated files" type="javaScript">
     <properties>
       <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/src/js/molview/renderer/MockRenderer.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/Constants.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/Utility.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/model/Molecule.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/MolView.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/model/Atom.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/model/IRenderableObject.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/AminoAcidData.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/ElementData.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/renderer/IMolRenderer.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/Utility.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/AminoAcidData.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/AnimateFrames.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/Constants.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/model/Atom.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/model/Model.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/model/Label.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/renderer/AtomRenderer.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/Messages.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/Configuration.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/model/Bond.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/model/RenderableObject.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/MolView.js" />
-        <item url="file://$PROJECT_DIR$/src/js/molview/model/IRenderableObject.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/renderer/IRenderer.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/model/RenderableObject.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/model/Bond.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/Configuration.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/src/js/molview/ElementData.js" />
-      <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/src/io.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/IMolRenderer.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/Utility.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/AminoAcidData.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/AnimateFrames.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/Constants.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/model/Model.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/model/Atom.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/model/Label.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/renderer/AtomRenderer.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/Messages.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/AtomRenderer.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/AnimateFrames.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/model/Model.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/model/Label.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/AnimateFrames.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/model/Model.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/model/Label.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/MockRenderer.js" />
+      <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/src/io.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/Constants.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/Utility.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/MolView.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/model/Molecule.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/model/Atom.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/model/IRenderableObject.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/AminoAcidData.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/ElementData.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/IMolRenderer.js" />
       <root url="file://$PROJECT_DIR$/src/js/Main.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/Configuration.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/Messages.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/IRenderer.js" />
       <root url="file://$PROJECT_DIR$/src/ts/SignalBinding.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/model/Bond.js" />
       <root url="file://$PROJECT_DIR$/src/ts/Signal.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/model/RenderableObject.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/MolView.js" />
       <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/testRunner.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/model/IRenderableObject.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/IRenderer.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/model/Bond.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/Configuration.js" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

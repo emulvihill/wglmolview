@@ -1,35 +1,37 @@
 ﻿module molview.model
 {
-import flash.geom.THREE.Vector3;
+    /// <reference path="../../../ts/DefinitelyTyped/jquery/jquery.d.ts" />
+    /// <reference path="../../../ts/DefinitelyTyped/threejs/three.d.ts" />
 
-import mx.utils.StringUtil;
-
-	import away3d.loaders.Obj;
-	import com.snazzyrobot.molview3d.renderer.IMolRenderer;
-
+    /// <reference path="../renderer/IMolRenderer.ts
+    // " />
+    /// <reference path="IRenderableObject.ts" />
+    /// <reference path="RenderableObject.ts" />
+    /// <reference path="Atom.ts" />
+    /// <reference path="Bond.ts" />
 
 export class Molecule extends RenderableObject
 {
 
-	private maxMframe:number, currentMframe:number;
-
-	private _id:string, title:string;
-	
-	private header:Object, compound:Object, residueSequence:Object;
+	private maxMframe:number;
+    private currentMframe:number;
+	private id:string;
+    private title:string;
+	private header:Object;
+    private compound:Object;
+    private residueSequence:Object;
 	
 	private objects:Object;
 	
 	private selections:Array;
 
-	function Molecule():void
-	{
-		selections = [];
-		objects = {};
+    constructor() {
+		this.selections = [];
+		this.objects = {};
 		this.currentMframe = 0;
 	}
-		
-	
-	function parsePDB(pdb:string, mframe:number = 0):void
+
+    public parsePDB(pdb:string, mframe:number = 0):void
 	{
 		var pdbArray:Array = pdb.split("\n");
 		
@@ -76,7 +78,7 @@ export class Molecule extends RenderableObject
 		        --        51 - 59        Date            depDate         Deposition date.  This is the date the coordinates were received by the PDB       
 		        --        63 - 66        IDcode          idCode          This identifier is unique within PDB
  				*/		        
-                header = {classification: currLine.substring(10,50), depDate: currLine.substring(50,59), idCode: currLine.substring(62,66) };
+                this.header = {classification: currLine.substring(10,50), depDate: currLine.substring(50,59), idCode: currLine.substring(62,66) };
 		        
 		        break;
 		        
@@ -89,11 +91,11 @@ export class Molecule extends RenderableObject
 		        -- 9 - 10        Continuation    continuation   Allows concatenation of multiple  records
 		        --11 - 70        String          title          Title of the experiment.
 		        */
-		        title = currLine.substring(10,70);
+		        this.title = currLine.substring(10,70);
 		        
 		        break;
 		        
-		      case "COMPND" :
+		      case "COMPND":
 		      /*
 		      -- The COMPND record describes the macromolecular contents of an entry.
 		      --  COLUMNS        DATA TYPE         FIELD          DEFINITION
@@ -102,11 +104,11 @@ export class Molecule extends RenderableObject
 		      --   9 - 10        Continuation      continuation   Allows concatenation of multiple records.    
 		      --  11 - 70        Specification     compound       Description of the molecular list components.
 		      */
-		      compound = {continuation: currLine.substring(8,10), compound: currLine.substring(10,70)};
+		      this.compound = {continuation: currLine.substring(8,10), compound: currLine.substring(10,70)};
 		        
 		      break;
 		        
-		      case "COLOR " :
+		      case "COLOR ":
 		      /*
 		        -- this is not a part of the normal PDB spec.
 		        --  COLUMNS        DATA TYPE         FIELD          DEFINITION
@@ -115,10 +117,10 @@ export class Molecule extends RenderableObject
 		        --   7 - 30        String            id             identifier for the object to be recolored
 		        --   31 - 36       RRGGBB            newcolor       new color in RRGGBB hex string format
 		        */
-		        id = StringUtil.trim(currLine.substring(6,30));
+		        this.id = $.trim(currLine.substring(6,30));
 		        var newcolor:string = currLine.substring(30,36);
 		        
-		        var obj:Object = objects[id];
+		        var obj:Object = this.objects[id];
 		        if (!obj)
 		        {
 		          throw new Error( "invalid object in COLOR statement: " + id );
@@ -130,8 +132,8 @@ export class Molecule extends RenderableObject
 		        
 		        break;
 		        		        		        
-		      case "ATOM  " :
-		      case "HETATM" : 
+		      case "ATOM  ":
+		      case "HETATM":
 		      /*    
 		        --COLUMNS        DATA TYPE       FIELD          DEFINITION
 		        --------------------------------------------------------------------------------
@@ -152,42 +154,42 @@ export class Molecule extends RenderableObject
 		        -- 77 - 78        LString(2)      element        Element symbol; right-justified.
 		        -- 79 - 80        LString(2)      charge         Charge on the atom.
 		        */
+
+		        var init:AtomInitializer = {
+                    serial: parseInt(currLine.substring(6,11)),
+                    element: $.trim(currLine.substring(12,16)),
+                    altLoc: parseInt(currLine.substring(16,17)),
+                    resName: currLine.substring(17,20),
+                    chainId: parseInt(currLine.substring(21,22)),
+                    resSeq: currLine.substring(22,26),
+                    iCode: currLine.substring(26,27),
+                    x: parseFloat(currLine.substring(30,38)),
+                    y: parseFloat(currLine.substring(38,46)),
+                    z: parseFloat(currLine.substring(46,54)),
+                    occupancy: currLine.substring(60,66),
+                    tempFactor: parseFloat(currLine.substring(72,76)),
+                    segId: parseInt(currLine.substring(76,78)),
+                    element2: $.trim(currLine.substring(78,80)),
+                    charge: parseInt(currLine.substring(80,81))
+		        };
 		        
-		        var init:Object = {
-		        serial: int(currLine.substring(6,11)), 
-		        element: StringUtil.trim(currLine.substring(12,16)), 
-		        altLoc: currLine.substring(16,17), 
-		        resName: currLine.substring(17,20), 
-		        chainID: currLine.substring(21,22), 
-		        resSeq: int(currLine.substring(22,26)),
-		        iCode: currLine.substring(26,27), 
-		        x: Number(currLine.substring(30,38)), 
-		        y: Number(currLine.substring(38,46)), 
-		        z: Number(currLine.substring(46,54)), 
-		        occupancy: Number(currLine.substring(60,66)), 
-		        tempFactor: Number(currLine.substring(72,76)), 
-		        segID: StringUtil.trim(currLine.substring(76,78)),
-		        element2: StringUtil.trim(currLine.substring(78,80)),
-		        charge: int(currLine.substring(80,81))
-		        }
-		        
-		        var atom:Atom = Atom(objects["atom" + init.serial]);
+		        var atom:Atom = Atom(this.objects["atom" + init.serial]);
 		        
 		        if (!atom)
 		        {
 		          // make a new atom object
 		          atom = new Atom(init);
-		          objects["atom" + init.serial] = atom;
+		          this.objects["atom" + init.serial] = atom;
 		        }
 		        
 		        // create a list of residues, each element is of form [#SEQ, <atom1>, <atom2>, ... <atom_n>]
-		        if (init.resseq > 0)
+		        if (init.resSeq > 0)
 		        {
-		          if (residueSequence.count < init.resseq)
+		          if (this.residueSequence.length < init.resSeq)
 		          {
-		            residueSequence[init.resseq] = {name:init.resname} // new residue
+		            this.residueSequence[init.resSeq] = {name:init.resName} // new residue
 		          }
-		          residueSequence[init.resseq][obj.name] = obj;            
+		          this.residueSequence[init.resSeq][obj.name] = obj;
 		        }
 		        
 		        // add the object to current frame
@@ -196,9 +198,9 @@ export class Molecule extends RenderableObject
 		        break;
 		            
 		        
-		      case "CONECT" :
-		      case "CONEC2" :
-		      case "CONEC3" :  
+		      case "CONECT":
+		      case "CONEC2":
+		      case "CONEC3":
 		        /*
 		        -- COLUMNS         DATA TYPE        FIELD           DEFINITION
 		        ---------------------------------------------------------------------------------
@@ -215,10 +217,10 @@ export class Molecule extends RenderableObject
 		        -- 52 - 56         Integer          serial          Serial number of hydrogen bonded atom
 		        -- 57 - 61         Integer          serial          Serial number of salt bridged atom   
 		        */     
-		        var cAtom:number = int(currLine.substring(6,11));
-		        var s:Array = [int(currLine.substring(11,16)), int(currLine.substring(16,21)),int(currLine.substring(21,26)), int(currLine.substring(26,31))];
-		        var h:Array = [int(currLine.substring(31,36)), int(currLine.substring(36,41)), int(currLine.substring(41,46)), int(currLine.substring(46,51))];
-		        var sb:Array = [int(currLine.substring(51,56)), int(currLine.substring(56,61))];
+		        var cAtom:number = parseInt(currLine.substring(6,11));
+		        var s:Array = [parseInt(currLine.substring(11,16)), parseInt(currLine.substring(16,21)),parseInt(currLine.substring(21,26)), parseInt(currLine.substring(26,31))];
+		        var h:Array = [parseInt(currLine.substring(31,36)), parseInt(currLine.substring(36,41)), parseInt(currLine.substring(41,46)), parseInt(currLine.substring(46,51))];
+		        var sb:Array = [parseInt(currLine.substring(51,56)), parseInt(currLine.substring(56,61))];
 		        var t:number = 1;
 		        
 		        if (cAtom == 0)
@@ -239,19 +241,19 @@ export class Molecule extends RenderableObject
 		        {
 		          if (s[cb] > cAtom) // only add each bond once
 		          {
-		            var a1:Atom = Atom(objects["atom" + cAtom]);
-		            var a2:Atom = Atom(objects["atom" + s[cb]]);  
+		            var a1:Atom = <Atom>this.objects["atom" + cAtom];
+		            var a2:Atom = <Atom>this.objects["atom" + s[cb]];
 		            // make the bond and add to current frame
 			        if (a1 && a2)
 					{
 						var id_str:string = a1.id + "-" + a2.id;
-						var bond:Bond = Bond(objects["bond" + id_str]);
+						var bond:Bond = <Bond>this.objects["bond" + id_str];
 						if (!bond)
 						{
 						  // no bond exists here
 						  var init2:Object = {t:t, a1:a1, a2:a2, id:id_str, maxMframe:maxMframe};
 						  bond = new Bond(init2);
-						  objects["bond" + id_str] = bond;
+						  this.objects["bond" + id_str] = bond;
 						}
 						bond.addToMframe(mframe);
 				    } 
@@ -260,26 +262,25 @@ export class Molecule extends RenderableObject
 		        
 		        break;
 		              
-		      case "END   " :
-		      case "TER   " :
+		      case "END   ":
+		      case "TER   ":
 		        break; 
 		        
 		    } // end switch 
 		}
 	}
-		
 	
 	
-	public override function render(renderer:IMolRenderer):void
+	render(renderer:molview.renderer.IMolRenderer):void
 	{		
-		for (var obj:string in objects)
+		for (var obj in this.objects)
 		{
-			IRenderableObject(objects[obj]).render(renderer);
+			IRenderableObject(this.objects[obj]).render(renderer);
 		}
 	}
     
     
-    public override public set mframe(mframe:number):void
+    public set mframe(mframe:number)
     {
 	    // go to a particular frame in a multi frame model
 	    
@@ -288,20 +289,20 @@ export class Molecule extends RenderableObject
 	        throw new Error(mframe + " is not a valid Mframe");
 	    }
 	  
-	    for (var i:number = 0; i<objects.length; i++)
+	    for (var i:number = 0; i<this.objects.length; i++)
 	    {
-	        objects[i].mframe = mframe;         
+	        this.objects[i].mframe = mframe;
 	    }
 	  
-	    currentMframe = mframe;
+	    this.currentMframe = mframe;
     }
 
 
-	public getBonds(atom1:Atom, atom2:Atom):Array
+	public getBonds(atom1:Atom, atom2:Atom):Bond[]
 	{
 		// returns either a list of names of bonds attached to single atom (one parameter)
 		// or a single bond between two atoms (two parameters)
-		var res:Array = [];
+		var res:Bond[] = [];
 		if (!atom1)
 		{
 		    // bad call
@@ -327,29 +328,29 @@ export class Molecule extends RenderableObject
 	}
 
 
-	function setColorMode(m:string):void
+	public setColorMode(m:string):void
 	{
 		for (var i:number = 0; i < objects.length; i++)
 		{
-		    objects[i].setColorMode(m);   
+		    this.objects[i].setColorMode(m);
 		}
-	}		
-
-
-
-	function addSelection(obj:RenderableObject):void
-	{
-		if (!obj) throw new Error("invalid selection");
-		
-		selections.push(obj);		
 	}
-	
 
-	function removeSelection(obj:RenderableObject):void
+
+
+    public addSelection(obj:RenderableObject):void
 	{
 		if (!obj) throw new Error("invalid selection");
 		
-		selections.splice(selections.indexOf(obj), 1);		
+		this.selections.push(obj);
+	}
+
+
+    public removeSelection(obj:RenderableObject):void
+	{
+		if (!obj) throw new Error("invalid selection");
+		
+		this.selections.splice(this.selections.indexOf(obj), 1);
 	}
 	
 	
@@ -359,7 +360,7 @@ export class Molecule extends RenderableObject
 		// return the atoms that are directly connected to this atom / bond
 		var res:Array = [];
 		
-		if (obj is Atom)
+		if (obj instanceof Atom)
 		{
 			for (var i:number = 0; i < Atom(obj).bonds.length; i++)
 			{
@@ -373,7 +374,7 @@ export class Molecule extends RenderableObject
 				}
 			}
 		}
-		else if (obj is Bond)
+		else if (obj instanceof Bond)
 		{
 			res.push(Bond(obj).atoms[0], Bond(obj).atoms[1]);
 		}
@@ -385,22 +386,22 @@ export class Molecule extends RenderableObject
 	/**
 	 * Adjust the loc of each object by the average offset of all objects
 	 **/
-	function center():void
+    public center():void
 	{
 		var center:THREE.Vector3 = new THREE.Vector3(0,0,0);
 		var numAtoms:number = 0;
-		for (var i:string in objects)
+		for (var i in this.objects)
 		{
-			if (objects[i] is Atom)
+			if (this.objects[i] instanceof Atom)
 			{
-				center.add(Atom(objects[i]).loc);
+				center.add(Atom(this.objects[i]).loc);
 				numAtoms++;
 			}
 		}
-		center.scaleBy(-1.0/numAtoms);
-	    for (var ii:string in objects)
+		center.multiplyScalar(-1.0/numAtoms);
+	    for (var ii in this.objects)
 		{
-	        IRenderableObject(objects[ii]).loc.add(center);
+	        IRenderableObject(this.objects[ii]).loc.add(center);
 		}
 	}
 	

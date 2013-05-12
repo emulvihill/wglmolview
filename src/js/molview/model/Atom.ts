@@ -8,8 +8,25 @@
     /// <reference path="../Constants.ts" />
     /// <reference path="../AminoAcidData.ts" />
 
+export interface AtomInitializer {
+    serial:number;
+    element:string;
+    altLoc:number;
+    resName:string;
+    chainId:number;
+    resSeq:string;
+    iCode:string;
+    x:number;
+    y:number;
+    z:number;
+    occupancy:string;
+    tempFactor:number;
+    segId:number;
+    element2:string;
+    charge:number;
+}
 
-export class Atom extends RenderableObject
+export class Atom extends molview.model.RenderableObject
 {
 	radius:number;
 
@@ -18,6 +35,7 @@ export class Atom extends RenderableObject
     name:string;
 
     element:string;
+    element2:string;
 
     private altLoc:number;
     private tempFactor:number;
@@ -35,21 +53,20 @@ export class Atom extends RenderableObject
         return this._bonds[this.mframe];
     }
 
-	constructor(init:{element:string; serial:string; altloc:number; resname:string; chainid:number; resseq:string; icode:string;
-                      occupancy:string; tempfactor:number; segid:number; element:string; charge:number;})
+	constructor(init:AtomInitializer)
 	{	
 		super();
         this.element = init.element;
         this.id = init.serial;
-        this.altLoc = init.altloc;
-        this.resName = init.resname;
-        this.chainID = init.chainid;
-        this.resSeq = init.resseq;
-        this.iCode = init.icode;
+        this.altLoc = init.altLoc;
+        this.resName = init.resName;
+        this.chainID = init.chainId;
+        this.resSeq = init.resSeq;
+        this.iCode = init.iCode;
         this.occupancy = init.occupancy;
-        this.tempFactor = init.tempfactor;
-        this.segID = init.segid;
-        this.element = init.element;
+        this.tempFactor = init.tempFactor;
+        this.segID = init.segId;
+        this.element2 = init.element2;
         this.charge = [init.charge];
 		
 		var edata:Object = ElementData.getData(this.element);

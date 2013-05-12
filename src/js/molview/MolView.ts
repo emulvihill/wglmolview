@@ -6,11 +6,10 @@
     /// <reference path="Constants.ts" />
     /// <reference path="Messages.ts" />
     /// <reference path="Utility.ts" />
-    /// <reference path="molview/model/Atom.ts" />
-    /// <reference path="molview/model/Molecule.ts" />
-    /// <reference path="molview/model/RenderableObject.ts" />
-    /// <reference path="molview/renderer/Away3DRenderer.ts" />
-    /// <reference path="ts/Signal.ts" />
+    /// <reference path="model/Atom.ts" />
+    /// <reference path="model/Molecule.ts" />
+    /// <reference path="model/RenderableObject.ts" />
+    /// <reference path="renderer/MockRenderer.ts" />
 
 
 export class MolView3D
@@ -47,7 +46,6 @@ export class MolView3D
             this.renderPDBData();
         }
 	}
-
 
 	private onMouseWheel(event:MouseEvent):void
 	{
@@ -123,7 +121,7 @@ export class MolView3D
 /*	    addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown, false, 0, false);
 	    addEventListener(MouseEvent.MOUSE_UP, handleMouseUp, false, 0, false);
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, false);
-		renderer.addEventListener(SelectionEvent.SELECT, handleSelect, false, 0, false);*/
+		renderer.addEventListener(SelectionEvent.SELECT, handleSelect, false, 0, false); */
 
 		this.molecule.parsePDB(Configuration.getConfig().pdbData);
 

@@ -9,7 +9,6 @@ export interface IRenderableObject
 
         id:string;
 		loc:THREE.Vector3;
-
 		mframe:number;
 		
 		render(renderer:molview.renderer.IMolRenderer):void;

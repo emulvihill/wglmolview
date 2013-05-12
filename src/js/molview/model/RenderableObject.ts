@@ -4,12 +4,12 @@ module molview.model
     /// <reference path="../../../ts/DefinitelyTyped/threejs/three.d.ts" />
 
     /// <reference path="../renderer/IMolRenderer.ts" />
+    /// <reference path="IRenderableObject.ts" />
     /// <reference path="../Configuration.ts" />
 
 
 export class RenderableObject implements molview.model.IRenderableObject
 	{
-	
 	id:string;
 	private _loc:THREE.Vector3[];
 	private _mframe:number;

@@ -9,7 +9,7 @@
     /// <reference path="../Constants.ts" />
 
 
-export class Bond extends RenderableObject
+export class Bond extends molview.model.RenderableObject
 {
 	type:number;
 	
@@ -39,7 +39,7 @@ export class Bond extends RenderableObject
 	}
 	
 	
-	private addToMframe(mframe:number):void
+	public addToMframe(mframe:number):void
 	{
 	  this.loc = this.atoms[0].loc.clone();
 	  loc.add(this.atoms[1].loc);
