@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/molView/ts/DefinitelyTyped/_infrastructure/tests/src/io.js" />
+        <item url="file://$PROJECT_DIR$/molView/ts/SignalBinding.js" />
+        <item url="file://$PROJECT_DIR$/molView/ts/Signal.js" />
+        <item url="file://$PROJECT_DIR$/molView/ts/DefinitelyTyped/_infrastructure/tests/testRunner.js" />
+        <item url="file://$PROJECT_DIR$/molView/js/Main.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/src/ts/SignalBinding.js" />
+      <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/src/io.js" />
+      <root url="file://$PROJECT_DIR$/src/ts/Signal.js" />
+      <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/testRunner.js" />
+      <root url="file://$PROJECT_DIR$/src/js/Main.js" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
