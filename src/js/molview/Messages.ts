@@ -1,6 +1,6 @@
 module molview
 {
-public class Messages
+export class Messages
 {
 	public static INSTRUCT_IDENTIFY:string = "Select an atom to show properties.";
 	public static INSTRUCT_DISTANCE:string = "Select any two atoms to measure distance.";

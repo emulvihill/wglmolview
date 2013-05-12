@@ -1,6 +1,6 @@
 module molview
 {
-public class Constants
+export class Constants
 {
 	public static CONTAINER_ATOM:string = "atomContainer";
 	public static CONTAINER_BOND:string = "bondContainer";

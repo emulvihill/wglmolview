@@ -8,7 +8,7 @@ import mx.utils.StringUtil;
 	import com.snazzyrobot.molview3d.renderer.IMolRenderer;
 
 
-public class Molecule extends RenderableObject
+export class Molecule extends RenderableObject
 {
 
 	private maxMframe:number, currentMframe:number;

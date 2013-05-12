@@ -1,22 +1,16 @@
 module molview.model
 {
-    /// <reference path="ts/DefinitelyTyped/threejs/three.d.ts" />
+    /// <reference path="../../../ts/DefinitelyTyped/threejs/three.d.ts" />
 
-    /// <reference path="molview/renderer/IMolRenderer.ts" />
+    /// <reference path="../renderer/IMolRenderer.ts" />
 
-public interface IRenderableObject
+export interface IRenderableObject
 	{
-/*		public get loc():THREE.Vector3 {};
 
-		public set loc(num:THREE.Vector3):void {};
+        id:string;
+		loc:THREE.Vector3;
 
-		public get mframe():number{};
-
-		public set mframe(mframe:number):void {};
-
-		public get id():string {};
-
-		public set id(s:string):void {};*/
+		mframe:number;
 		
 		render(renderer:molview.renderer.IMolRenderer):void;
 	}

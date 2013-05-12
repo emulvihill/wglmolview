@@ -1,6 +1,6 @@
 module molview
 {
-public class AminoAcidData
+export class AminoAcidData
 {
 		private static aminoAcidColors:Object =
 		{

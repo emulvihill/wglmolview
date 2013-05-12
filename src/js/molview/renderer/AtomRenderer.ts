@@ -1,6 +1,6 @@
 module molview.renderer
 {
-	public class AtomRenderer implements IRenderer
+	export class AtomRenderer implements IRenderer
 	{
 		render():void
 		{

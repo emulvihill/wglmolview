@@ -1,6 +1,6 @@
 module molview.renderer
 {
-	public interface IRenderer
+	export interface IRenderer
 	{
 		init():void;
 	    render():void;

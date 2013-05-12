@@ -28,7 +28,7 @@ import flash.utils.Dictionary;
 
 import mx.core.BitmapAsset;
 
-public class Away3DRenderer extends Sprite implements IMolRenderer
+export class Away3DRenderer extends Sprite implements IMolRenderer
 {
 	
     [Embed(source="../assets/greySphere.png")]

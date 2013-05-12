@@ -1,48 +1,56 @@
 ﻿module molview.model
 {
-    /// <reference path="molview/renderer/IMolRenderer.ts" />
-    /// <reference path="molview/model/RenderableObject.ts" />
-    /// <reference path="molview/model/Bond.ts" />
-    /// <reference path="molview/ElementData.ts" />
-    /// <reference path="molview/Configuration.ts" />
-    /// <reference path="molview/Constants.ts" />
-    /// <reference path="molview/AminoAcidData.ts" />
+    /// <reference path="../renderer/IMolRenderer.ts" />
+    /// <reference path="RenderableObject.ts" />
+    /// <reference path="Bond.ts" />
+    /// <reference path="../ElementData.ts" />
+    /// <reference path="../Configuration.ts" />
+    /// <reference path="../Constants.ts" />
+    /// <reference path="../AminoAcidData.ts" />
 
 
-public class Atom extends RenderableObject
+export class Atom extends RenderableObject
 {
-	radius:number, altLoc:number, tempFactor:number;
-	
-	private serial:number, chainID:number, segID:number;
-	
-	private _bonds:Array, _charge:Array;
+	radius:number;
 
-    private resName:string, resSeq:string, iCode:string, occupancy:string;
+    color:string;
 
-	color:string;
-
-	name:string;
+    name:string;
 
     element:string;
 
-	public get bonds():Array { return this._bonds[this.mframe]; }
-	
-	
-	public Atom(init:Object):void
+    private altLoc:number;
+    private tempFactor:number;
+	private serial:number;
+    private chainID:number;
+    private segID:number;
+    private charge:number[];
+    private resName:string;
+    private resSeq:string;
+    private iCode:string;
+    private occupancy:string;
+
+    private _bonds:Bond[][];
+	public get bonds():Bond[] {
+        return this._bonds[this.mframe];
+    }
+
+	constructor(init:{element:string; serial:string; altloc:number; resname:string; chainid:number; resseq:string; icode:string;
+                      occupancy:string; tempfactor:number; segid:number; element:string; charge:number;})
 	{	
 		super();
-        this.element = String(init.element);
-        this.id = String(init.serial);
-        this.altLoc = Number(init.altloc);
+        this.element = init.element;
+        this.id = init.serial;
+        this.altLoc = init.altloc;
         this.resName = init.resname;
-        this.chainID = int(init.chainid);
+        this.chainID = init.chainid;
         this.resSeq = init.resseq;
         this.iCode = init.icode;
         this.occupancy = init.occupancy;
-        this.tempFactor = Number(init.tempfactor);
-        this.segID = int(init.segid);
+        this.tempFactor = init.tempfactor;
+        this.segID = init.segid;
         this.element = init.element;
-        this._charge = [Number(init.charge)];
+        this.charge = [init.charge];
 		
 		var edata:Object = ElementData.getData(this.element);
         this.name = edata.name;
@@ -62,7 +70,7 @@ public class Atom extends RenderableObject
                 this.radius = radiusScale * ElementData.getData("H").radius;
 		}
 
-        this._charge = new Array(Configuration.getConfig().maxFrames);  // per frame
+        this.charge = new Array(Configuration.getConfig().maxFrames);  // per frame
         this._bonds = new Array(Configuration.getConfig().maxFrames);   // per frame
  		for (var i:number = 0; i <= Configuration.getConfig().maxFrames; i++)
 		{
@@ -75,7 +83,7 @@ public class Atom extends RenderableObject
 	{
 		this.mframe = mframe;
         this.loc = new THREE.Vector3(x, y, z);
-        this._charge[mframe] = c;
+        this.charge[mframe] = c;
 	}
 
 
@@ -89,7 +97,7 @@ public class Atom extends RenderableObject
 	{		
 		renderer.addRenderableObject(this);
 	}
-	
+
 	
 	public setColorMode(colorMode:string):void
 	{

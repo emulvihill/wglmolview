@@ -1,9 +1,9 @@
 module molview.renderer
 {
 
-    /// <reference path="molview/model/IRenderableObject.ts" />
+    /// <reference path="../model/IRenderableObject.ts" />
 
-	public interface IMolRenderer
+	export interface IMolRenderer
 	{
 		init():void;
 		addRenderableObject(obj:molview.model.IRenderableObject):void;

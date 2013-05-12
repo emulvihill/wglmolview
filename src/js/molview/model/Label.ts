@@ -1,6 +1,6 @@
 ﻿module molview.model
 {
-public class Label
+export class Label
 {
     // implementation goes here
 }

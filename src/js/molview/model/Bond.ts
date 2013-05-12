@@ -1,15 +1,15 @@
 ﻿module molview.model
 {
 
-    /// <reference path="molview/renderer/IMolRenderer.ts" />
-    /// <reference path="molview/model/RenderableObject.ts" />
-    /// <reference path="molview/model/Atom.ts" />
-    /// <reference path="molview/ElementData.ts" />
-    /// <reference path="molview/Configuration.ts" />
-    /// <reference path="molview/Constants.ts" />
+    /// <reference path="../renderer/IMolRenderer.ts" />
+    /// <reference path="RenderableObject.ts" />
+    /// <reference path="Atom.ts" />
+    /// <reference path="../ElementData.ts" />
+    /// <reference path="../Configuration.ts" />
+    /// <reference path="../Constants.ts" />
 
 
-public class Bond extends RenderableObject
+export class Bond extends RenderableObject
 {
 	type:number;
 	
@@ -17,11 +17,11 @@ public class Bond extends RenderableObject
 	
 	color:string;
 
-    private _length:Array;
+    private _length:number[];
 	public get length():number { return this._length[this.mframe]; }
-	public set length(len:number):void { this._length[this.mframe] = len; }
+	public set length(len:number) { this._length[this.mframe] = len; }
 
-	function Bond(init:Object):void
+	constructor(init:{id:string; t:number; a1:model.Atom; a2:model.Atom;})
 	{   
 		super();
         this.type = init.t;
@@ -39,16 +39,16 @@ public class Bond extends RenderableObject
 	}
 	
 	
-	function addToMframe(mframe:number):void
+	private addToMframe(mframe:number):void
 	{
 	  this.loc = this.atoms[0].loc.clone();
 	  loc.add(this.atoms[1].loc);
-	  loc.scaleBy(0.5);
-        this.length = 100 * THREE.Vector3.distance(this.atoms[1].loc, this.atoms[0].loc);
+	  loc.multiplyScalar(0.5);
+        this.length = 100 * this.atoms[0].loc.distanceTo(this.atoms[1].loc);
 	}
 	
 	
-	public override function render(renderer:molview.renderer.IMolRenderer):void
+	render(renderer:molview.renderer.IMolRenderer):void
 	{
 		renderer.addRenderableObject(this);
 	}

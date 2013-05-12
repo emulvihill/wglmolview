@@ -1,6 +1,6 @@
 ﻿module molview.model
 {
-public class Model
+export class Model
 {
     // implementation goes here
 }
