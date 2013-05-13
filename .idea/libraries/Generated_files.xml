@@ -3,6 +3,7 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/src/js/molview/renderer/MockRenderer.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/renderer/ThreeRenderer.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/Constants.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/Utility.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/model/Molecule.js" />
@@ -29,6 +30,7 @@
       <root url="file://$PROJECT_DIR$/src/js/molview/AnimateFrames.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/model/Model.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/model/Label.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/ThreeRenderer.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/renderer/MockRenderer.js" />
       <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/src/io.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/Constants.js" />

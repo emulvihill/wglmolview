@@ -10,6 +10,7 @@
     /// <reference path="model/Molecule.ts" />
     /// <reference path="model/RenderableObject.ts" />
     /// <reference path="renderer/MockRenderer.ts" />
+    /// <reference path="renderer/ThreeRenderer.ts" />
 
 
 export class MolView
@@ -116,7 +117,7 @@ export class MolView
     private renderPDBData():void
     {
         this.molecule = new molview.model.Molecule();
-        this.renderer = new molview.renderer.MockRenderer();
+        this.renderer = new molview.renderer.ThreeRenderer();
         this.renderer.init();
 /*	    addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown, false, 0, false);
 	    addEventListener(MouseEvent.MOUSE_UP, handleMouseUp, false, 0, false);

@@ -1,5 +1,7 @@
 module molview
 {
+    /// <reference path="Constants.ts" />
+
     export class Configuration {
 
         private static config:molview.Configuration;
