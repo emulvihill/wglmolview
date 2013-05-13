@@ -13,18 +13,18 @@ export class ElementData
 			initData();
 		}
 
-		return atomData[e];
+		return atomData[e.toLowerCase()];
 	}
 
 	private static initData():void
 	{
 		//load data from text clip. example: 29,Copper,Cu,100,A52A2A
 		atomData = new Object();
-		var dataArr:Array = atomDataText.split(":");
+		var dataArr:string[] = atomDataText.split(":");
 		for (var i:number = 0; i < dataArr.length; i++)
 		{
-			var edata:Array = String(dataArr[i]).split(",");
-			atomData [edata[2]] = {name : edata[1] , number : Number (edata[0]),
+			var edata:string[] = dataArr[i].split(",");
+			atomData [edata[2].toLowerCase()] = {name : edata[1] , number : Number (edata[0]),
 				radius : Number (edata[3]) , color : edata[4]};
 		}
 	}

@@ -24,7 +24,6 @@ module molview
                     this[p] = parameters[p];
                 }
             }
-            return c;
         };
 
         public static newConfig(parameters):void

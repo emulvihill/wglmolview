@@ -13,6 +13,7 @@
         <item url="file://$PROJECT_DIR$/src/js/molview/ElementData.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/renderer/IMolRenderer.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/Messages.js" />
+        <item url="file://$PROJECT_DIR$/src/js/Main.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/renderer/IRenderer.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/model/RenderableObject.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/model/Bond.js" />

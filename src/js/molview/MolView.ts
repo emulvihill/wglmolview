@@ -12,13 +12,13 @@
     /// <reference path="renderer/MockRenderer.ts" />
 
 
-export class MolView3D
+export class MolView
 {
 	private selections:model.Atom[];
 
-	private molecule:model.Molecule;
+	private molecule:molview.model.Molecule;
 
-	private renderer:renderer.Away3DRenderer;
+	private renderer:renderer.IMolRenderer;
 
 	private display:HTMLTextAreaElement;
 
@@ -51,7 +51,7 @@ export class MolView3D
 	{
 		var oldZoom:number = Configuration.getConfig().zoom;
 		Configuration.getConfig().zoom = oldZoom+event.wheelDelta/50.0;
-		renderer.render();
+        this.renderer.render();
 	}
 
 
@@ -115,13 +115,13 @@ export class MolView3D
 
     private renderPDBData():void
     {
-        this.molecule = new model.Molecule();
-        this.renderer = new renderer.Away3DRenderer();
-		renderer.init();
+        this.molecule = new molview.model.Molecule();
+        this.renderer = new molview.renderer.MockRenderer();
+        this.renderer.init();
 /*	    addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown, false, 0, false);
 	    addEventListener(MouseEvent.MOUSE_UP, handleMouseUp, false, 0, false);
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, false);
-		renderer.addEventListener(SelectionEvent.SELECT, handleSelect, false, 0, false); */
+        this.renderer.addEventListener(SelectionEvent.SELECT, handleSelect, false, 0, false); */
 
 		this.molecule.parsePDB(Configuration.getConfig().pdbData);
 
@@ -133,13 +133,13 @@ export class MolView3D
         //if listP(pInitTransform) and pInitTransform.count=16 then pGroup.transform = newtransform(pInitTransform)
 
 		// render the molecule as 3d items
-		this.molecule.render(renderer);
+		this.molecule.render(this.renderer);
 
 	    // load initial render mode
-	    renderer.setRenderMode(Configuration.getConfig().renderMode);
+        //this.renderer.setRenderMode(Configuration.getConfig().renderMode);
 
 		// draw the molecule on screen
-		renderer.render();
+        this.renderer.render();
 	}
 
 
@@ -147,7 +147,7 @@ export class MolView3D
 	{
 		if (Configuration.getConfig().selectable === false) return;
 
-		if (renderer.mouseDownTravel > Constants.SELECTION_MAX_MOUSETRAVEL) return;  // do nothing when moved
+	//	if (this.renderer.mouseDownTravel > Constants.SELECTION_MAX_MOUSETRAVEL) return;  // do nothing when moved
 
 		if (!(obj instanceof model.Atom)) return;
 
@@ -160,7 +160,7 @@ export class MolView3D
 			// already selected so deselect	if possible
 			if (index === 0)
 			{
-		        renderer.deselect(selAtom);
+                //this.renderer.deselect(selAtom);
 		        var connectingBonds:Array;
 		        if (this.selections.length >= 2)
 		        {
@@ -171,7 +171,7 @@ export class MolView3D
 	        }
 	        else if (index === this.selections.length-1)
 			{
-		        renderer.deselect(selAtom);
+		        //this.renderer.deselect(selAtom);
 		        if (this.selections.length >= 2)
 		        {
 		            connectingBonds = this.molecule.getBonds(selAtom, this.selections[this.selections.length-2]);
@@ -179,7 +179,7 @@ export class MolView3D
 		        }
                 this.selections.pop();
 	        }
-	    	renderer.render();
+            this.renderer.render();
 	    	return;
 		}
 
@@ -201,45 +201,45 @@ export class MolView3D
 
 	    	if (neighbors.indexOf(this.selections[0]) > -1)
 	    	{
-	            renderer.select(selAtom);
-	            renderer.select(this.molecule.getBonds(selAtom, this.selections[0])[0]);
+                //this.renderer.select(selAtom);
+                //this.renderer.select(this.molecule.getBonds(selAtom, this.selections[0])[0]);
                 this.selections.unshift(selAtom);
 	    	}
 	    	else if (neighbors.indexOf(this.selections[this.selections.length-1]) > -1)
 	    	{
-	            renderer.select(selAtom);
-	            renderer.select(this.molecule.getBonds(selAtom, this.selections[this.selections.length-1])[0]);
+	            //this.renderer.select(selAtom);
+	            //this.renderer.select(this.molecule.getBonds(selAtom, this.selections[this.selections.length-1])[0]);
                 this.selections.push(selAtom);
 	    	}
   	  	}
   	  	else
   	  	{
   	  		// no restrictions in other modes
-	        renderer.select(selAtom);
+            //this.renderer.select(selAtom);
             this.selections.push(selAtom);
   	  	}
 
-	    renderer.render();
+        this.renderer.render();
    }
 
 
    private clearSelections():void
    {
-   	renderer.deselectAll();
+       //this.renderer.deselectAll();
    	this.selections = [];
    }
 
 
 	private handleMouseDown(event:MouseEvent):void
 	{
-		renderer.mouseDownTravel = 0;
-		renderer.animate(true);
+        //this.renderer.mouseDownTravel = 0;
+        //this.renderer.animate(true);
 	}
 
 
 	private handleMouseUp(event:MouseEvent):void
 	{
-		renderer.animate(false);
+		//this.renderer.animate(false);
 
 		switch(Configuration.getConfig().selectionMode)
 		{
@@ -264,12 +264,12 @@ export class MolView3D
 		if (event.clientX < this.renderToolbar.clientWidth*0.333)
 		{
 		    Configuration.getConfig().renderMode = Constants.RENDERMODE_STICKS;
-			renderer.setRenderMode(Constants.RENDERMODE_STICKS);
+			//this.renderer.setRenderMode(Constants.RENDERMODE_STICKS);
 		}
 		else if (event.clientX < this.renderToolbar.clientWidth*0.666)
 		{
 		    Configuration.getConfig().renderMode = Constants.RENDERMODE_BALL_AND_STICK;
-			renderer.setRenderMode(Constants.RENDERMODE_BALL_AND_STICK);
+			//this.renderer.setRenderMode(Constants.RENDERMODE_BALL_AND_STICK);
 		}
 		else
 		{

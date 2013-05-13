@@ -41,9 +41,9 @@ export class Bond extends molview.model.RenderableObject
 	
 	public addToMframe(mframe:number):void
 	{
-	  this.loc = this.atoms[0].loc.clone();
-	  loc.add(this.atoms[1].loc);
-	  loc.multiplyScalar(0.5);
+	    this.loc = this.atoms[0].loc.clone();
+        this.loc.add(this.atoms[1].loc);
+        this.loc.multiplyScalar(0.5);
         this.length = 100 * this.atoms[0].loc.distanceTo(this.atoms[1].loc);
 	}
 	
@@ -56,12 +56,12 @@ export class Bond extends molview.model.RenderableObject
 	
 	setColorMode(mode:string):void
 	{  
-		if (!type) throw new Error("bond type is undefined");
+		if (!this.type) throw new Error("bond type is undefined");
 		
 		switch (mode)
 		{
 		case Constants.COLORMODE_CPK:  // i.e. "element color"
-		    this.color = ["0000FF","8822FF","2299FF"][type-1];
+		    this.color = ["0000FF","8822FF","2299FF"][this.type-1];
 			break;
 		  
 		case Constants.COLORMODE_AMINO_ACID:

@@ -1,8 +1,8 @@
 ﻿module molview.model
 {
-    /// <reference path="../renderer/IMolRenderer.ts" />
     /// <reference path="RenderableObject.ts" />
     /// <reference path="Bond.ts" />
+    /// <reference path="../renderer/IMolRenderer.ts" />
     /// <reference path="../ElementData.ts" />
     /// <reference path="../Configuration.ts" />
     /// <reference path="../Constants.ts" />

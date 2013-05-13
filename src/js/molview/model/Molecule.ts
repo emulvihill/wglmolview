@@ -3,14 +3,12 @@
     /// <reference path="../../../ts/DefinitelyTyped/jquery/jquery.d.ts" />
     /// <reference path="../../../ts/DefinitelyTyped/threejs/three.d.ts" />
 
-    /// <reference path="../renderer/IMolRenderer.ts
-    // " />
-    /// <reference path="IRenderableObject.ts" />
+    /// <reference path="../renderer/IMolRenderer.ts/>
     /// <reference path="RenderableObject.ts" />
     /// <reference path="Atom.ts" />
     /// <reference path="Bond.ts" />
 
-export class Molecule extends RenderableObject
+export class Molecule extends molview.model.RenderableObject
 {
 
 	private maxMframe:number;
@@ -28,7 +26,9 @@ export class Molecule extends RenderableObject
     constructor() {
 		this.selections = [];
 		this.objects = {};
+        this.residueSequence = {};
 		this.currentMframe = 0;
+        this.maxMframe = 0;
 	}
 
     public parsePDB(pdb:string, mframe:number = 0):void
@@ -79,7 +79,7 @@ export class Molecule extends RenderableObject
 		        --        63 - 66        IDcode          idCode          This identifier is unique within PDB
  				*/		        
                 this.header = {classification: currLine.substring(10,50), depDate: currLine.substring(50,59), idCode: currLine.substring(62,66) };
-		        
+
 		        break;
 		        
 		      case "TITLE ":
@@ -173,12 +173,12 @@ export class Molecule extends RenderableObject
                     charge: parseInt(currLine.substring(80,81))
 		        };
 		        
-		        var atom:Atom = Atom(this.objects["atom" + init.serial]);
+		        var atom:Atom = <Atom>(this.objects["atom" + init.serial]);
 		        
 		        if (!atom)
 		        {
 		          // make a new atom object
-		          atom = new Atom(init);
+		          atom = new molview.model.Atom(init);
 		          this.objects["atom" + init.serial] = atom;
 		        }
 		        
@@ -189,7 +189,7 @@ export class Molecule extends RenderableObject
 		          {
 		            this.residueSequence[init.resSeq] = {name:init.resName} // new residue
 		          }
-		          this.residueSequence[init.resSeq][obj.name] = obj;
+		       // ???obj->atom   this.residueSequence[init.resSeq][obj.name] = obj;
 		        }
 		        
 		        // add the object to current frame
@@ -218,9 +218,9 @@ export class Molecule extends RenderableObject
 		        -- 57 - 61         Integer          serial          Serial number of salt bridged atom   
 		        */     
 		        var cAtom:number = parseInt(currLine.substring(6,11));
-		        var s:Array = [parseInt(currLine.substring(11,16)), parseInt(currLine.substring(16,21)),parseInt(currLine.substring(21,26)), parseInt(currLine.substring(26,31))];
-		        var h:Array = [parseInt(currLine.substring(31,36)), parseInt(currLine.substring(36,41)), parseInt(currLine.substring(41,46)), parseInt(currLine.substring(46,51))];
-		        var sb:Array = [parseInt(currLine.substring(51,56)), parseInt(currLine.substring(56,61))];
+		        var s:number[] = [parseInt(currLine.substring(11,16)), parseInt(currLine.substring(16,21)),parseInt(currLine.substring(21,26)), parseInt(currLine.substring(26,31))];
+		        var h:number[] = [parseInt(currLine.substring(31,36)), parseInt(currLine.substring(36,41)), parseInt(currLine.substring(41,46)), parseInt(currLine.substring(46,51))];
+		        var sb:number[] = [parseInt(currLine.substring(51,56)), parseInt(currLine.substring(56,61))];
 		        var t:number = 1;
 		        
 		        if (cAtom == 0)
@@ -251,8 +251,8 @@ export class Molecule extends RenderableObject
 						if (!bond)
 						{
 						  // no bond exists here
-						  var init2:Object = {t:t, a1:a1, a2:a2, id:id_str, maxMframe:maxMframe};
-						  bond = new Bond(init2);
+						  var init2:Object = {t:t, a1:a1, a2:a2, id:id_str, maxMframe:this.maxMframe};
+						  bond = new molview.model.Bond(init2);
 						  this.objects["bond" + id_str] = bond;
 						}
 						bond.addToMframe(mframe);
@@ -275,7 +275,7 @@ export class Molecule extends RenderableObject
 	{		
 		for (var obj in this.objects)
 		{
-			IRenderableObject(this.objects[obj]).render(renderer);
+			<RenderableObject>(this.objects[obj]).render(renderer);
 		}
 	}
     
@@ -362,21 +362,21 @@ export class Molecule extends RenderableObject
 		
 		if (obj instanceof Atom)
 		{
-			for (var i:number = 0; i < Atom(obj).bonds.length; i++)
+			for (var i:number = 0; i < (<Atom>obj).bonds.length; i++)
 			{
-				if (Bond(Atom(obj).bonds[i]).atoms[0] == obj)
+				if (<Bond>((<Atom>obj).bonds[i]).atoms[0] == obj)
 				{
-					res.push(Bond(Atom(obj).bonds[i]).atoms[1]);
+					res.push(<Bond>((<Atom>obj).bonds[i]).atoms[1]);
 				}
 				else
 				{
-					res.push(Bond(Atom(obj).bonds[i]).atoms[0]);					
+					res.push(<Bond>((<Atom>obj).bonds[i]).atoms[0]);
 				}
 			}
 		}
 		else if (obj instanceof Bond)
 		{
-			res.push(Bond(obj).atoms[0], Bond(obj).atoms[1]);
+			res.push((<Bond>obj).atoms[0], (<Bond>obj).atoms[1]);
 		}
 	
 	return res;
@@ -394,14 +394,14 @@ export class Molecule extends RenderableObject
 		{
 			if (this.objects[i] instanceof Atom)
 			{
-				center.add(Atom(this.objects[i]).loc);
+				center.add(<Atom>this.objects[i].loc);
 				numAtoms++;
 			}
 		}
 		center.multiplyScalar(-1.0/numAtoms);
 	    for (var ii in this.objects)
 		{
-	        IRenderableObject(this.objects[ii]).loc.add(center);
+	        <RenderableObject>this.objects[ii].loc.add(center);
 		}
 	}
 	
