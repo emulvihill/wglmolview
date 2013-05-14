@@ -22,14 +22,6 @@
       </sourceFilesUrls>
     </properties>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/AtomRenderer.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/AtomRenderer.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/AnimateFrames.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/model/Model.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/model/Label.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/AnimateFrames.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/model/Model.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/model/Label.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/renderer/ThreeRenderer.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/renderer/MockRenderer.js" />
       <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/src/io.js" />

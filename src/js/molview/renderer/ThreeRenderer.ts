@@ -121,8 +121,6 @@ module molview.renderer {
         {
             var quality:string = Configuration.getConfig().renderQuality;
 
-            var moveToLoc:THREE.Vector3 = atom.loc;
-
             // set up the sphere vars
             var radius = atom.radius,
                 segments = 12,
@@ -144,7 +142,7 @@ module molview.renderer {
             // changes to the normals
             sphere.geometry.normalsNeedUpdate = true;
 
-            sphere.translateOnAxis(atom.loc, ThreeRenderer.SCALE);
+            sphere.position = atom.loc.clone().multiplyScalar(ThreeRenderer.SCALE);
 
             // add the sphere to the scene
             this.scene.add(sphere);
@@ -154,7 +152,78 @@ module molview.renderer {
 
 
         private renderBond(bond:molview.model.Bond):THREE.Mesh {
-            return null;
+            var quality:string = Configuration.getConfig().renderQuality;
+            var mode:string = Configuration.getConfig().renderMode;
+
+            var tubes:THREE.Mesh[] = [];
+
+            var m:number[] = this.getBondMetrics(bond, mode);
+            var bondMaterial:THREE.MeshNormalMaterial = new THREE.MeshNormalMaterial();
+            var bondObj:THREE.Mesh = new THREE.Mesh();
+            var bondLength = bond.length; // 10 * m[2];
+            switch (bond.type)
+            {
+                case 1:
+                    tubes.push( this.makeCylinder(6, bondLength, bondMaterial) );
+                    break;
+
+                case 2:
+                    tubes.push( this.makeCylinder(5, bondLength, bondMaterial) );
+                    tubes.push(  this.makeCylinder(5, bondLength, bondMaterial) );
+                    tubes[0].translateX(6);
+                    tubes[1].translateX(-6);
+                    break;
+
+                case 3:
+                    tubes.push( this.makeCylinder(4, bondLength, bondMaterial) );
+                    tubes.push( this.makeCylinder(4, bondLength, bondMaterial) );
+                    tubes.push( this.makeCylinder(4, bondLength, bondMaterial) );
+                    tubes[0].translateX(6);
+                    tubes[0].translateY(-3.5);
+                    tubes[1].translateX(-6);
+                    tubes[1].translateY(-3.5);
+                    tubes[2].translateY(3.5);
+                    break;
+            }
+
+            for (var i:number = 0; i < tubes.length; i++) {
+                bondObj.add(tubes[i]);
+m            }
+
+            var v0:THREE.Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeRenderer.SCALE);
+            var v1:THREE.Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeRenderer.SCALE);
+            bondObj.position = v0.add(v1).divideScalar(2);
+            bondObj.lookAt(v1);
+
+            this.scene.add(bondObj);
+
+            return bondObj;
+        }
+
+        private makeCylinder(width:number, height:number, material:any) {
+
+            var g:THREE.CylinderGeometry = new THREE.CylinderGeometry(width, width, height, 24, 1, true);
+            g.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
+            var m:THREE.Mesh = new THREE.Mesh(g, material);
+            return m;
+        }
+
+        /*
+         * Measure the "empty space" at the ends of bonds, to make it look right with drawing between atoms
+         * [length between atom0 & start of bond, length between end of bond & atom1, bond length as drawn]
+         */
+        private getBondMetrics(bond:molview.model.Bond, mode:string):number[]
+        {
+            if (mode === Constants.RENDERMODE_STICKS)
+            {
+                return [0, bond.length, bond.length];
+            }
+            else
+            {
+                return [bond.atoms[0].radius,
+                        bond.length - bond.atoms[1].radius,
+                        bond.length - (bond.atoms[1].radius + bond.atoms[0].radius)];
+            }
         }
 
     }
