@@ -2,7 +2,7 @@ var console;
 function init() {
     makeLog();
     var mv = new molview.MolView({
-        pdbUrl: "/pdb/arg.pdb"
+        pdbUrl: "/pdb/bsheet.pdb"
     });
 }
 function makeLog() {

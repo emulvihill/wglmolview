@@ -179,21 +179,23 @@ export class Molecule extends molview.model.RenderableObject
 		        {
 		          // make a new atom object
 		          atom = new molview.model.Atom(init);
-		          this.objects["atom" + init.serial] = atom;
+                  if (atom && atom.name) {
+                      this.objects["atom" + init.serial] = atom;
+
+                      // create a list of residues, each element is of form [#SEQ, <atom1>, <atom2>, ... <atom_n>]
+                      if (init.resSeq > 0)
+                      {
+                          if (this.residueSequence.length < init.resSeq)
+                          {
+                              this.residueSequence[init.resSeq] = {name:init.resName} // new residue
+                          }
+                          // ???obj->atom   this.residueSequence[init.resSeq][obj.name] = obj;
+                      }
+
+                      // add the object to current frame
+                      atom.addToMframe(init.x, init.y, init.z, init.charge, mframe);
+                  }
 		        }
-		        
-		        // create a list of residues, each element is of form [#SEQ, <atom1>, <atom2>, ... <atom_n>]
-		        if (init.resSeq > 0)
-		        {
-		          if (this.residueSequence.length < init.resSeq)
-		          {
-		            this.residueSequence[init.resSeq] = {name:init.resName} // new residue
-		          }
-		       // ???obj->atom   this.residueSequence[init.resSeq][obj.name] = obj;
-		        }
-		        
-		        // add the object to current frame
-		        atom.addToMframe(init.x, init.y, init.z, init.charge, mframe);
 		        
 		        break;
 		            

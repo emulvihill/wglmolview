@@ -56,6 +56,14 @@ export class Atom extends molview.model.RenderableObject
 	constructor(init:AtomInitializer)
 	{	
 		super();
+
+
+        var edata:Object = ElementData.getData(init.element);
+        if (!edata) {
+            // unsupported ATOM record
+            console.warn("bad ATOM symbol: " + init.element);
+            return;
+        }
         this.element = init.element;
         this.id = init.serial;
         this.altLoc = init.altLoc;
@@ -68,8 +76,7 @@ export class Atom extends molview.model.RenderableObject
         this.segID = init.segId;
         this.element2 = init.element2;
         this.charge = [init.charge];
-		
-		var edata:Object = ElementData.getData(this.element);
+
         this.name = edata.name;
         this.color = edata.color;
 		
