@@ -2,7 +2,7 @@
 // http://www.w3.org/TR/file-system-api/
 
 // 2. Introduction
-declare public getAsText(file:File): void;
+declare function getAsText(file:File): void;
 declare function writeDataToLogFile(fileWriter:FileWriterSync): void;
 
 function useAsyncFS(fs:FileSystem):void {

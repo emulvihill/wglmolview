@@ -15803,7 +15803,7 @@ function render() {
 
             }
 
-            public getY( x, z ) {
+            function getY( x, z ) {
 
                 return ( data[ x + z * worldWidth ] * 0.2 ) | 0;
 
@@ -16083,7 +16083,7 @@ function render() {
 
             }
 
-            public getY( x, z ) {
+            function getY( x, z ) {
 
                 return ( data[ x + z * worldWidth ] * 0.2 ) | 0;
 
@@ -16334,7 +16334,7 @@ function render() {
 
             }
 
-            public getY( x, z ) {
+            function getY( x, z ) {
 
                 return ( data[ x + z * worldWidth ] * 0.2 ) | 0;
 
@@ -18931,7 +18931,7 @@ function render() {
 
             }
 
-            public getText( id ) {
+            function getText( id ) {
 
                 return document.getElementById( id ).textContent;
 

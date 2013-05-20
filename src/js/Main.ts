@@ -9,7 +9,7 @@ function init() {
     // launch point from html page
     makeLog();
 
-    var mv:molview.MolView = new molview.MolView({pdbUrl:"/pdb/arg.pdb"});
+    var mv:molview.MolView = new molview.MolView({domElement:"container", pdbUrl:"/pdb/h2o.pdb"});
 
 
 }

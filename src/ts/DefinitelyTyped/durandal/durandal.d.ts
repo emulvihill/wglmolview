@@ -498,7 +498,7 @@ declare module "durandal/widget" {
     /**
       * Developers implementing widgets may wish to use this function to acquire the resolved template parts for a widget. Pass a single dom element or an array of elements and get back an object keyed by part name whose values are the dom elements corresponding to each part in that scope.
       */
-    export public getParts(elements: any): any;
+    export function getParts(elements: any): any;
     /**
       * (overrridable) Replace this to re-interpret the kind id as a module path. By default it does a lookup for any custom maps added through mapKind and then falls back to the path "durandal/widgets/{kind}/controller".
       */

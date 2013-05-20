@@ -18,6 +18,7 @@ module molview
         autoCenter:bool = true;
         pdbUrl:string;
         pdbData:string;
+        domElement:string;
 
         constructor(parameters) {
 

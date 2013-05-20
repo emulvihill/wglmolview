@@ -87,7 +87,7 @@ module createjs {
         removeEventListener(type: string, listener: (eventObj: Object) => void): void;
         removeEventListener(type: string, listener: { handleEvent: (eventObj: Object) => bool; }): void;
         removeEventListener(type: string, listener: { handleEvent: (eventObj: Object) => void; }): void;
-        removeAllEventListeners(type?: string): void;
+        removeAllEventListeners(type: string): void;
         dispatchEvent(eventObj: string, target: Object): bool;
         dispatchEvent(eventObj: Object, target: Object): bool;
         hasEventListener(type: string): bool;

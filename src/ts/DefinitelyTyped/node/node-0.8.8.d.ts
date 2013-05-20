@@ -295,7 +295,7 @@ declare module "http" {
     export function createServer(requestListener?: (request: ServerRequest, response: ServerResponse) =>void ): Server;
     export function createClient(port?: number, host?: string): any;
     export function request(options: any, callback?: Function): ClientRequest;
-    export public get(options: any, callback?: Function): ClientRequest;
+    export function get(options: any, callback?: Function): ClientRequest;
     export var globalAgent: Agent;
 }
 
@@ -463,7 +463,7 @@ declare module "https" {
     export interface Server extends tls.Server { }
     export function createServer(options: ServerOptions, requestListener?: Function): Server;
     export function request(options: RequestOptions, callback?: (res: events.NodeEventEmitter) =>void ): http.ClientRequest;
-    export public get(options: RequestOptions, callback?: (res: events.NodeEventEmitter) =>void ): http.ClientRequest;
+    export function get(options: RequestOptions, callback?: (res: events.NodeEventEmitter) =>void ): http.ClientRequest;
     export var globalAgent: NodeAgent;
 }
 
@@ -968,7 +968,7 @@ declare module "crypto" {
         setPublicKey(public_key: string, encoding?: string): void;
         setPrivateKey(public_key: string, encoding?: string): void;
     }
-    export public getDiffieHellman(group_name: string): DiffieHellman;
+    export function getDiffieHellman(group_name: string): DiffieHellman;
     export function pbkdf2(password: string, salt: string, iterations: number, keylen: number, callback: (err: Error, derivedKey: string) => any): void;
     export function randomBytes(size: number, callback?: (err: Error, buf: NodeBuffer) =>void );
 }

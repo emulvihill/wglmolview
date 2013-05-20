@@ -55,9 +55,9 @@ var IO = (function () {
                     streamObj.LoadFromFile(path);
                     var bomChar = streamObj.ReadText(2);
                     streamObj.Position = 0;
-                    if((bomChar.charCodeAt(0) == 254 && bomChar.charCodeAt(1) == 255) || (bomChar.charCodeAt(0) == 255 && bomChar.charCodeAt(1) == 254)) {
+                    if((bomChar.charCodeAt(0) == 0xFE && bomChar.charCodeAt(1) == 0xFF) || (bomChar.charCodeAt(0) == 0xFF && bomChar.charCodeAt(1) == 0xFE)) {
                         streamObj.Charset = 'unicode';
-                    } else if(bomChar.charCodeAt(0) == 239 && bomChar.charCodeAt(1) == 187) {
+                    } else if(bomChar.charCodeAt(0) == 0xEF && bomChar.charCodeAt(1) == 0xBB) {
                         streamObj.Charset = 'utf-8';
                     }
                     var str = streamObj.ReadText(-1);
@@ -217,8 +217,8 @@ var IO = (function () {
                 try  {
                     var buffer = _fs.readFileSync(file);
                     switch(buffer[0]) {
-                        case 254:
-                            if(buffer[1] == 255) {
+                        case 0xFE:
+                            if(buffer[1] == 0xFF) {
                                 var i = 0;
                                 while((i + 1) < buffer.length) {
                                     var temp = buffer[i];
@@ -229,13 +229,13 @@ var IO = (function () {
                                 return buffer.toString("ucs2", 2);
                             }
                             break;
-                        case 255:
-                            if(buffer[1] == 254) {
+                        case 0xFF:
+                            if(buffer[1] == 0xFE) {
                                 return buffer.toString("ucs2", 2);
                             }
                             break;
-                        case 239:
-                            if(buffer[1] == 187) {
+                        case 0xEF:
+                            if(buffer[1] == 0xBB) {
                                 return buffer.toString("utf8", 3);
                             }
                     }
@@ -264,7 +264,7 @@ var IO = (function () {
                         return;
                     } else {
                         mkdirRecursiveSync(_path.dirname(path));
-                        _fs.mkdirSync(path, 775);
+                        _fs.mkdirSync(path, 0775);
                     }
                 }
                 mkdirRecursiveSync(_path.dirname(path));
@@ -289,20 +289,22 @@ var IO = (function () {
             dir: function dir(path, spec, options) {
                 options = options || {
                 };
-                function filesInFolder(folder) {
+                function filesInFolder(folder, deep) {
                     var paths = [];
                     var files = _fs.readdirSync(folder);
                     for(var i = 0; i < files.length; i++) {
                         var stat = _fs.statSync(folder + "/" + files[i]);
                         if(options.recursive && stat.isDirectory()) {
-                            paths = paths.concat(filesInFolder(folder + "/" + files[i]));
+                            if(deep < (options.deep || 100)) {
+                                paths = paths.concat(filesInFolder(folder + "/" + files[i], 1));
+                            }
                         } else if(stat.isFile() && (!spec || files[i].match(spec))) {
                             paths.push(folder + "/" + files[i]);
                         }
                     }
                     return paths;
                 }
-                return filesInFolder(path);
+                return filesInFolder(path, 0);
             },
             createDirectory: function (path) {
                 try  {
@@ -423,3 +425,4 @@ var IO = (function () {
         return null;
     }
 })();
+//@ sourceMappingURL=io.js.map

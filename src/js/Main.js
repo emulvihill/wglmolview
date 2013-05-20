@@ -2,7 +2,8 @@ var console;
 function init() {
     makeLog();
     var mv = new molview.MolView({
-        pdbUrl: "/pdb/bsheet.pdb"
+        domElement: "container",
+        pdbUrl: "/pdb/h2o.pdb"
     });
 }
 function makeLog() {

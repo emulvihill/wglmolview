@@ -57,19 +57,19 @@ interface AutocompleteUIParams {
 
 }
 
-interface AuotcompleteEvent {
+interface AutocompleteEvent {
     (event: Event, ui: AutocompleteUIParams): void;
 }
 
 interface AutocompleteEvents {
-    change?: AuotcompleteEvent;
-    close?: AuotcompleteEvent;
-    create?: AuotcompleteEvent;
-    focus?: AuotcompleteEvent;
-    open?: AuotcompleteEvent;
-    response?: AuotcompleteEvent;
-    search?: AuotcompleteEvent;
-    select?: AuotcompleteEvent;
+    change?: AutocompleteEvent;
+    close?: AutocompleteEvent;
+    create?: AutocompleteEvent;
+    focus?: AutocompleteEvent;
+    open?: AutocompleteEvent;
+    response?: AutocompleteEvent;
+    search?: AutocompleteEvent;
+    select?: AutocompleteEvent;
 }
 
 interface Autocomplete extends Widget, AutocompleteOptions, AutocompleteEvents {
@@ -494,6 +494,7 @@ interface SortableUIParams {
     position: any;
     originalPosition: any;
     sender: JQuery;
+	placeholder: JQuery;
 }
 
 interface SortableEvent {
@@ -919,17 +920,23 @@ interface JQuery {
     effect(effect: string, options?: any, duration?: number, complete?: Function): JQuery;
     effect(effect: string, options?: any, duration?: string, complete?: Function): JQuery;
 
+    hide(duration?: any, callback?: any): JQuery;
     hide(options: any): JQuery;
     hide(effect: string, options?: any, duration?: number, complete?: Function): JQuery;
     hide(effect: string, options?: any, duration?: string, complete?: Function): JQuery;
 
+    show(duration?: any, callback?: any): JQuery;
     show(options: any): JQuery;
     show(effect: string, options?: any, duration?: number, complete?: Function): JQuery;
     show(effect: string, options?: any, duration?: string, complete?: Function): JQuery;
 
+    toggle(duration?: any, callback?: any): JQuery;
     toggle(options: any): JQuery;
     toggle(effect: string, options?: any, duration?: number, complete?: Function): JQuery;
     toggle(effect: string, options?: any, duration?: string, complete?: Function): JQuery;
+
+    position(): { top: number; left: number; };
+    position(options: JQueryPositionOptions): JQuery;
 
     enableSelection(): JQuery;
     disableSelection(): JQuery;
@@ -939,7 +946,6 @@ interface JQuery {
     scrollParent(): JQuery;
     zIndex(): JQuery;
     zIndex(zIndex: number): JQuery;
-    position(options: JQueryPositionOptions): JQuery;
 
     widget: Widget;
 

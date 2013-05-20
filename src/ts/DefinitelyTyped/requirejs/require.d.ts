@@ -144,7 +144,7 @@ interface Require {
 	// Undefine a module
 	undef(module: string): void;
 
-	// Semi-private, overload in special instance of undef()
+	// Semi-private function, overload in special instance of undef()
 	onResourceLoad(context: Object, map: RequireMap, depArray: RequireMap[]): void;
 }
 
@@ -199,6 +199,13 @@ interface RequireDefine {
 	*	@return module definition
 	**/
 	(name: string, deps: string[], ready: (...deps: any[]) => any): void;
+	
+	/**
+	* Defines whether require js supports multiple versions of jQuery being loaded
+	**/
+	amd: {
+		jQuery: bool;
+	};
 }
 
 // Ambient declarations for 'require' and 'define'

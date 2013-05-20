@@ -9,8 +9,8 @@ USAGE
 declare module fabric {
 
     function createCanvasForNode(width: number, height: number): ICanvas;
-    public getCSSRules(doc: SVGDocument);
-    public getGradientDefs(doc: SVGDocument);
+    function getCSSRules(doc: SVGDocument);
+    function getGradientDefs(doc: SVGDocument);
     function loadSVGFromString(text: string, callback: (results: IObject[], options) => void , reviver?: (el, obj) => void );
     function loadSVGFromURL(url, callback: (results: IObject[], options) => void , reviver?: (el, obj) => void );
     function log(values);
@@ -526,6 +526,7 @@ declare module fabric {
         getContext(): CanvasRenderingContext2D;
         getElement(): HTMLCanvasElement;
         getHeight(): number;
+        getObjects(): IObject[];
         getWidth(): number;
         insertAt(object: IObject, index: number, nonSplicing: bool): ICanvas;
         isEmpty(): bool;

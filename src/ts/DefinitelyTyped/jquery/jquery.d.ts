@@ -282,7 +282,10 @@ interface JQueryStatic {
         (fn?: (d: JQueryDeferred) => any): JQueryDeferred;
         new(fn?: (d: JQueryDeferred) => any): JQueryDeferred;
     };
-    Event(name:string, eventProperties?:any): JQueryEventObject;
+    Event: {
+        (name:string, eventProperties?:any): JQueryEventObject;
+        new(name:string, eventProperties?:any): JQueryEventObject;
+    };
 
     /*********
      INTERNALS
@@ -340,7 +343,7 @@ interface JQueryStatic {
 
     now(): number;
 
-    parseJSON(json: string): Object;
+    parseJSON(json: string): any;
 
     //FIXME: This should return an XMLDocument
     parseXML(data: string): any;

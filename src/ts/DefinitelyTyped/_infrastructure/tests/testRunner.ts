@@ -42,11 +42,11 @@ class Tests {
     public tests: Test[] = [];
 }
 
-public getLibDirectory(file: string) {
+function getLibDirectory(file: string) {
     return file.substr(cfg.root.length).split('/')[1];
 }
 
-public getErrorList(out): string[] {
+function getErrorList(out): string[] {
     var splitContentByNewlines = function (content: string) {
         var lines = content.split('\r\n');
         if (lines.length === 1) {

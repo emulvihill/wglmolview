@@ -31,8 +31,8 @@ declare module jasmine {
     function any(aclass: any);
     function createSpy(name: string): Spy;
     function createSpyObj(baseName: string, methodNames: any[]): any;
-
-    public getEnv(): Env;
+    function pp(value: any): string;
+    function getEnv(): Env;
 
     interface Any {
 
@@ -145,6 +145,12 @@ declare module jasmine {
 
         new (env: Env, actual, spec: Env, isNot?: bool);
 
+        env: Env;
+        actual: any;
+        spec: Env;
+        isNot?: bool;
+        message(): any;
+
         toBe(expected): bool;
         toNotBe(expected): bool;
         toEqual(expected): bool;
@@ -232,6 +238,8 @@ declare module jasmine {
     }
 
     interface Spy {
+        (...params: any[]): any;
+
         identity: string;
         calls: any[];
         mostRecentCall: { args: any[]; };

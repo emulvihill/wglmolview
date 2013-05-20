@@ -15,7 +15,7 @@ function pad(str: string, length: number): string {
 
 var getRandomInt = fabric.util.getRandomInt;
 
-public getRandomColor() {
+function getRandomColor() {
     return (
         pad(getRandomInt(0, 255).toString(16), 2) +
         pad(getRandomInt(0, 255).toString(16), 2) +
@@ -23,7 +23,7 @@ public getRandomColor() {
     );
 }
 
-public getRandomNum(min: number, max: number): number {
+function getRandomNum(min: number, max: number): number {
     return Math.random() * (max - min) + min;
   }
 

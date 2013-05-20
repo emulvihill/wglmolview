@@ -52,7 +52,7 @@ function test_camera() {
             destinationType: destinationType.DATA_URL
         });
     }
-    public getPhoto(source) {
+    function getPhoto(source) {
         navigator.camera.getPicture(onPhotoURISuccess, onFail, {
             quality: 50,
             destinationType: destinationType.FILE_URI,

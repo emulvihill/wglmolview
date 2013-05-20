@@ -4,8 +4,8 @@
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
 declare class UnitySettings {
-   public name:string;
-   public iconUrl:string;
+   public name:String;
+   public iconUrl:String;
    public onInit:Function;
 }
 
@@ -15,12 +15,12 @@ enum UnityPlaybackState {
 }
 
 declare class UnityTrackMetadata {
-   title:string;
+   title:String;
 
    // Optionals
-   album:string;
-   artist:string;
-   artLocation:string;
+   album:String;
+   artist:String;
+   artLocation:String;
 }
 
 interface UnityMediaPlayer {
@@ -40,29 +40,29 @@ interface UnityMediaPlayer {
 }	      
 
 interface UnityNotification {
-   showNotification (summary:string, body:string, iconUrl?:string);
+   showNotification (summary:String, body:String, iconUrl?:String);
 } 
 
 declare class UnityIndicatorProperties {
    public count:Number;
    public time:Date;
-   public iconURI:string;
+   public iconURI:String;
    public onIndicatorActivated:Function;
 }
 
 interface UnityMessagingIndicator {
-   showIndicator(name:string, indicatorProperties:UnityIndicatorProperties);
-   clearIndicator(name:string);
+   showIndicator(name:String, indicatorProperties:UnityIndicatorProperties);
+   clearIndicator(name:String);
    clearIndicators();
 
-   addAction(name:string, onActionInvoked:Function);
-   removeAction(name:string);
+   addAction(name:String, onActionInvoked:Function);
+   removeAction(name:String);
    removeActions();
    onPresenceChanged(onPresenceChanged:Function);
    
    // This is suppose to be readonly, but i'm not sure how to do this
    // in a definition file.
-   presence:string;
+   presence:String;
 }
 
  interface UnityLauncher {
@@ -74,15 +74,15 @@ interface UnityMessagingIndicator {
 
    setUrgent(urgent:Boolean);
 
-   addAction(name:string, onActionInvoked:Function);
-   removeAction(name:string);
+   addAction(name:String, onActionInvoked:Function);
+   removeAction(name:String);
    removeActions();
 } 
 
 interface Unity {
 	init(settings:UnitySettings);
-	addAction(name:string, callback:Function);
-	removeAction(actionName:string);
+	addAction(name:String, callback:Function);
+	removeAction(actionName:String);
    	removeActions();
 
 	Notification:UnityNotification;

@@ -76,6 +76,9 @@ declare module google.maps {
         setStreetView(panorama: StreetViewPanorama): void;
         setTilt(tilt: number): void;
         setZoom(zoom: number): void;
+        controls: MVCArray[]; //Array.<MVCArray.<Node >>
+        mapTypes: MapTypeRegistry;
+        overlayMapTypes: MVCArray; // MVCArray.<MapType>
     }
 
     export interface MapOptions {
@@ -91,6 +94,8 @@ declare module google.maps {
         mapMaker?: bool;
         mapTypeControl?: bool;
         mapTypeControlOptions?: MapTypeControlOptions;
+        navigationControl?: bool;
+        navigationControlOptions?: NavigationControlOptions;
         mapTypeId?: MapTypeId;
         maxZoom?: number;
         minZoom?: number;
@@ -182,6 +187,18 @@ declare module google.maps {
         TOP_CENTER,
         TOP_LEFT,
         TOP_RIGHT
+    }
+
+    export interface NavigationControlOptions {
+        position?: ControlPosition;
+        style?: NavigationControlStyle;
+    }
+
+    export enum NavigationControlStyle {
+        DEFAULT,
+        SMALL,
+        ANDROID,
+        ZOOM_PAN
     }
 
     /***** Overlays *****/
@@ -321,7 +338,7 @@ declare module google.maps {
 
     export interface PolylineOptions {
         clickable?: bool;
-        draggable: bool;
+        draggable?: bool;
         editable?: bool;
         geodesic?: bool;
         icons?: IconSequence[];
@@ -842,10 +859,12 @@ declare module google.maps {
         fromPointToLatLng(pixel: Point, noWrap?: bool): LatLng;
     }
 
-    export class ImageMapType {
+    export class ImageMapType extends MVCObject implements MapType {
         constructor (opts: ImageMapTypeOptions);
         getOpacity(): number;
         setOpacity(opacity: number): void;
+        getTile(tileCoord: Point, zoom: number, ownerDocument: Document): Element;
+        releaseTile(tile: Element): void;
     }
 
     export interface ImageMapTypeOptions {

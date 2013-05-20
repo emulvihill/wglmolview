@@ -25,11 +25,11 @@ declare module chrome.alarms {
 
     export function create(alarmInfo: AlarmCreateInfo): void;
     export function create(name: string, alarmInfo: AlarmCreateInfo): void;
-    export public getAll(callback: (alarms: Alarm[]) => void): void;
+    export function getAll(callback: (alarms: Alarm[]) => void): void;
     export function clearAll(): void;
     export function clear(name?: string): void;
-    export public get(callback: (alarm: Alarm) => void): void;
-    export public get(name: string, callback: (alarm: Alarm) => void): void;
+    export function get(callback: (alarm: Alarm) => void): void;
+    export function get(name: string, callback: (alarm: Alarm) => void): void;
     
     declare var onAlarm: AlarmEvent;
 }
@@ -102,16 +102,16 @@ declare module chrome.bookmarks {
     declare var MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE: number;
 
     export function search(query: string, callback: (results: BookmarkTreeNode[]) => void): void;
-    export public getTree(callback: (results: BookmarkTreeNode[]) => void): void;
-    export public getRecent(numberOfItems: number, callback: (results: BookmarkTreeNode[]) => void): void;
-    export public get(id: string, callback: (results: BookmarkTreeNode[]) => void): void;
-    export public get(idList: string[], callback: (results: BookmarkTreeNode[]) => void): void;
+    export function getTree(callback: (results: BookmarkTreeNode[]) => void): void;
+    export function getRecent(numberOfItems: number, callback: (results: BookmarkTreeNode[]) => void): void;
+    export function get(id: string, callback: (results: BookmarkTreeNode[]) => void): void;
+    export function get(idList: string[], callback: (results: BookmarkTreeNode[]) => void): void;
     export function create(bookmark: Object, callback?: (result: BookmarkTreeNode) => void): void;
     export function move(id: string, destination: Object, callback?: (result: BookmarkTreeNode) => void): void;
     export function update(id: string, changes: Object, callback?: (result: BookmarkTreeNode) => void): void;
     export function remove(id: string, callback?: Function): void;
-    export public getChildren(id: string, callback: (results: BookmarkTreeNode[]) => void): void;
-    export public getSubTree(id: string, callback: (results: BookmarkTreeNode[]) => void): void;
+    export function getChildren(id: string, callback: (results: BookmarkTreeNode[]) => void): void;
+    export function getSubTree(id: string, callback: (results: BookmarkTreeNode[]) => void): void;
     export function removeTree(id: string, callback?: Function): void;
 
     declare var onRemoved: chrome.alarms.AlarmEvent;
@@ -164,12 +164,12 @@ declare module chrome.browserAction {
     export function setBadgeBackgroundColor(details: BadgeBackgroundColorDetails): void;
     export function setBadgeText(details: BadgeTextDetails): void;
     export function setTitle(details: TitleDetails): void;
-    export public getBadgeText(details: TabDetails, callback: (result: string) => void): void;
+    export function getBadgeText(details: TabDetails, callback: (result: string) => void): void;
     export function setPopup(details: PopupDetails): void;
     export function disable(tabId?: number): void;
-    export public getTitle(details: TabDetails, callback: (result: string) => void): void;
-    export public getBadgeBackgroundColor(details: TabDetails, callback: (result: number[]) => void): void;
-    export public getPopup(details: TabDetails, callback: (result: string) => void): void;
+    export function getTitle(details: TabDetails, callback: (result: string) => void): void;
+    export function getBadgeBackgroundColor(details: TabDetails, callback: (result: number[]) => void): void;
+    export function getPopup(details: TabDetails, callback: (result: string) => void): void;
     export function setIcon(details: TabIconDetails, callback?: Function): void;
 
     declare var onClicked: BrowserClickedEvent;
@@ -393,11 +393,11 @@ declare module chrome.cookies {
         addListener(callback: (changeInfo: CookieChangeInfo) => void): void;
     }
 
-    export public getAllCookieStores(callback: (cookieStores: CookieStore[]) => void): void;
-    export public getAll(details: GetAllDetails, callback: (cookies: Cookie) => void): void;
+    export function getAllCookieStores(callback: (cookieStores: CookieStore[]) => void): void;
+    export function getAll(details: GetAllDetails, callback: (cookies: Cookie) => void): void;
     export function set(details: SetDetails, callback?: (cookie?: Cookie) => void): void;
     export function remove(details: Details, callback?: (details: Details) => void): void;
-    export public get(details: Details, callback: (cookie?: Cookie) => void): void;
+    export function get(details: Details, callback: (cookie?: Cookie) => void): void;
 
     declare var onChanged: CookieChangedEvent;
 }
@@ -565,7 +565,7 @@ declare module chrome.devtools.inspectedWindow {
 
     export function reload(reloadOptions: ReloadOptions): void;
     export function eval(expression: string, callback?: (result: Object, isException: bool) => void): void;
-    export public getResources(callback: (resources: Resource[]) => void): void;
+    export function getResources(callback: (resources: Resource[]) => void): void;
 
     declare var onResourceAdded: ResourceAddedEvent;
     declare var onResourceContentCommitted: ResourceContentCommittedEvent;
@@ -587,7 +587,7 @@ declare module chrome.devtools.network {
         addListener(callback: (url: string) => void): void;
     }
 
-    export public getHAR(callback: (harLog: Object) => void): void;
+    export function getHAR(callback: (harLog: Object) => void): void;
 
     declare var onRequestFinished: RequestFinishedEvent;
     declare var onNavigated: NavigatedEvent;
@@ -770,8 +770,8 @@ declare module chrome.downloads {
 
     export function search(query: DownloadQuery, callback: (results: DownloadItem[]) => void): void;
     export function pause(downloadId: number, callback?: Function): void;
-    export public getFileIcon(downloadId: number, callback: (iconURL: string) => void): void;
-    export public getFileIcon(downloadId: number, options: GetFileIconOptions, callback: (iconURL: string) => void): void;
+    export function getFileIcon(downloadId: number, callback: (iconURL: string) => void): void;
+    export function getFileIcon(downloadId: number, options: GetFileIconOptions, callback: (iconURL: string) => void): void;
     export function resume(downloadId: number, callback?: Function): void;
     export function cancel(downloadId: number, callback?: Function): void;
     export function download(options: DownloadOptions, callback?: (downloadId: number) => void): void;
@@ -871,10 +871,10 @@ declare module chrome.extension {
     declare var inIncognitoContext: bool;
     declare var lastError: Object;
 
-    export public getBackgroundPage(): Window;
-    export public getURL(path: string): string;
+    export function getBackgroundPage(): Window;
+    export function getURL(path: string): string;
     export function setUpdateUrlData(data: string): void;
-    export public getViews(fetchProperties?: FetchProperties): Window[];
+    export function getViews(fetchProperties?: FetchProperties): Window[];
     export function isAllowedFileSchemeAccess(callback: (isAllowedAccess: bool) => void): void;
     export function sendMessage(message: any, responseCallback?: (response: any) => void): void;
     export function sendMessage(extensionId: string, message: any, responseCallback?: (response: any) => void): void;
@@ -976,17 +976,17 @@ declare module chrome.fontSettings {
     }
 
     export function setDefaultFontSize(details: DefaultFontSizeDetails, callback?: Function): void;
-    export public getFont(details: FontDetails, callback?: (details: FontDetailsResult) => void): void;
-    export public getDefaultFontSize(details?: FontSizeDetails, callback?: (options: FontSizeDetails) => void): void;
-    export public getMinimumFontSize(details?: FontSizeDetails, callback?: (options: FontSizeDetails) => void): void;
+    export function getFont(details: FontDetails, callback?: (details: FontDetailsResult) => void): void;
+    export function getDefaultFontSize(details?: FontSizeDetails, callback?: (options: FontSizeDetails) => void): void;
+    export function getMinimumFontSize(details?: FontSizeDetails, callback?: (options: FontSizeDetails) => void): void;
     export function setMinimumFontSize(details: SetFontSizeDetails, callback?: Function): void;
-    export public getDefaultFixedFontSize(details?: Object, callback?: (details: FontSizeDetails) => void): void;
+    export function getDefaultFixedFontSize(details?: Object, callback?: (details: FontSizeDetails) => void): void;
     export function clearDefaultFontSize(details?: Object, callback?: Function): void;
     export function setDefaultFixedFontSize(details: SetFontSizeDetails, callback?: Function): void;
     export function clearFont(details: FontDetails, callback?: Function): void;
     export function setFont(details: SetFontDetails, callback?: Function): void;
     export function clearMinimumFontSize(details?: Object, callback?: Function): void;
-    export public getFontList(callback: (results: FontName[]) => void): void;
+    export function getFontList(callback: (results: FontName[]) => void): void;
     export function clearDefaultFixedFontSize(details: Object, callback?: Function): void;
 
     declare var onDefaultFixedFontSizeChanged: DefaultFixedFontSizeChangedEvent;
@@ -1049,7 +1049,7 @@ declare module chrome.history {
     export function addUrl(details: Url, callback?: Function): void;
     export function deleteRange(range: Range, callback: Function): void;
     export function deleteAll(callback: Function): void;
-    export public getVisits(details: Url, callback: (results: VisitItem[]) => void): void;
+    export function getVisits(details: Url, callback: (results: VisitItem[]) => void): void;
     export function deleteUrl(details: Url, callback?: Function): void;
 
     declare var onVisited: HistoryVisitedEvent;
@@ -1060,8 +1060,8 @@ declare module chrome.history {
 // Internationalization
 ////////////////////
 declare module chrome.i18n {
-    export public getMessage(messageName: string, substitutions?: any): string;
-    export public getAcceptLanguages(callback: (languages: string[]) => void): void;
+    export function getMessage(messageName: string, substitutions?: any): string;
+    export function getAcceptLanguages(callback: (languages: string[]) => void): void;
 }
 
 ////////////////////
@@ -1243,10 +1243,10 @@ declare module chrome.management {
     }
 
     export function setEnabled(id: string, enabled: bool, callback?: Function): void;
-    export public getPermissionWarningsById(id: string, callback?: (permissionWarnings: string[]) => void): void;
-    export public get(id: string, callback?: (result: ExtensionInfo) => void): void;
-    export public getAll(callback?: (result: ExtensionInfo[]) => void): void;
-    export public getPermissionWarningsByManifest(manifestStr: string, callback?: (permissionwarnings: string[]) => void): void;
+    export function getPermissionWarningsById(id: string, callback?: (permissionWarnings: string[]) => void): void;
+    export function get(id: string, callback?: (result: ExtensionInfo) => void): void;
+    export function getAll(callback?: (result: ExtensionInfo[]) => void): void;
+    export function getPermissionWarningsByManifest(manifestStr: string, callback?: (permissionwarnings: string[]) => void): void;
     export function launchApp(id: string, callback?: Function): void;
     export function uninstall(id: string, options: UninstallOptions, callback?: Function): void;
 
@@ -1326,8 +1326,8 @@ declare module chrome.pageAction {
     export function show(tabId: number): void;
     export function setTitle(details: TitleDetails): void;
     export function setPopup(details: PopupDetails): void;
-    export public getTitle(details: GetDetails, callback: (result: string) => void): void;
-    export public getPopup(details: GetDetails, callback: (result: string) => void): void;
+    export function getTitle(details: GetDetails, callback: (result: string) => void): void;
+    export function getPopup(details: GetDetails, callback: (result: string) => void): void;
     export function setIcon(details: IconDetails, callback?: Function): void;
 
     declare var onClicked: PageActionClickedEvent;
@@ -1362,7 +1362,7 @@ declare module chrome.permissions {
     }
 
     export function contains(permissions: Permissions, callback: (result: bool) => void): void;
-    export public getAll(callback: (permissions: Permissions) => void): void;
+    export function getAll(callback: (permissions: Permissions) => void): void;
     export function request(permissions: Permissions, callback?: (granted: bool) => void): void;
     export function remove(permissions: Permissions, callback?: (removed: bool) => void): void;
 
@@ -1473,9 +1473,9 @@ declare module chrome.runtime {
         addListener(callback: Function): void;
     }
     
-    export public getBackgroundPage(callback: (backgroundPage?: Window) => void): void;
-    export public getManifest(): Object;
-    export public getURL(path: string): string;
+    export function getBackgroundPage(callback: (backgroundPage?: Window) => void): void;
+    export function getManifest(): Object;
+    export function getURL(path: string): string;
     
     declare var onSuspend: RuntimeSuspendEvent;
     declare var onStartup: RuntimeStartupEvent;
@@ -1504,8 +1504,8 @@ declare module chrome.scriptBadge {
         addListener(callback: (tab: chrome.tabs.Tab) => void): void;
     }
 
-    export public getPopup(details: GetPopupDetails, callback: Function): void;
-    export public getAttention(details: AttentionDetails): void;
+    export function getPopup(details: GetPopupDetails, callback: Function): void;
+    export function getAttention(details: AttentionDetails): void;
     export function setPopup(details: SetPopupDetails): void;
 
     declare var onClicked: ScriptBadgeClickedEvent;
@@ -1612,8 +1612,8 @@ declare module chrome.socket {
     export function accept(socketId: number, callback?: (acceptInfo: AcceptInfo) => void): void;
     export function setKeepAlive(socketId: number, enable: bool, delay?: number, callback?: (result: bool) => void): void;
     export function setNoDelay(socketId: number, noDelay: bool, callback?: (result: bool) => void): void;
-    export public getInfo(socketId: number, callback: (result: SocketInfo) => void): void;
-    export public getNetworkList(callback: (result: NetworkInterface[]) => void): void;
+    export function getInfo(socketId: number, callback: (result: SocketInfo) => void): void;
+    export function getNetworkList(callback: (result: NetworkInterface[]) => void): void;
 }
 
 ////////////////////
@@ -1766,8 +1766,8 @@ declare module chrome.tabs {
 
     export function executeScript(details: InjectDetails, callback?: (result: any[]) => void): void;
     export function executeScript(tabId: number, details: InjectDetails, callback?: (result: any[]) => void): void;
-    export public get(tabId: number, callback: (tab: Tab) => void): void;
-    export public getCurrent(callback: (tab?: Tab) => void): void;
+    export function get(tabId: number, callback: (tab: Tab) => void): void;
+    export function getCurrent(callback: (tab?: Tab) => void): void;
     export function create(createProperties: CreateProperties, callback?: (tab: Tab) => void): void;
     export function move(tabId: number, moveProperties: MoveProperties, callback?: (tab: Tab) => void): void;
     export function move(tabIds: number[], moveProperties: MoveProperties, callback?: (tabs: Tab[]) => void): void;
@@ -1807,7 +1807,7 @@ declare module chrome.topSites {
         title: string;
     }
 
-    export public get(callback: (data: MostVisitedURL) => void): void;
+    export function get(callback: (data: MostVisitedURL) => void): void;
 }
 
 ////////////////////
@@ -1844,7 +1844,7 @@ declare module chrome.tts {
 
     export function isSpeaking(callback?: (speaking: bool) => void): void;
     export function stop(): void;
-    export public getVoices(callback?: (voices: TtsVoice[]) => void): void;
+    export function getVoices(callback?: (voices: TtsVoice[]) => void): void;
     export function speak(utterance: string, options?: SpeakOptions, callback?: Function): void;
 }
 
@@ -2040,8 +2040,8 @@ declare module chrome.webNavigation {
         addListener(callback: (details: ErrorOccurredDetails) => void): void;
     }
 
-    export public getFrame(details: GetFrameDetails, callback: (details?: GetFrameResultDetails) => void): void;
-    export public getAllFrames(details: GetAllFrameDetails, callback: (details?: Object[]) => void): void;
+    export function getFrame(details: GetFrameDetails, callback: (details?: GetFrameResultDetails) => void): void;
+    export function getAllFrames(details: GetAllFrameDetails, callback: (details?: Object[]) => void): void;
     
     declare var onReferenceFragmentUpdated: WebNavigationReferenceFragmentUpdatedEvent;
     declare var onCompleted: WebNavigationCompletedEvent;
@@ -2337,17 +2337,17 @@ declare module chrome.windows {
     declare var WINDOW_ID_CURRENT: number;
     declare var WINDOW_ID_NONE: number;
 
-    export public get(windowId: number, callback: (window: chrome.windows.Window) => void): void;
-    export public get(windowId: number, getInfo: GetInfo, callback: (window: chrome.windows.Window) => void): void;
-    export public getCurrent(callback: (window: chrome.windows.Window) => void): void;
-    export public getCurrent(getInfo: GetInfo, callback: (window: chrome.windows.Window) => void): void;
+    export function get(windowId: number, callback: (window: chrome.windows.Window) => void): void;
+    export function get(windowId: number, getInfo: GetInfo, callback: (window: chrome.windows.Window) => void): void;
+    export function getCurrent(callback: (window: chrome.windows.Window) => void): void;
+    export function getCurrent(getInfo: GetInfo, callback: (window: chrome.windows.Window) => void): void;
     export function create(createData?: CreateData, callback?: (window: chrome.windows.Window) => void): void;
-    export public getAll(callback: (windows: chrome.windows.Window[]) => void): void;
-    export public getAll(getInfo: GetInfo, callback: (windows: chrome.windows.Window[]) => void): void;
+    export function getAll(callback: (windows: chrome.windows.Window[]) => void): void;
+    export function getAll(getInfo: GetInfo, callback: (windows: chrome.windows.Window[]) => void): void;
     export function update(windowId: number, updateInfo: UpdateInfo, callback?: (window: chrome.windows.Window) => void): void;
     export function remove(windowId: number, callback?: Function): void;
-    export public getLastFocused(callback: (window: chrome.windows.Window) => void): void;
-    export public getLastFocused(getInfo: GetInfo, callback: (window: chrome.windows.Window) => void): void;
+    export function getLastFocused(callback: (window: chrome.windows.Window) => void): void;
+    export function getLastFocused(getInfo: GetInfo, callback: (window: chrome.windows.Window) => void): void;
 
     declare var onRemoved: WindowRemovedEvent;
     declare var onCreated: WindowCreatedEvent;

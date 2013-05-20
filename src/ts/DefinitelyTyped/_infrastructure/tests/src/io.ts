@@ -105,11 +105,11 @@ var IO = (function() {
 
     // Create an IO object for use inside WindowsScriptHost hosts
     // Depends on WSCript and FileSystemObject
-    public getWindowsScriptHostIO(): IIO {
+    function getWindowsScriptHostIO(): IIO {
         var fso = new ActiveXObject("Scripting.FileSystemObject");
         var streamObjectPool = [];
 
-        public getStreamObject(): any {
+        function getStreamObject(): any { 
             if (streamObjectPool.length > 0) {
                 return streamObjectPool.pop();
             }  else {
@@ -314,7 +314,7 @@ var IO = (function() {
 
     // Create an IO object for use inside Node.js hosts
     // Depends on 'fs' and 'path' modules
-    public getNodeIO(): IIO {
+    function getNodeIO(): IIO {
 
         var _fs = require('fs');
         var _path = require('path');
