@@ -3,7 +3,7 @@ function init() {
     makeLog();
     var mv = new molview.MolView({
         domElement: "container",
-        pdbUrl: "/pdb/arg.pdb"
+        pdbUrl: "/pdb/helix2.pdb"
     });
 }
 function makeLog() {

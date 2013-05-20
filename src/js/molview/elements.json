@@ -19,7 +19,8 @@
         "oxidation_states" : "1, -1",
         "electronic_configuration" : "1s¹",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 3.750
+        "lattice_constant ang" : 3.750,
+        "color":"FFFFFF"
     },
     "Helium": {
         "symbol" : "He",
@@ -41,7 +42,8 @@
         "oxidation_states" : "-",
         "electronic_configuration" : "1s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 3.570
+        "lattice_constant ang" : 3.570,
+        "color":"FFC8C8"
     },
     "Lithium": {
         "symbol" : "Li",
@@ -63,7 +65,8 @@
         "oxidation_states" : 1,
         "electronic_configuration" : "[He]2s¹",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 3.490
+        "lattice_constant ang" : 3.490,
+        "color":"A52A2A"
     },
     "Beryllium": {
         "symbol" : "Be",
@@ -85,7 +88,8 @@
         "oxidation_states" : 2,
         "electronic_configuration" : "[He]2s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 2.290
+        "lattice_constant ang" : 2.290,
+        "color":"FF1493"
     },
     "Boron": {
         "symbol" : "B",
@@ -107,7 +111,8 @@
         "oxidation_states" : 3,
         "electronic_configuration" : "[He]2s²2p¹",
         "lattice_structure" : "TET",
-        "lattice_constant ang" : 8.730
+        "lattice_constant ang" : 8.730,
+        "color":"00FF00"
     },
     "Carbon": {
         "symbol" : "C",
@@ -129,7 +134,8 @@
         "oxidation_states" : "4, 2, -4",
         "electronic_configuration" : "[He]2s²2p²",
         "lattice_structure" : "DIA",
-        "lattice_constant ang" : 3.570
+        "lattice_constant ang" : 3.570,
+        "color":"C8C8C8"
     },
     "Nitrogen": {
         "symbol" : "N",
@@ -151,7 +157,8 @@
         "oxidation_states" : "5, 4, 3, 2, -3",
         "electronic_configuration" : "[He]2s²2p³",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 4.039
+        "lattice_constant ang" : 4.039,
+        "color":"8F8FFF"
     },
     "Oxygen": {
         "symbol" : "O",
@@ -173,7 +180,8 @@
         "oxidation_states" : "-2, -1",
         "electronic_configuration" : "[He]2s²2p",
         "lattice_structure" : "CUB",
-        "lattice_constant ang" : 6.830
+        "lattice_constant ang" : 6.830,
+        "color":"F00000"
     },
     "Fluorine": {
         "symbol" : "F",
@@ -195,7 +203,8 @@
         "oxidation_states" : -1,
         "electronic_configuration" : "[He]2s²2p",
         "lattice_structure" : "MCL",
-        "lattice_constant ang" : "-"
+        "lattice_constant ang" : "-",
+        "color":"C8A518"
     },
     "Neon": {
         "symbol" : "Ne",
@@ -217,7 +226,8 @@
         "oxidation_states" : "-",
         "electronic_configuration" : "[He]2s²2p",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 4.430
+        "lattice_constant ang" : 4.430,
+        "color":"FF1493"
     },
     "Sodium": {
         "symbol" : "Na",
@@ -239,7 +249,8 @@
         "oxidation_states" : 1,
         "electronic_configuration" : "[Ne]3s¹",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 4.230
+        "lattice_constant ang" : 4.230,
+        "color":"0000FF"
     },
     "Magnesium": {
         "symbol" : "Mg",
@@ -261,7 +272,8 @@
         "oxidation_states" : 2,
         "electronic_configuration" : "[Ne]3s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 3.210
+        "lattice_constant ang" : 3.210,
+        "color":"2A802A"
     },
     "Aluminium": {
         "symbol" : "Al",
@@ -283,7 +295,8 @@
         "oxidation_states" : 3,
         "electronic_configuration" : "[Ne]3s²3p¹",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 4.050
+        "lattice_constant ang" : 4.050,
+        "color":"808090"
     },
     "Silicon": {
         "symbol" : "Si",
@@ -305,7 +318,8 @@
         "oxidation_states" : "4, -4",
         "electronic_configuration" : "[Ne]3s²3p²",
         "lattice_structure" : "DIA",
-        "lattice_constant ang" : 5.430
+        "lattice_constant ang" : 5.430,
+        "color":"C8A518"
     },
     "Phosphorus": {
         "symbol" : "P",
@@ -327,7 +341,8 @@
         "oxidation_states" : "5, 3, -3",
         "electronic_configuration" : "[Ne]3s²3p³",
         "lattice_structure" : "CUB",
-        "lattice_constant ang" : 7.170
+        "lattice_constant ang" : 7.170,
+        "color":"FFA500"
     },
     "Sulphur": {
         "symbol" : "S",
@@ -349,7 +364,8 @@
         "oxidation_states" : "6, 4, 2, -2",
         "electronic_configuration" : "[Ne]3s²3p",
         "lattice_structure" : "ORC",
-        "lattice_constant ang" : 10.470
+        "lattice_constant ang" : 10.470,
+        "color":"FFC832"
     },
     "Chlorine": {
         "symbol" : "Cl",
@@ -371,7 +387,8 @@
         "oxidation_states" : "7, 5, 3, 1, -1",
         "electronic_configuration" : "[Ne]3s²3p",
         "lattice_structure" : "ORC",
-        "lattice_constant ang" : 6.240
+        "lattice_constant ang" : 6.240,
+        "color":"00FF00"
     },
     "Argon": {
         "symbol" : "Ar",
@@ -393,7 +410,8 @@
         "oxidation_states" : "-",
         "electronic_configuration" : "[Ne]3s²3p",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 5.260
+        "lattice_constant ang" : 5.260,
+        "color":"FF1493"
     },
     "Potassium": {
         "symbol" : "K",
@@ -415,7 +433,8 @@
         "oxidation_states" : 1,
         "electronic_configuration" : "[Ar]4s¹",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 5.230
+        "lattice_constant ang" : 5.230,
+        "color":"FF1493"
     },
     "Calcium": {
         "symbol" : "Ca",
@@ -437,7 +456,8 @@
         "oxidation_states" : 2,
         "electronic_configuration" : "[Ar]4s²",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 5.580
+        "lattice_constant ang" : 5.580,
+        "color":"808090"
     },
     "Scandium": {
         "symbol" : "Sc",
@@ -459,7 +479,8 @@
         "oxidation_states" : 3,
         "electronic_configuration" : "[Ar]3d¹4s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 3.310
+        "lattice_constant ang" : 3.310,
+        "color":"FF1493"
     },
     "Titanium": {
         "symbol" : "Ti",
@@ -481,7 +502,8 @@
         "oxidation_states" : "4, 3",
         "electronic_configuration" : "[Ar]3d²4s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 2.950
+        "lattice_constant ang" : 2.950,
+        "color":"808090"
     },
     "Vanadium": {
         "symbol" : "V",
@@ -503,7 +525,8 @@
         "oxidation_states" : "5, 4, 3, 2, 0",
         "electronic_configuration" : "[Ar]3d³4s²",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 3.020
+        "lattice_constant ang" : 3.020,
+        "color":"FF1493"
     },
     "Chromium": {
         "symbol" : "Cr",
@@ -525,7 +548,8 @@
         "oxidation_states" : "6, 3, 2, 0",
         "electronic_configuration" : "[Ar]3d4s¹",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 2.880
+        "lattice_constant ang" : 2.880,
+        "color":"808090"
     },
     "Manganese": {
         "symbol" : "Mn",
@@ -547,7 +571,8 @@
         "oxidation_states" : "7, 6, 4, 3, 2, 0, -1",
         "electronic_configuration" : "[Ar]3d4s²",
         "lattice_structure" : "CUB",
-        "lattice_constant ang" : 8.890
+        "lattice_constant ang" : 8.890,
+        "color":"808090"
     },
     "Iron": {
         "symbol" : "Fe",
@@ -569,7 +594,8 @@
         "oxidation_states" : "6, 3, 2, 0, -2",
         "electronic_configuration" : "[Ar]3d4s²",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 2.870
+        "lattice_constant ang" : 2.870,
+        "color":"FFA500"
     },
     "Cobalt": {
         "symbol" : "Co",
@@ -591,7 +617,8 @@
         "oxidation_states" : "3, 2, 0, -1",
         "electronic_configuration" : "[Ar]3d4s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 2.510
+        "lattice_constant ang" : 2.510,
+        "color":"FF1493"
     },
     "Nickel": {
         "symbol" : "Ni",
@@ -613,7 +640,8 @@
         "oxidation_states" : "3, 2, 0",
         "electronic_configuration" : "[Ar]3d4s²",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 3.520
+        "lattice_constant ang" : 3.520,
+        "color":"A52A2A"
     },
     "Copper": {
         "symbol" : "Cu",
@@ -635,7 +663,8 @@
         "oxidation_states" : "2, 1",
         "electronic_configuration" : "[Ar]3d¹4s¹",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 3.610
+        "lattice_constant ang" : 3.610,
+        "color":"A52A2A"
     },
     "Zinc": {
         "symbol" : "Zn",
@@ -657,7 +686,8 @@
         "oxidation_states" : 2,
         "electronic_configuration" : "[Ar]3d¹4s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 2.660
+        "lattice_constant ang" : 2.660,
+        "color":"A52A2A"
     },
     "Gallium": {
         "symbol" : "Ga",
@@ -679,7 +709,8 @@
         "oxidation_states" : 3,
         "electronic_configuration" : "[Ar]3d¹4s²4p¹",
         "lattice_structure" : "ORC",
-        "lattice_constant ang" : 4.510
+        "lattice_constant ang" : 4.510,
+        "color":"FF1493"
     },
     "Germanium": {
         "symbol" : "Ge",
@@ -701,7 +732,8 @@
         "oxidation_states" : 4,
         "electronic_configuration" : "[Ar]3d¹4s²4p²",
         "lattice_structure" : "DIA",
-        "lattice_constant ang" : 5.660
+        "lattice_constant ang" : 5.660,
+        "color":"FF1493"
     },
     "Arsenic": {
         "symbol" : "As",
@@ -723,7 +755,8 @@
         "oxidation_states" : "5, 3, -2",
         "electronic_configuration" : "[Ar]3d¹4s²4p³",
         "lattice_structure" : "RHL",
-        "lattice_constant ang" : 4.130
+        "lattice_constant ang" : 4.130,
+        "color":"FF1493"
     },
     "Selenium": {
         "symbol" : "Se",
@@ -745,7 +778,8 @@
         "oxidation_states" : "6, 4, -2",
         "electronic_configuration" : "[Ar]3d¹4s²4p",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 4.360
+        "lattice_constant ang" : 4.360,
+        "color":"FF1493"
     },
     "Bromine": {
         "symbol" : "Br",
@@ -767,7 +801,8 @@
         "oxidation_states" : "7, 5, 3, 1, -1",
         "electronic_configuration" : "[Ar]3d¹4s²4p",
         "lattice_structure" : "ORC",
-        "lattice_constant ang" : 6.670
+        "lattice_constant ang" : 6.670,
+        "color":"A52A2A"
     },
     "Krypton": {
         "symbol" : "Kr",
@@ -789,7 +824,8 @@
         "oxidation_states" : 2,
         "electronic_configuration" : "[Ar]3d¹4s²4p",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 5.720
+        "lattice_constant ang" : 5.720,
+        "color":"FF1493"
     },
     "Rubidium": {
         "symbol" : "Rb",
@@ -811,7 +847,8 @@
         "oxidation_states" : 1,
         "electronic_configuration" : "[Kr]5s¹",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 5.590
+        "lattice_constant ang" : 5.590,
+        "color":"FF1493"
     },
     "Strontium": {
         "symbol" : "Sr",
@@ -833,7 +870,8 @@
         "oxidation_states" : 2,
         "electronic_configuration" : "[Kr]5s²",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 6.080
+        "lattice_constant ang" : 6.080,
+        "color":"FF1493"
     },
     "Yttrium": {
         "symbol" : "Y",
@@ -855,7 +893,8 @@
         "oxidation_states" : 3,
         "electronic_configuration" : "[Kr]4d¹5s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 3.650
+        "lattice_constant ang" : 3.650,
+        "color":"FF1493"
     },
     "Zirconium": {
         "symbol" : "Zr",
@@ -877,7 +916,8 @@
         "oxidation_states" : 4,
         "electronic_configuration" : "[Kr]4d²5s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 3.230
+        "lattice_constant ang" : 3.230,
+        "color":"FF1493"
     },
     "Niobium": {
         "symbol" : "Nb",
@@ -899,7 +939,8 @@
         "oxidation_states" : "5, 3",
         "electronic_configuration" : "[Kr]4d5s¹",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 3.300
+        "lattice_constant ang" : 3.300,
+        "color":"FF1493"
     },
     "Molybdenum": {
         "symbol" : "Mo",
@@ -921,7 +962,8 @@
         "oxidation_states" : "6, 5, 4, 3, 2, 0",
         "electronic_configuration" : "[Kr]4d5s¹",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 3.150
+        "lattice_constant ang" : 3.150,
+        "color":"FF1493"
     },
     "Technetium": {
         "symbol" : "Tc",
@@ -943,7 +985,8 @@
         "oxidation_states" : 7,
         "electronic_configuration" : "[Kr]4d5s¹",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 2.740
+        "lattice_constant ang" : 2.740,
+        "color":"FF1493"
     },
     "Ruthenium": {
         "symbol" : "Ru",
@@ -965,7 +1008,8 @@
         "oxidation_states" : "8, 6, 4, 3, 2, 0, -2",
         "electronic_configuration" : "[Kr]4d5s¹",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 2.700
+        "lattice_constant ang" : 2.700,
+        "color":"FF1493"
     },
     "Rhodium": {
         "symbol" : "Rh",
@@ -987,7 +1031,8 @@
         "oxidation_states" : "5, 4, 3, 2, 1, 0",
         "electronic_configuration" : "[Kr]4d5s¹",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 3.800
+        "lattice_constant ang" : 3.800,
+        "color":"FF1493"
     },
     "Palladium": {
         "symbol" : "Pd",
@@ -1009,7 +1054,8 @@
         "oxidation_states" : "4, 2, 0",
         "electronic_configuration" : "[Kr]4d5s",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 3.890
+        "lattice_constant ang" : 3.890,
+        "color":"FF1493"
     },
     "Silver": {
         "symbol" : "Ag",
@@ -1031,7 +1077,8 @@
         "oxidation_states" : "2, 1",
         "electronic_configuration" : "[Kr]4d5s¹",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 4.090
+        "lattice_constant ang" : 4.090,
+        "color":"808090"
     },
     "Cadmium": {
         "symbol" : "Cd",
@@ -1053,7 +1100,8 @@
         "oxidation_states" : 2,
         "electronic_configuration" : "[Kr]4d5s²",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 2.980
+        "lattice_constant ang" : 2.980,
+        "color":"FF1493"
     },
     "Indium": {
         "symbol" : "In",
@@ -1075,7 +1123,8 @@
         "oxidation_states" : 3,
         "electronic_configuration" : "[Kr]4d5s²5p¹",
         "lattice_structure" : "TET",
-        "lattice_constant ang" : 4.590
+        "lattice_constant ang" : 4.590,
+        "color":"FF1493"
     },
     "Tin": {
         "symbol" : "Sn",
@@ -1097,7 +1146,8 @@
         "oxidation_states" : "4, 2",
         "electronic_configuration" : "[Kr]4d5s²5p²",
         "lattice_structure" : "TET",
-        "lattice_constant ang" : 5.820
+        "lattice_constant ang" : 5.820,
+        "color":"FF1493"
     },
     "Antimony": {
         "symbol" : "Sb",
@@ -1119,7 +1169,8 @@
         "oxidation_states" : "5, 3, -2",
         "electronic_configuration" : "[Kr]4d5s²5p³",
         "lattice_structure" : "RHL",
-        "lattice_constant ang" : 4.510
+        "lattice_constant ang" : 4.510,
+        "color":"FF1493"
     },
     "Tellurium": {
         "symbol" : "Te",
@@ -1141,7 +1192,8 @@
         "oxidation_states" : "6, 4, 2",
         "electronic_configuration" : "[Kr]4d5s²5p",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 4.450
+        "lattice_constant ang" : 4.450,
+        "color":"FF1493"
     },
     "Iodine": {
         "symbol" : "I",
@@ -1163,7 +1215,8 @@
         "oxidation_states" : "7, 5, 1, -1",
         "electronic_configuration" : "[Kr]4d5s²5p",
         "lattice_structure" : "ORC",
-        "lattice_constant ang" : 7.720
+        "lattice_constant ang" : 7.720,
+        "color":"8F8FFF"
     },
     "Xenon": {
         "symbol" : "Xe",
@@ -1185,7 +1238,8 @@
         "oxidation_states" : 7,
         "electronic_configuration" : "[Kr]4d5s²5p",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 6.200
+        "lattice_constant ang" : 6.200,
+        "color":"FF1493"
     },
     "Cesium": {
         "symbol" : "Cs",
@@ -1207,7 +1261,8 @@
         "oxidation_states" : 1,
         "electronic_configuration" : "[Xe]6s¹",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 6.050
+        "lattice_constant ang" : 6.050,
+        "color":"FF1493"
     },
     "Barium": {
         "symbol" : "Ba",
@@ -1229,7 +1284,8 @@
         "oxidation_states" : 2,
         "electronic_configuration" : "[Xe]6s²",
         "lattice_structure" : "BCC",
-        "lattice_constant ang" : 5.020
+        "lattice_constant ang" : 5.020,
+        "color":"FFA500"
     },
     "Lanthanum": {
         "symbol" : "La",
@@ -1735,7 +1791,8 @@
         "oxidation_states" : "3, 1",
         "electronic_configuration" : "[Xe]4f¹5d¹6s²",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 4.080
+        "lattice_constant ang" : 4.080,
+        "color":"C8A518"
     },
     "Mercury": {
         "symbol" : "Hg",
@@ -1757,7 +1814,8 @@
         "oxidation_states" : "2, 1",
         "electronic_configuration" : "[Xe]4f¹5d¹6s²",
         "lattice_structure" : "RHL",
-        "lattice_constant ang" : 2.990
+        "lattice_constant ang" : 2.990,
+        "color":"FF1493"
     },
     "Thallium": {
         "symbol" : "Tl",
@@ -1779,7 +1837,8 @@
         "oxidation_states" : "3, 1",
         "electronic_configuration" : "[Xe]4f¹5d¹6s²6p¹",
         "lattice_structure" : "HEX",
-        "lattice_constant ang" : 3.460
+        "lattice_constant ang" : 3.460,
+        "color":"FF1493"
     },
     "Lead": {
         "symbol" : "Pb",
@@ -1801,7 +1860,8 @@
         "oxidation_states" : "4, 2",
         "electronic_configuration" : "[Xe]4f¹5d¹6s²6p²",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : 4.950
+        "lattice_constant ang" : 4.950,
+        "color":"FF1493"
     },
     "Bismuth": {
         "symbol" : "Bi",
@@ -1823,7 +1883,8 @@
         "oxidation_states" : "5, 3",
         "electronic_configuration" : "[Xe]4f¹5d¹6s²6p³",
         "lattice_structure" : "RHL",
-        "lattice_constant ang" : 4.750
+        "lattice_constant ang" : 4.750,
+        "color":"FF1493"
     },
     "Polonium": {
         "symbol" : "Po",
@@ -1845,7 +1906,8 @@
         "oxidation_states" : "6, 4, 2",
         "electronic_configuration" : "[Xe]4f¹5d¹6s²6p",
         "lattice_structure" : "SC",
-        "lattice_constant ang" : 3.350
+        "lattice_constant ang" : 3.350,
+        "color":"FF1493"
     },
     "Astatine": {
         "symbol" : "At",
@@ -1867,7 +1929,8 @@
         "oxidation_states" : "7, 5, 3, 1, -1",
         "electronic_configuration" : "[Xe]4f¹5d¹6s²6p",
         "lattice_structure" : "n/a",
-        "lattice_constant ang" : "n/a"
+        "lattice_constant ang" : "n/a",
+        "color":"FF1493"
     },
     "Radon": {
         "symbol" : "Rn",
@@ -1889,7 +1952,8 @@
         "oxidation_states" : "-",
         "electronic_configuration" : "[Xe]4f¹5d¹6s²6p",
         "lattice_structure" : "FCC",
-        "lattice_constant ang" : "n/a"
+        "lattice_constant ang" : "n/a",
+        "color":"FF1493"
     },
     "Francium": {
         "symbol" : "Fr",

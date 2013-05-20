@@ -31,14 +31,14 @@ export class ElementData
         public symbol:string;
         public number:number;
         public radius:number;
-        public color:string;
+        public color:number;
 
         constructor(json) {
             this.name = json.name;
             this.symbol = json.symbol;
             this.number = json.atomic_number;
             this.radius = json["atomic_radius pm"];
-            this.color = "FFFF00";     // http://jmol.sourceforge.net/jscolors/#Jmol colors
+            this.color = (typeof json.color !== "string") ? 0xCCCCCC : parseInt(json.color, 16);     // http://jmol.sourceforge.net/jscolors/#Jmol colors
         }
     }
 

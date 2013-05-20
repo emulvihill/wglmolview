@@ -30,7 +30,7 @@ export class Atom extends molview.model.RenderableObject
 {
 	radius:number;
 
-    color:string;
+    color:number;
 
     name:string;
 
@@ -141,7 +141,7 @@ export class Atom extends molview.model.RenderableObject
                 this.color = AminoAcidData.getData(this.resName).color;
                 if (!color)
 				{
-					this.color = "CCCCCC";  // fallback
+					this.color = 0xCCCCCC;  // fallback
 				}
 		} 
 	}

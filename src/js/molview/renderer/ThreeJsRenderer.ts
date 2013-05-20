@@ -89,6 +89,7 @@ module molview.renderer {
 
 
         addRenderableObject(modelObject:molview.model.RenderableObject):void {
+
             var viewObject:THREE.Object3D;
 
             if (modelObject instanceof molview.model.Atom) {
@@ -107,6 +108,7 @@ module molview.renderer {
 
 
         select(modelObject:molview.model.RenderableObject):void {
+
             var viewObject:THREE.Mesh = modelObject['viewObject'];
 
             if (!viewObject) throw new Error("cannot find view object for " + modelObject);
@@ -129,6 +131,7 @@ module molview.renderer {
 
 
         deselect(modelObject:Object):void {
+
             for (var i:number = 0; i < this.selections.length; i++) {
                 if (this.selections[i]["modelObject"] === modelObject) {
                     var sels:THREE.Object3D[] = this.selections.splice(i,1);
@@ -139,6 +142,7 @@ module molview.renderer {
 
 
         deselectAll():void {
+
             for (var i:number = 0; i < this.selections.length; i++) {
                 this.scene.remove(this.selections[i]);
             }
@@ -146,7 +150,27 @@ module molview.renderer {
         }
 
 
+        setRenderMode(mode:string):void {
+
+            switch (mode)
+            {
+                case Constants.RENDERMODE_BALL_AND_STICK :
+                    // stuff
+                    break;
+                case Constants.RENDERMODE_SPACE_FILL :
+                    // stuff
+                    break;
+                case Constants.RENDERMODE_STICKS :
+                    // stuff
+                    break;
+            }
+
+            render();
+        }
+
+
         private animate():void {
+
             requestAnimationFrame( ()=> {this.animate();}, <HTMLCanvasElement>this.renderer.domElement);
             this.controls.update();
 
@@ -165,8 +189,8 @@ module molview.renderer {
         }
 
 
-        private renderAtom(atom:molview.model.Atom):THREE.Object3D
-        {
+        private renderAtom(atom:molview.model.Atom):THREE.Object3D {
+
             var quality:string = Configuration.getConfig().renderQuality;
 
             // set up the sphere vars
@@ -175,19 +199,10 @@ module molview.renderer {
                 rings = 16
 
             // create the sphere's material
-            var sphereMaterial = new THREE.MeshLambertMaterial({ color: parseInt(atom.color, 16) });
+            var sphereMaterial = new THREE.MeshLambertMaterial({ color: atom.color });
             // create a new mesh with sphere geometry
             var geometry:THREE.SphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
             var sphere:THREE.Mesh = new THREE.Mesh(geometry, sphereMaterial);
-
-/*            // set the geometry to dynamic so that it allow updates
-            sphere.geometry.dynamic = true;
-
-            // changes to the vertices
-            sphere.geometry.verticesNeedUpdate = true;
-
-            // changes to the normals
-            sphere.geometry.normalsNeedUpdate = true;*/
 
             sphere.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
@@ -199,13 +214,14 @@ module molview.renderer {
 
 
         private renderBond(bond:molview.model.Bond):THREE.Object3D {
+
             var quality:string = Configuration.getConfig().renderQuality;
             var mode:string = Configuration.getConfig().renderMode;
 
             var tubes:THREE.Mesh[] = [];
 
             var m:number[] = this.getBondMetrics(bond, mode);
-            var bondMaterial:THREE.MeshLambertMaterial = new THREE.MeshLambertMaterial({ color: 0x0000ff });
+            var bondMaterial:THREE.MeshLambertMaterial = new THREE.MeshLambertMaterial({ color: 0x0000FF });
             //var bondObj:THREE.Mesh = new THREE.Mesh();
             var bondLength = bond.length; // 10 * m[2];
             switch (bond.type)
@@ -250,8 +266,9 @@ m            }
             return <THREE.Object3D>bondObj;
         }
 
-        private renderAtomSelection(atom:molview.model.Atom):THREE.Mesh
-        {
+
+        private renderAtomSelection(atom:molview.model.Atom):THREE.Mesh {
+
             var quality:string = Configuration.getConfig().renderQuality;
 
             // set up the sphere vars
@@ -260,19 +277,10 @@ m            }
                 rings = 16
 
             // create the sphere's material
-            var sphereMaterial:THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, opacity:0.5, transparent:true });
+            var sphereMaterial:THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000, opacity:0.5, transparent:true });
             // create a new mesh with sphere geometry
             var geometry:THREE.SphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
             var selObj = new THREE.Mesh(geometry, sphereMaterial);
-
-/*            // set the geometry to dynamic so that it allow updates
-            sphere.geometry.dynamic = true;
-
-            // changes to the vertices
-            sphere.geometry.verticesNeedUpdate = true;
-
-            // changes to the normals
-            sphere.geometry.normalsNeedUpdate = true;*/
 
             selObj.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
@@ -286,11 +294,12 @@ m            }
 
 
         private renderBondSelection(bond:molview.model.Bond):THREE.Object3D {
+
             var quality:string = Configuration.getConfig().renderQuality;
             var mode:string = Configuration.getConfig().renderMode;
 
             var m:number[] = this.getBondMetrics(bond, mode);
-            var selMaterial:THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, opacity:0.5, transparent:true });
+            var selMaterial:THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000, opacity:0.5, transparent:true });
             var selObj:THREE.Mesh = this.makeCylinder(10, bondLength, selMaterial);
             var bondLength = bond.length;
 
@@ -305,6 +314,7 @@ m            }
             return <THREE.Object3D>selObj;
         }
 
+
         private makeCylinder(width:number, height:number, material:any) {
 
             var g:THREE.CylinderGeometry = new THREE.CylinderGeometry(width, width, height, 24, 1, true);
@@ -317,8 +327,8 @@ m            }
          * Measure the "empty space" at the ends of bonds, to make it look right with drawing between atoms
          * [length between atom0 & start of bond, length between end of bond & atom1, bond length as drawn]
          */
-        private getBondMetrics(bond:molview.model.Bond, mode:string):number[]
-        {
+        private getBondMetrics(bond:molview.model.Bond, mode:string):number[] {
+
             if (mode === Constants.RENDERMODE_STICKS)
             {
                 return [0, bond.length, bond.length];
@@ -333,6 +343,7 @@ m            }
 
 
         private onWindowResize():void {
+
             this.camera.aspect = window.innerWidth / window.innerHeight;
             this.camera.updateProjectionMatrix();
             this.renderer.setSize( window.innerWidth, window.innerHeight );
@@ -362,6 +373,7 @@ m            }
         }
 
         private radiusConversion(radius:number):number {
+
             return 5 * Math.log(8 * radius);
         }
 
