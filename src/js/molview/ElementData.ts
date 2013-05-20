@@ -14,10 +14,11 @@ export class ElementData
             $.ajax({url:"/js/molview/elements.json", async:false,
                 success:(data)=>{
                     ElementData.atomData = {};
-                    $.each(data, (item)=> {
-                        data[item].name = item;
-                        var obj:DataObject = new DataObject(data[item]);
-                        atomData[data[item].symbol.toUpperCase()] = obj;
+                    var json:Object = JSON.parse(data);
+                    $.each(json, (item)=> {
+                        json[item].name = item;
+                        var obj:DataObject = new DataObject(json[item]);
+                        atomData[json[item].symbol.toUpperCase()] = obj;
                     })
                 }});
         }
