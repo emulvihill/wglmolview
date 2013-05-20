@@ -18,6 +18,7 @@ module molview.renderer {
         private projector:THREE.Projector;
         private light:THREE.Light;
         private controls;
+        private domElement:JQuery;
         private objects:THREE.Object3D[] = [];
         private selections:THREE.Object3D[] = [];
 
@@ -34,7 +35,7 @@ module molview.renderer {
 
             // get the DOM element to attach to
             // - assume we've got jQuery to hand
-            var $container = $('#container');
+            this.domElement = $('#container');
 
             // create a WebGL renderer, camera
             // and a scene
@@ -47,8 +48,6 @@ module molview.renderer {
                     FAR);
 
             this.scene = new THREE.Scene();
-
-            this.projector = new THREE.Projector();
 
             // add the camera to the scene
             this.scene.add(this.camera);
@@ -71,10 +70,12 @@ module molview.renderer {
             // add to the scene
             this.camera.add(this.light);
 
+            // create a projector
+            this.projector = new THREE.Projector();
 
             // attach the render-supplied DOM element
-            $container.append(this.renderer.domElement);
-            $container.click(null, (event)=>{this.onDocumentMouseDown(event)});
+            this.domElement.append(this.renderer.domElement);
+            this.domElement.click(null, (event)=>{this.onDocumentMouseDown(event)});
 
             this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
             this.controls.rotateSpeed = 0.5;
@@ -110,7 +111,7 @@ module molview.renderer {
 
             if (!viewObject) throw new Error("cannot find view object for " + modelObject);
 
-            for (var i = 0; i < this.selections.length; i++) {
+            for (var i:number = 0; i < this.selections.length; i++) {
                 if (this.selections[i]["modelObject"] === modelObject) {
                     // we've already selected.. unselect
                     this.deselect(modelObject);
@@ -122,14 +123,13 @@ module molview.renderer {
                 this.selections.push(this.renderAtomSelection(<molview.model.Atom>modelObject));
             }
             else if (modelObject instanceof molview.model.Bond) {
-
                 this.selections.push(this.renderBondSelection(<molview.model.Bond>modelObject));
             }
         }
 
 
         deselect(modelObject:Object):void {
-            for (var i = 0; i < this.selections.length; i++) {
+            for (var i:number = 0; i < this.selections.length; i++) {
                 if (this.selections[i]["modelObject"] === modelObject) {
                     var sels:THREE.Object3D[] = this.selections.splice(i,1);
                     this.scene.remove(sels[0]);
@@ -139,7 +139,7 @@ module molview.renderer {
 
 
         deselectAll():void {
-            for (var i = 0; i < this.selections.length; i++) {
+            for (var i:number = 0; i < this.selections.length; i++) {
                 this.scene.remove(this.selections[i]);
             }
             this.selections = [];
@@ -348,29 +348,21 @@ m            }
 
             console.info("event.clientX " + event.clientX);
             console.info("event.clientY " + event.clientY);
-            console.info("this.renderer.domElement.clientTop " + this.renderer.domElement.clientTop);
-            console.info("this.renderer.domElement.clientLeft " + this.renderer.domElement.clientLeft);
-            console.info("this.renderer.domElement.clientWidth " + this.renderer.domElement.clientWidth);
-            console.info("this.renderer.domElement.height " + this.renderer.domElement.height);
 
-            var vector:THREE.Vector3 = new THREE.Vector3( ( (event.clientX-this.renderer.domElement.clientLeft) / this.renderer.domElement.clientWidth ) * 2 - 1,
-                - ( (event.clientY-this.renderer.domElement.clientTop) / this.renderer.domElement.clientHeight) * 2 + 1, 0.5 );
-            this.projector.unprojectVector(vector, this.camera);
-
-            var raycaster:THREE.Raycaster = new THREE.Raycaster( this.camera.position, vector.sub( this.camera.position ).normalize() );
-
-            var intersects:THREE.Intersection[] = raycaster.intersectObjects(this.objects);
+            var vector:THREE.Vector3 = new THREE.Vector3( ( (event.clientX-this.renderer.domElement.offsetLeft) / this.renderer.domElement.clientWidth ) * 2 - 1,
+                - ( (event.clientY-this.renderer.domElement.offsetTop) / this.renderer.domElement.clientHeight) * 2 + 1, 0.5 );
+            var ray = this.projector.pickingRay(vector, this.camera);
+            var intersects:THREE.Intersection[] = ray.intersectObjects( this.objects );
 
             if ( intersects.length > 0 ) {
                 var viewObject:THREE.Mesh = <THREE.Mesh>intersects[0].object;
                 var modelObject:molview.model.RenderableObject = viewObject['modelObject'];
                 this.select(modelObject);
             }
-
         }
 
         private radiusConversion(radius:number):number {
-            return 3 * Math.log(10 * radius);
+            return 5 * Math.log(8 * radius);
         }
 
     }
