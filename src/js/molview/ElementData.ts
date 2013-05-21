@@ -11,10 +11,10 @@ export class ElementData
         if (!e) {return null;}
 
         if (ElementData.atomData === null) {
-            $.ajax({url:"/js/molview/elements.json", async:false,
-                success:(data)=>{
+            $.ajax({url:"/js/molview/elements.json", async:false, dataType:"json",
+                    success:(data)=>{
                     ElementData.atomData = {};
-                    var json:Object = JSON.parse(data);
+                    var json:Object = (typeof data === "string") ? JSON.parse(data) : data;
                     $.each(json, (item)=> {
                         json[item].name = item;
                         var obj:DataObject = new DataObject(json[item]);

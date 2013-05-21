@@ -164,7 +164,6 @@
       </sourceFilesUrls>
     </properties>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/src/js/molview/renderer/ThreeRenderer.js" />
       <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/ace/tests/ace-range-tests.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/Utility.js" />
       <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/ace/tests/ace-editor1-tests.js" />
