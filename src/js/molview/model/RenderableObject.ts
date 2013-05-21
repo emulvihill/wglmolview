@@ -12,6 +12,7 @@ export class RenderableObject
 	id:string;
 	private _loc:THREE.Vector3[];
 	private _mframe:number;
+    viewObject:Object;
 	
 	constructor()
 	{

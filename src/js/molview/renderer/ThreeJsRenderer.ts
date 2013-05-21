@@ -8,6 +8,9 @@ module molview.renderer {
     /// <reference path="../model/Atom.ts" />
     /// <reference path="../model/Bond.ts" />
 
+    class ViewObject extends THREE.Mesh {
+        modelObject:molview.model.RenderableObject;
+    }
     export class ThreeJsRenderer implements IMolRenderer {
 
         private static SCALE:number = 100;
@@ -19,8 +22,8 @@ module molview.renderer {
         private light:THREE.Light;
         private controls;
         private domElement:JQuery;
-        private objects:THREE.Object3D[] = [];
-        private selections:THREE.Object3D[] = [];
+        private objects:ViewObject[] = [];
+        private selections:ViewObject[] = [];
 
         init():void {
             // set the scene size
@@ -90,7 +93,7 @@ module molview.renderer {
 
         addRenderableObject(modelObject:molview.model.RenderableObject):void {
 
-            var viewObject:THREE.Object3D;
+            var viewObject:ViewObject;
 
             if (modelObject instanceof molview.model.Atom) {
                 viewObject = this.renderAtom(<molview.model.Atom>modelObject);
@@ -99,8 +102,8 @@ module molview.renderer {
                 viewObject = this.renderBond(<molview.model.Bond>modelObject);
             }
 
-            modelObject['viewObject'] = viewObject;
-            viewObject['modelObject'] = modelObject;
+            modelObject.viewObject = viewObject;
+            viewObject.modelObject = modelObject;
 
 
             this.objects.push(viewObject);
@@ -109,12 +112,12 @@ module molview.renderer {
 
         select(modelObject:molview.model.RenderableObject):void {
 
-            var viewObject:THREE.Mesh = modelObject['viewObject'];
+            var viewObject:ViewObject = <ViewObject>modelObject.viewObject;
 
             if (!viewObject) throw new Error("cannot find view object for " + modelObject);
 
             for (var i:number = 0; i < this.selections.length; i++) {
-                if (this.selections[i]["modelObject"] === modelObject) {
+                if (this.selections[i].modelObject === modelObject) {
                     // we've already selected.. unselect
                     this.deselect(modelObject);
                     return;
@@ -130,11 +133,11 @@ module molview.renderer {
         }
 
 
-        deselect(modelObject:Object):void {
+        deselect(modelObject:molview.model.RenderableObject):void {
 
             for (var i:number = 0; i < this.selections.length; i++) {
-                if (this.selections[i]["modelObject"] === modelObject) {
-                    var sels:THREE.Object3D[] = this.selections.splice(i,1);
+                if (this.selections[i].modelObject === modelObject) {
+                    var sels:ViewObject[] = this.selections.splice(i,1);
                     this.scene.remove(sels[0]);
                 }
             }
@@ -189,7 +192,7 @@ module molview.renderer {
         }
 
 
-        private renderAtom(atom:molview.model.Atom):THREE.Object3D {
+        private renderAtom(atom:molview.model.Atom):ViewObject {
 
             var quality:string = Configuration.getConfig().renderQuality;
 
@@ -199,30 +202,29 @@ module molview.renderer {
                 rings = 16
 
             // create the sphere's material
-            var sphereMaterial = new THREE.MeshLambertMaterial({ color: atom.color });
+            var sphereMaterial:THREE.MeshLambertMaterial = new THREE.MeshLambertMaterial({ color: atom.color });
             // create a new mesh with sphere geometry
             var geometry:THREE.SphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
-            var sphere:THREE.Mesh = new THREE.Mesh(geometry, sphereMaterial);
+            var sphere:ViewObject = new ViewObject(geometry, sphereMaterial);
 
             sphere.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
             // add the sphere to the scene
             this.scene.add(sphere);
 
-            return <THREE.Object3D>sphere;
+            return <ViewObject>sphere;
         }
 
 
-        private renderBond(bond:molview.model.Bond):THREE.Object3D {
+        private renderBond(bond:molview.model.Bond):ViewObject {
 
             var quality:string = Configuration.getConfig().renderQuality;
             var mode:string = Configuration.getConfig().renderMode;
 
-            var tubes:THREE.Mesh[] = [];
+            var tubes:ViewObject[] = [];
 
             var m:number[] = this.getBondMetrics(bond, mode);
             var bondMaterial:THREE.MeshLambertMaterial = new THREE.MeshLambertMaterial({ color: 0x0000FF });
-            //var bondObj:THREE.Mesh = new THREE.Mesh();
             var bondLength = bond.length; // 10 * m[2];
             switch (bond.type)
             {
@@ -249,7 +251,7 @@ module molview.renderer {
                     break;
             }
 
-            var bondObj:THREE.Mesh = tubes[0];
+            var bondObj:ViewObject = tubes[0];
             for (var i:number = 1; i < tubes.length; i++) {
 
                 THREE.GeometryUtils.merge(tubes[0].geometry, tubes[i].geometry, 0);
@@ -263,11 +265,11 @@ m            }
 
             this.scene.add(bondObj);
 
-            return <THREE.Object3D>bondObj;
+            return bondObj;
         }
 
 
-        private renderAtomSelection(atom:molview.model.Atom):THREE.Mesh {
+        private renderAtomSelection(atom:molview.model.Atom):ViewObject {
 
             var quality:string = Configuration.getConfig().renderQuality;
 
@@ -280,7 +282,7 @@ m            }
             var sphereMaterial:THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000, opacity:0.5, transparent:true });
             // create a new mesh with sphere geometry
             var geometry:THREE.SphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
-            var selObj = new THREE.Mesh(geometry, sphereMaterial);
+            var selObj = new ViewObject(geometry, sphereMaterial);
 
             selObj.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
@@ -293,14 +295,14 @@ m            }
         }
 
 
-        private renderBondSelection(bond:molview.model.Bond):THREE.Object3D {
+        private renderBondSelection(bond:molview.model.Bond):ViewObject {
 
             var quality:string = Configuration.getConfig().renderQuality;
             var mode:string = Configuration.getConfig().renderMode;
 
             var m:number[] = this.getBondMetrics(bond, mode);
             var selMaterial:THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000, opacity:0.5, transparent:true });
-            var selObj:THREE.Mesh = this.makeCylinder(10, bondLength, selMaterial);
+            var selObj:ViewObject = this.makeCylinder(10, bondLength, selMaterial);
             var bondLength = bond.length;
 
             var v0:THREE.Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
@@ -308,10 +310,10 @@ m            }
             selObj.position = v0.add(v1).divideScalar(2);
             selObj.lookAt(v1);
 
-            selObj["modelObject"] = bond;
+            selObj.modelObject = bond;
             this.scene.add(selObj);
 
-            return <THREE.Object3D>selObj;
+            return selObj;
         }
 
 
@@ -319,7 +321,7 @@ m            }
 
             var g:THREE.CylinderGeometry = new THREE.CylinderGeometry(width, width, height, 24, 1, true);
             g.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
-            var m:THREE.Mesh = new THREE.Mesh(g, material);
+            var m:ViewObject = new ViewObject(g, material);
             return m;
         }
 
@@ -366,8 +368,8 @@ m            }
             var intersects:THREE.Intersection[] = ray.intersectObjects( this.objects );
 
             if ( intersects.length > 0 ) {
-                var viewObject:THREE.Mesh = <THREE.Mesh>intersects[0].object;
-                var modelObject:molview.model.RenderableObject = viewObject['modelObject'];
+                var viewObject:ViewObject = <ViewObject>intersects[0].object;
+                var modelObject:molview.model.RenderableObject = viewObject.modelObject;
                 this.select(modelObject);
             }
         }
