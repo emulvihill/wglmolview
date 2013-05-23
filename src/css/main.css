@@ -13,3 +13,50 @@ body {
     width: 800px;
     height: 600px;
 }
+
+#controlsWrapper {
+    width: 400px;
+    position: fixed;
+    bottom: 37px;
+    left: 50%;
+}
+
+#renderControls {
+    display: inline-block;
+    position: absolute;
+    left: -150px;
+}
+
+#selectionControls {
+    display: inline-block;
+    position: absolute;
+    left: 30px;
+}
+
+.controlButton {
+    position: absolute;
+    display: inline-block;
+}
+
+#renderStick {
+    left: 0px;
+}
+#renderBall {
+    left: 42px;
+}
+#renderBlob {
+    left: 82px;
+}
+
+#selectionInfo {
+    left: 0px;
+}
+#selectionAngle {
+    left: 42px;
+}
+#selectionDistance {
+    left: 82px;
+}
+#selectionTorsion {
+    left: 122px;
+}
