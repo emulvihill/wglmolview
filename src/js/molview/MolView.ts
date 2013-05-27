@@ -7,6 +7,7 @@
     /// <reference path="Messages.ts" />
     /// <reference path="Utility.ts" />
     /// <reference path="model/Atom.ts" />
+    /// <reference path="model/Bond.ts" />
     /// <reference path="model/Molecule.ts" />
     /// <reference path="model/RenderableObject.ts" />
     /// <reference path="renderer/MockRenderer.ts" />
@@ -20,15 +21,23 @@ export class MolView
 
 	private renderer:renderer.IMolRenderer;
 
+    private domElement:JQuery;
+
+    private infoElement:JQuery;
+
 	private display:HTMLTextAreaElement;
 
 	private renderToolbar:HTMLDivElement;
 
 	private selectionToolbar:HTMLDivElement;
 
+    private config:Configuration;
+
     constructor(params?:Object)
 	{
         Configuration.newConfig(params);
+
+        this.config = Configuration.getConfig();
 
         // this is where selections are stored
         this.selections = [];
@@ -39,18 +48,18 @@ export class MolView
         this.drawDisplay();
 
         // load the molecule from the init settings
-        if (Configuration.getConfig().pdbUrl)
+        if (this.config.pdbUrl)
         {
-            this.loadPDB(Configuration.getConfig().pdbUrl);
-        } else if (Configuration.getConfig().pdbData) {
+            this.loadPDB(this.config.pdbUrl);
+        } else if (this.config.pdbData) {
             this.renderPDBData();
         }
 	}
 
 	private onMouseWheel(event:MouseEvent):void
 	{
-		var oldZoom:number = Configuration.getConfig().zoom;
-		Configuration.getConfig().zoom = oldZoom+event.wheelDelta/50.0;
+		var oldZoom:number = this.config.zoom;
+		this.config.zoom = oldZoom+event.wheelDelta/50.0;
         this.renderer.render();
 	}
 
@@ -108,24 +117,43 @@ export class MolView
           console.warn("empty 3D molecule name");
 	  }
         $.get(pdbUrl, (data:string) => {
-            Configuration.getConfig().pdbData = data;
+            this.config.pdbData = data;
             this.renderPDBData();
             });
+    }
+
+    setRenderMode(mode:string):void {
+        this.config.renderMode = mode;
+        this.clearSelections();
+        this.renderer.render();
+    }
+
+    setSelectionMode(mode:string):void {
+        this.config.selectionMode = mode;
+        this.clearSelections();
+        this.renderer.render();
     }
 
     private renderPDBData():void
     {
         this.molecule = new molview.model.Molecule();
         this.renderer = new molview.renderer.ThreeJsRenderer();
-        this.renderer.init();
+
+        // get the DOM element to attach to
+        // - assume we've got jQuery to hand
+        this.domElement = $('#' + this.config.domElement);
+        this.infoElement = $('#' + this.config.infoElement);
+        this.renderer.init(this.domElement);
+        this.domElement.click(null, (event)=>{this.handleSelect(event)});
+        this.domElement.click(null, (event)=>{this.updateInfoDisplay(event)});
 /*	    addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown, false, 0, false);
 	    addEventListener(MouseEvent.MOUSE_UP, handleMouseUp, false, 0, false);
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, false);
         this.renderer.addEventListener(SelectionEvent.SELECT, handleSelect, false, 0, false); */
 
-		this.molecule.parsePDB(Configuration.getConfig().pdbData);
+		this.molecule.parsePDB(this.config.pdbData);
 
-		if (Configuration.getConfig().autoCenter === true) {
+		if (this.config.autoCenter === true) {
             this.molecule.center();
         }
 
@@ -136,19 +164,20 @@ export class MolView
 		this.molecule.render(this.renderer);
 
 	    // load initial render mode
-        //this.renderer.setRenderMode(Configuration.getConfig().renderMode);
+        //this.renderer.setRenderMode(this.config.renderMode);
 
 		// draw the molecule on screen
         this.renderer.render();
 	}
 
 
-	private handleSelect(obj:model.RenderableObject):void
+	private handleSelect(event:MouseEvent):void
 	{
-		if (Configuration.getConfig().selectable === false) return;
+		if (this.config.selectable === false) return;
 
 	//	if (this.renderer.mouseDownTravel > Constants.SELECTION_MAX_MOUSETRAVEL) return;  // do nothing when moved
 
+        var obj:model.RenderableObject = this.renderer.getSelectedObject(event);
 		if (!(obj instanceof model.Atom)) return;
 
         var selAtom = <model.Atom>obj;
@@ -158,24 +187,28 @@ export class MolView
 		if (index > -1)
 		{
 			// already selected so deselect	if possible
+            var connectingBonds:model.Bond[];
 			if (index === 0)
 			{
-                //this.renderer.deselect(selAtom);
-		        var connectingBonds:Array;
+                this.renderer.deselect(selAtom);
 		        if (this.selections.length >= 2)
 		        {
 		            connectingBonds = this.molecule.getBonds(selAtom, this.selections[1]);
-	                if (connectingBonds && connectingBonds.length > 0) renderer.deselect(connectingBonds[0]);
+	                if (connectingBonds && connectingBonds.length > 0) {
+                        this.renderer.deselect(connectingBonds[0]);
+                    }
 	            }
                 this.selections.shift();
 	        }
 	        else if (index === this.selections.length-1)
 			{
-		        //this.renderer.deselect(selAtom);
+		        this.renderer.deselect(selAtom);
 		        if (this.selections.length >= 2)
 		        {
 		            connectingBonds = this.molecule.getBonds(selAtom, this.selections[this.selections.length-2]);
-	                if (connectingBonds && connectingBonds.length>0) renderer.deselect(connectingBonds[0]);
+	                if (connectingBonds && connectingBonds.length>0) {
+                        this.renderer.deselect(connectingBonds[0]);
+                    }
 		        }
                 this.selections.pop();
 	        }
@@ -183,39 +216,39 @@ export class MolView
 	    	return;
 		}
 
-		if (Configuration.getConfig().selectionMode === Constants.SELECTIONMODE_IDENTIFY && this.selections.length >= 1) this.clearSelections();
+		if (this.config.selectionMode === Constants.SELECTIONMODE_IDENTIFY && this.selections.length >= 1) this.clearSelections();
 
-        if ((Configuration.getConfig().selectionMode === Constants.SELECTIONMODE_DISTANCE && this.selections.length >= 2) ||
-	       (Configuration.getConfig().selectionMode === Constants.SELECTIONMODE_ROTATION && this.selections.length >= 3) ||
-	       (Configuration.getConfig().selectionMode === Constants.SELECTIONMODE_TORSION && this.selections.length >= 4))
+        if ((this.config.selectionMode === Constants.SELECTIONMODE_DISTANCE && this.selections.length >= 2) ||
+	       (this.config.selectionMode === Constants.SELECTIONMODE_ROTATION && this.selections.length >= 3) ||
+	       (this.config.selectionMode === Constants.SELECTIONMODE_TORSION && this.selections.length >= 4))
 	    {
 	    	// too many selected
 	   	    return;
 	    }
 
 		if (this.selections.length > 0 &&
-		   (Configuration.getConfig().selectionMode === Constants.SELECTIONMODE_ROTATION || Configuration.getConfig().selectionMode === Constants.SELECTIONMODE_TORSION))
+		   (this.config.selectionMode === Constants.SELECTIONMODE_ROTATION || this.config.selectionMode === Constants.SELECTIONMODE_TORSION))
 	    {
 			// check for neighborness before selecting
 	    	var neighbors:Array = this.molecule.getNeighbors(selAtom);
 
 	    	if (neighbors.indexOf(this.selections[0]) > -1)
 	    	{
-                //this.renderer.select(selAtom);
-                //this.renderer.select(this.molecule.getBonds(selAtom, this.selections[0])[0]);
+                this.renderer.select(selAtom);
+                this.renderer.select(this.molecule.getBonds(selAtom, this.selections[0])[0]);
                 this.selections.unshift(selAtom);
 	    	}
 	    	else if (neighbors.indexOf(this.selections[this.selections.length-1]) > -1)
 	    	{
-	            //this.renderer.select(selAtom);
-	            //this.renderer.select(this.molecule.getBonds(selAtom, this.selections[this.selections.length-1])[0]);
+	            this.renderer.select(selAtom);
+	            this.renderer.select(this.molecule.getBonds(selAtom, this.selections[this.selections.length-1])[0]);
                 this.selections.push(selAtom);
 	    	}
   	  	}
   	  	else
   	  	{
   	  		// no restrictions in other modes
-            //this.renderer.select(selAtom);
+            this.renderer.select(selAtom);
             this.selections.push(selAtom);
   	  	}
 
@@ -225,23 +258,14 @@ export class MolView
 
    private clearSelections():void
    {
-       //this.renderer.deselectAll();
-   	this.selections = [];
+       this.renderer.deselectAll();
+   	   this.selections = [];
    }
 
 
-	private handleMouseDown(event:MouseEvent):void
+	private updateInfoDisplay(event:MouseEvent):void
 	{
-        //this.renderer.mouseDownTravel = 0;
-        //this.renderer.animate(true);
-	}
-
-
-	private handleMouseUp(event:MouseEvent):void
-	{
-		//this.renderer.animate(false);
-
-		switch(Configuration.getConfig().selectionMode)
+		switch(this.config.selectionMode)
 		{
 			case Constants.SELECTIONMODE_IDENTIFY :
 				this.displayIdentify();
@@ -259,53 +283,6 @@ export class MolView
 	}
 
 
-	private handleRenderToolbarMouseDown(event:MouseEvent):void
-	{
-		if (event.clientX < this.renderToolbar.clientWidth*0.333)
-		{
-		    Configuration.getConfig().renderMode = Constants.RENDERMODE_STICKS;
-			//this.renderer.setRenderMode(Constants.RENDERMODE_STICKS);
-		}
-		else if (event.clientX < this.renderToolbar.clientWidth*0.666)
-		{
-		    Configuration.getConfig().renderMode = Constants.RENDERMODE_BALL_AND_STICK;
-			//this.renderer.setRenderMode(Constants.RENDERMODE_BALL_AND_STICK);
-		}
-		else
-		{
-		    Configuration.getConfig().renderMode = Constants.RENDERMODE_SPACE_FILL;
-			renderer.setRenderMode(Constants.RENDERMODE_SPACE_FILL);
-		}
-		this.clearSelections();
-	}
-
-
-	private handleSelectionToolbarMouseDown(event:MouseEvent):void
-	{
-		if (event.clientX < this.selectionToolbar.clientWidth * 0.25)
-		{
-			Configuration.getConfig().selectionMode = Constants.SELECTIONMODE_IDENTIFY;
-			this.updateDisplay(Messages.INSTRUCT_IDENTIFY);
-		}
-		else if (event.clientX < this.selectionToolbar.clientWidth * 0.5)
-		{
-			Configuration.getConfig().selectionMode = Constants.SELECTIONMODE_DISTANCE;
-			this.updateDisplay(Messages.INSTRUCT_DISTANCE);
-		}
-		else if (event.clientX < this.selectionToolbar.clientWidth * 0.75)
-		{
-			Configuration.getConfig().selectionMode = Constants.SELECTIONMODE_ROTATION;
-			this.updateDisplay(Messages.INSTRUCT_ROTATION);
-		}
-		else
-		{
-			Configuration.getConfig().selectionMode = Constants.SELECTIONMODE_TORSION;
-			this.updateDisplay(Messages.INSTRUCT_TORSION);
-		}
-		this.clearSelections();
-	}
-
-
 	private displayIdentify():void
 	{
         if (this.selections.length < 1)
@@ -314,7 +291,7 @@ export class MolView
 	        return;
 	    }
 	    var a:model.Atom = this.selections[0];
-		var text:string = a.name + " (" + a.element + ")"
+		var text:string = a.name + " (" + a.element + ")";
 
 		this.updateDisplay(text);
 	}
@@ -385,18 +362,13 @@ export class MolView
 	
 	private updateDisplay(str:string):void
 	{
-		display.text = str;
-		var format:HTMLTextAreaElement = new HTMLTextAreaElement();
-		format.font = "Arial";
-		format.size = 11;
-		format.bold = true;
-		display.setTextFormat(format);
+        this.infoElement.text(str);
 	}	
 
 
 	private clearDisplays():void
 	{
-		display.text = "";
+        //this.infoElement.text("");
 	}
 	
 }

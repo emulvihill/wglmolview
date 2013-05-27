@@ -46,15 +46,15 @@ export class Bond extends molview.model.RenderableObject
         this.loc.multiplyScalar(0.5);
         this.length = 100 * this.atoms[0].loc.distanceTo(this.atoms[1].loc);
 	}
-	
-	
-	render(renderer:molview.renderer.IMolRenderer):void
+
+
+    public render(renderer:molview.renderer.IMolRenderer):void
 	{
 		renderer.addRenderableObject(this);
 	}
-	
-	
-	setColorMode(mode:string):void
+
+
+    public setColorMode(mode:string):void
 	{  
 		if (!this.type) throw new Error("bond type is undefined");
 		

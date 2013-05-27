@@ -318,7 +318,7 @@ export class Molecule extends molview.model.RenderableObject
 		{
 		    for (var i:number = 0; i < atom1.bonds.length; i++)
 		    {		    	
-		      var b1:Bond = Bond(atom1.bonds[i]);
+		      var b1:Bond = atom1.bonds[i];
 		      if (b1.atoms[0] == atom2 || b1.atoms[1] == atom2)
 		      {
 		         res = [b1];
@@ -366,13 +366,13 @@ export class Molecule extends molview.model.RenderableObject
 		{
 			for (var i:number = 0; i < (<Atom>obj).bonds.length; i++)
 			{
-				if (<Bond>((<Atom>obj).bonds[i]).atoms[0] == obj)
+				if ((<Atom>obj).bonds[i].atoms[0] == obj)
 				{
-					res.push(<Bond>((<Atom>obj).bonds[i]).atoms[1]);
+					res.push((<Atom>obj).bonds[i].atoms[1]);
 				}
 				else
 				{
-					res.push(<Bond>((<Atom>obj).bonds[i]).atoms[0]);
+					res.push((<Atom>obj).bonds[i].atoms[0]);
 				}
 			}
 		}

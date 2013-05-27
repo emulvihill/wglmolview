@@ -15,7 +15,7 @@
 </head>
 
 
-<body onload="init();">
+<body onload="init();" class="nonselectable">
 
 <script src="js/vendor/three.min.js"></script>
 <script src="js/vendor/TrackballControls.js"></script>
@@ -42,12 +42,15 @@
 <div id="loader"></div>
 
 <header id="header">
-    <h1><span>MolView Demo</span></h1>
+    <h1><span class="nonselectable">MolView Demo</span></h1>
 </header>
 
 <div id="container" class="moleculeContainer"/>
 
-<div id=controlsWrapper>
+
+<div id="infoText" class="nonselectable"><!-- placeholder --></div>
+
+<div id="controlsWrapper">
 
     <div id="renderControls">
         <div id="renderStick" class="controlButton"><img src="img/renderStick.png"/></div>
@@ -57,8 +60,8 @@
 
     <div id="selectionControls">
         <div id="selectionInfo" class="controlButton"><img src="img/selectionInfo.png"/></div>
-        <div id="selectionAngle" class="controlButton"><img src="img/selectionAngle.png"/></div>
         <div id="selectionDistance" class="controlButton"><img src="img/selectionDistance.png"/></div>
+        <div id="selectionRotation" class="controlButton"><img src="img/selectionRotation.png"/></div>
         <div id="selectionTorsion" class="controlButton"><img src="img/selectionTorsion.png"/></div>
     </div>
 

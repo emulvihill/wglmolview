@@ -3,7 +3,29 @@ function init() {
     makeLog();
     var mv = new molview.MolView({
         domElement: "container",
+        infoElement: "infoText",
         pdbUrl: "/pdb/helix2.pdb"
+    });
+    $("#renderStick").click(function () {
+        mv.setRenderMode(molview.Constants.RENDERMODE_STICKS);
+    });
+    $("#renderBall").click(function () {
+        mv.setRenderMode(molview.Constants.RENDERMODE_BALL_AND_STICK);
+    });
+    $("#renderBlob").click(function () {
+        mv.setRenderMode(molview.Constants.RENDERMODE_SPACE_FILL);
+    });
+    $("#selectionInfo").click(function () {
+        mv.setSelectionMode(molview.Constants.SELECTIONMODE_IDENTIFY);
+    });
+    $("#selectionDistance").click(function () {
+        mv.setSelectionMode(molview.Constants.SELECTIONMODE_DISTANCE);
+    });
+    $("#selectionRotation").click(function () {
+        mv.setSelectionMode(molview.Constants.SELECTIONMODE_ROTATION);
+    });
+    $("#selectionTorsion").click(function () {
+        mv.setSelectionMode(molview.Constants.SELECTIONMODE_TORSION);
     });
 }
 function makeLog() {

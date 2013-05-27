@@ -18,7 +18,8 @@ module molview
         autoCenter:bool = true;
         pdbUrl:string;
         pdbData:string;
-        domElement:string;
+        domElement:string; // dom element to attach molecule renderer
+        infoElement:string; // dom element to set info text output
 
         constructor(parameters) {
 

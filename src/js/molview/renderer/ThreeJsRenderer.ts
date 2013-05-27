@@ -11,6 +11,8 @@ module molview.renderer {
     class ViewObject extends THREE.Mesh {
         modelObject:molview.model.RenderableObject;
     }
+
+
     export class ThreeJsRenderer implements IMolRenderer {
 
         private static SCALE:number = 100;
@@ -25,7 +27,9 @@ module molview.renderer {
         private objects:ViewObject[] = [];
         private selections:ViewObject[] = [];
 
-        init():void {
+        init(domElement:JQuery):void {
+            this.domElement = domElement;
+
             // set the scene size
             var WIDTH = 800,
                 HEIGHT = 600;
@@ -36,9 +40,6 @@ module molview.renderer {
                 NEAR = 0.1,
                 FAR = 10000;
 
-            // get the DOM element to attach to
-            // - assume we've got jQuery to hand
-            this.domElement = $('#container');
 
             // create a WebGL renderer, camera
             // and a scene
@@ -78,7 +79,6 @@ module molview.renderer {
 
             // attach the render-supplied DOM element
             this.domElement.append(this.renderer.domElement);
-            this.domElement.click(null, (event)=>{this.onDocumentMouseDown(event)});
 
             this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
             this.controls.rotateSpeed = 0.5;
@@ -289,7 +289,7 @@ m            }
             // add the sphere to the scene
             this.scene.add(selObj);
 
-            selObj["modelObject"] = atom;
+            selObj.modelObject = atom;
 
             return selObj;
         }
@@ -355,7 +355,7 @@ m            }
         }
 
 
-        private onDocumentMouseDown(event):void {
+        private getSelectedObject(event):molview.model.RenderableObject {
 
             event.preventDefault();
 
@@ -370,9 +370,13 @@ m            }
             if ( intersects.length > 0 ) {
                 var viewObject:ViewObject = <ViewObject>intersects[0].object;
                 var modelObject:molview.model.RenderableObject = viewObject.modelObject;
-                this.select(modelObject);
+                return modelObject;
             }
+
+            return null;
+
         }
+
 
         private radiusConversion(radius:number):number {
 
