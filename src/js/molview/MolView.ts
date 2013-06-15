@@ -42,11 +42,6 @@ export class MolView
         // this is where selections are stored
         this.selections = [];
 
-        // draw the on-screen displays
-        this.drawBackground();
-        this.drawToolbars();
-        this.drawDisplay();
-
         // load the molecule from the init settings
         if (this.config.pdbUrl)
         {
@@ -62,53 +57,6 @@ export class MolView
 		this.config.zoom = oldZoom+event.wheelDelta/50.0;
         this.renderer.render();
 	}
-
-
-    private drawBackground():void
-    {
-        /*		var bg:Shape = new Shape();
-         bg.name = "background";
-         bg.graphics.beginFill(0x8888FF);
-         bg.graphics.drawRect(-2000,-2000,4000,4000);
-         addChild(bg);
-         return bg;*/
-    }
-
-
-	private drawToolbars():void
-	{
-/*		renderToolbar = new MovieClip();
-		renderToolbar.name = "renderToolbar";
-		renderToolbar.addChild(new renderModesBitmap());
-		renderToolbar.useHandCursor = true;
-		renderToolbar.mouseChildren = false;
-		addChild(renderToolbar);
-		renderToolbar.addEventListener(MouseEvent.MOUSE_DOWN, handleRenderToolbarMouseDown);
-
-		selectionToolbar = new Sprite();
-		selectionToolbar.name = "selectionToolbar";
-		selectionToolbar.addChild(new selectionModesBitmap());
-		selectionToolbar.useHandCursor = true;
-		selectionToolbar.mouseChildren = false;
-		selectionToolbar.x = 300;
-		addChild(selectionToolbar);
-		selectionToolbar.addEventListener(MouseEvent.MOUSE_DOWN, handleSelectionToolbarMouseDown);*/
-	}
-
-
-	private drawDisplay():void
-	{
-/*		display = new TextField();
-		display.name = "display";
-		display.width = 150;
-		display.x = 150;
-		display.y = 0;
-		display.selectable = false;
-		display.wordWrap = true;
-		display.text = "";
-		addChild(display);*/
-	}
-
 
     public loadPDB(pdbUrl:string):void
     {
@@ -146,19 +94,12 @@ export class MolView
         this.renderer.init(this.domElement);
         this.domElement.click(null, (event)=>{this.handleSelect(event)});
         this.domElement.click(null, (event)=>{this.updateInfoDisplay(event)});
-/*	    addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown, false, 0, false);
-	    addEventListener(MouseEvent.MOUSE_UP, handleMouseUp, false, 0, false);
-		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, false);
-        this.renderer.addEventListener(SelectionEvent.SELECT, handleSelect, false, 0, false); */
 
 		this.molecule.parsePDB(this.config.pdbData);
 
 		if (this.config.autoCenter === true) {
             this.molecule.center();
         }
-
-        // load the initial view
-        //if listP(pInitTransform) and pInitTransform.count=16 then pGroup.transform = newtransform(pInitTransform)
 
 		// render the molecule as 3d items
 		this.molecule.render(this.renderer);
@@ -174,8 +115,6 @@ export class MolView
 	private handleSelect(event:MouseEvent):void
 	{
 		if (this.config.selectable === false) return;
-
-	//	if (this.renderer.mouseDownTravel > Constants.SELECTION_MAX_MOUSETRAVEL) return;  // do nothing when moved
 
         var obj:model.RenderableObject = this.renderer.getSelectedObject(event);
 		if (!(obj instanceof model.Atom)) return;
@@ -318,8 +257,8 @@ export class MolView
 			this.updateDisplay(Messages.INSTRUCT_ROTATION);
 	        return;
 	    }
-		var v:THREE.Vector3 = this.selections[0].loc.sub(this.selections[1].loc);
-		var w:THREE.Vector3 = this.selections[2].loc.sub(this.selections[1].loc);
+		var v:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[0].loc, this.selections[1].loc);
+		var w:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
 		var ang:number = v.angleTo(w);
 
 		if (!ang)
@@ -341,9 +280,9 @@ export class MolView
 			this.updateDisplay(Messages.INSTRUCT_TORSION);
 	        return;
 	    }
-		var u:THREE.Vector3 = this.selections[1].loc.sub(this.selections[0].loc);
-		var v:THREE.Vector3 = this.selections[2].loc.sub(this.selections[1].loc);
-		var w:THREE.Vector3 = this.selections[3].loc.sub(this.selections[2].loc);
+		var u:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[1].loc, this.selections[0].loc);
+		var v:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
+		var w:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[3].loc, this.selections[2].loc);
 		var uXv:THREE.Vector3 = u.cross(v);
 		var vXw:THREE.Vector3 = v.cross(w);
 		var ang:number = (uXv && vXw) ? uXv.angleTo(vXw) : null;
