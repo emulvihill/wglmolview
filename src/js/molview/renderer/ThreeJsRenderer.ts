@@ -43,6 +43,10 @@ module molview.renderer {
 
             // create a WebGL renderer, camera
             // and a scene
+            if (this.testWebGL() === false) {
+                alert("Sorry. Please use WebGL-enabled browser (Chrome, Firefox, Safari, IE 11+)");
+                return;
+            }
             this.renderer = new THREE.WebGLRenderer();
             this.camera =
                 new THREE.PerspectiveCamera(
@@ -381,6 +385,11 @@ m            }
         private radiusConversion(radius:number):number {
 
             return 5 * Math.log(8 * radius);
+        }
+
+
+        private testWebGL():Boolean {
+            try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; }
         }
 
     }
