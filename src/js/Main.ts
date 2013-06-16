@@ -10,7 +10,7 @@ function init() {
     // launch point from html page
     makeLog();
 
-    var mv:molview.MolView = new molview.MolView({domElement:"container", infoElement:"infoText", pdbUrl:"/pdb/helix2.pdb"});
+    var mv:molview.MolView = new molview.MolView({baseUrl:"/projects/wglmolview/", domElement:"container", infoElement:"infoText", pdbUrl:"/projects/wglmolview/pdb/helix2.pdb"});
 
     $("#renderStick").click(()=>{mv.setRenderMode(molview.Constants.RENDERMODE_STICKS)});
     $("#renderBall").click(()=>{mv.setRenderMode(molview.Constants.RENDERMODE_BALL_AND_STICK)});
@@ -23,7 +23,7 @@ function init() {
 
     // molecule selection dropdown
     $("#pdbSelect").change(()=> {
-        mv.loadPDB($("#pdbSelect").val());
+        mv.loadPDB("/projects/wglmolview/" + $("#pdbSelect").val());
     });
 }
 

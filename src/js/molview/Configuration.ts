@@ -16,7 +16,8 @@ module molview
         maxFrames:number = 99;
         zoom:number = 1.0;
         autoCenter:bool = true;
-        pdbUrl:string;
+        baseUrl:string = "";
+        pdbUrl:string = "";
         pdbData:string;
         domElement:string; // dom element to attach molecule renderer
         infoElement:string; // dom element to set info text output

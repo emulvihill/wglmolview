@@ -1,6 +1,7 @@
 module molview
 {
     /// <reference path="../../ts/DefinitelyTyped/jquery/jquery.d.ts" />
+    /// <reference path="Configuration.ts" />
 
 export class ElementData
 {	
@@ -11,7 +12,7 @@ export class ElementData
         if (!e) {return null;}
 
         if (ElementData.atomData === null) {
-            $.ajax({url:"/js/molview/elements.json", async:false, dataType:"json",
+            $.ajax({url: Configuration.getConfig().baseUrl + "/js/molview/elements.json", async:false, dataType:"json",
                     success:(data)=>{
                     ElementData.atomData = {};
                     var json:Object = (typeof data === "string") ? JSON.parse(data) : data;
