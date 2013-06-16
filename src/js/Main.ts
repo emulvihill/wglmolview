@@ -21,6 +21,10 @@ function init() {
     $("#selectionRotation").click(()=>{mv.setSelectionMode(molview.Constants.SELECTIONMODE_ROTATION)});
     $("#selectionTorsion").click(()=>{mv.setSelectionMode(molview.Constants.SELECTIONMODE_TORSION)});
 
+    // molecule selection dropdown
+    $("#pdbSelect").change(()=> {
+        mv.loadPDB($("#pdbSelect").val());
+    });
 }
 
 function makeLog() {

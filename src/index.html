@@ -45,18 +45,47 @@
     <h1><span class="nonselectable">MolView Demo</span></h1>
 </header>
 
-<div id="container" class="moleculeContainer"/>
+<h1>GLMolView - WebGL Molecule Renderer</h1>
+
+<select id="pdbSelect" tabindex="1">
+    <option value="">Choose a molecule to view</option>
+    <option value="pdb/aa/ala.pdb">Alanine</option>
+    <option value="pdb/aa/arg.pdb">Arganine</option>
+    <option value="pdb/aa/asn.pdb">Asparagine</option>
+    <option value="pdb/aa/asp.pdb">Aspartate</option>
+    <option value="pdb/aa/cys.pdb">Cysteine</option>
+    <option value="pdb/aa/gln.pdb">Glutamine</option>
+    <option value="pdb/aa/glu.pdb">Glutamate</option>
+    <option value="pdb/aa/gly.pdb">Glycine</option>
+    <option value="pdb/aa/his.pdb">Histidine</option>
+    <option value="pdb/aa/ile.pdb">Isoleucine</option>
+    <option value="pdb/aa/leu.pdb">Leucine</option>
+    <option value="pdb/aa/lys.pdb">Lysine</option>
+    <option value="pdb/aa/met.pdb">Methionine</option>
+    <option value="pdb/aa/phe.pdb">Phenylananine</option>
+    <option value="pdb/aa/pro.pdb">Proline</option>
+    <option value="pdb/aa/ser.pdb">Serene</option>
+    <option value="pdb/aa/thr.pdb">Threonine</option>
+    <option value="pdb/aa/trp.pdb">Tryptophan</option>
+    <option value="pdb/aa/tyr.pdb">Tyrosine</option>
+    <option value="pdb/aa/val.pdb">Valine</option>
+    <option value="pdb/helix2.pdb">Alpha helix</option>
+    <option value="pdb/bsheet.pdb">Beta-sheet</option>
+
+</select>
+
+<div id="container" class="moleculeContainer"><!-- placeholder --></div>
 
 
 <div id="infoText" class="nonselectable"><!-- placeholder --></div>
 
 <div id="controlsWrapper">
 
-    <div id="renderControls">
+<!--    <div id="renderControls">
         <div id="renderStick" class="controlButton"><img src="img/renderStick.png"/></div>
         <div id="renderBall" class="controlButton"><img src="img/renderBall.png"/></div>
         <div id="renderBlob" class="controlButton"><img src="img/renderBlob.png"/></div>
-    </div>
+    </div>-->
 
     <div id="selectionControls">
         <div id="selectionInfo" class="controlButton"><img src="img/selectionInfo.png"/></div>

@@ -7,6 +7,7 @@ module molview.renderer
 	export interface IMolRenderer
 	{
 		init(domElement:JQuery):void;
+        reset():void;
 		addRenderableObject(obj:molview.model.RenderableObject):void;
 		render():void;
         getSelectedObject(event):molview.model.RenderableObject;

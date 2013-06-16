@@ -33,11 +33,15 @@ export class MolView
 
     private config:Configuration;
 
+    private initialized:Boolean;
+
     constructor(params?:Object)
 	{
         Configuration.newConfig(params);
 
         this.config = Configuration.getConfig();
+
+        this.renderer = new molview.renderer.ThreeJsRenderer();
 
         // this is where selections are stored
         this.selections = [];
@@ -85,15 +89,23 @@ export class MolView
     private renderPDBData():void
     {
         this.molecule = new molview.model.Molecule();
-        this.renderer = new molview.renderer.ThreeJsRenderer();
 
         // get the DOM element to attach to
         // - assume we've got jQuery to hand
         this.domElement = $('#' + this.config.domElement);
+        //this.domElement.empty();
         this.infoElement = $('#' + this.config.infoElement);
-        this.renderer.init(this.domElement);
-        this.domElement.click(null, (event)=>{this.handleSelect(event)});
-        this.domElement.click(null, (event)=>{this.updateInfoDisplay(event)});
+        this.infoElement.empty();
+
+        if (!this.initialized) {
+            this.renderer.init(this.domElement);
+        } else {
+            this.renderer.reset();
+        }
+        if (!this.initialized) {
+            this.domElement.click(null, (event)=>{this.handleSelect(event)});
+            this.domElement.click(null, (event)=>{this.updateInfoDisplay(event)});
+        }
 
 		this.molecule.parsePDB(this.config.pdbData);
 
@@ -109,6 +121,8 @@ export class MolView
 
 		// draw the molecule on screen
         this.renderer.render();
+
+        this.initialized = true;
 	}
 
 

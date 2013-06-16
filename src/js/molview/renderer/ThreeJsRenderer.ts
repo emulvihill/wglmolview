@@ -40,14 +40,15 @@ module molview.renderer {
                 NEAR = 0.1,
                 FAR = 10000;
 
-
             // create a WebGL renderer, camera
             // and a scene
             if (this.testWebGL() === false) {
                 alert("Sorry. Please use WebGL-enabled browser (Chrome, Firefox, Safari, IE 11+)");
                 return;
             }
+
             this.renderer = new THREE.WebGLRenderer();
+
             this.camera =
                 new THREE.PerspectiveCamera(
                     VIEW_ANGLE,
@@ -92,6 +93,21 @@ module molview.renderer {
             this.objects = [];
 
             this.animate();
+        }
+
+
+        reset():void {
+            //this.camera.position = new THREE.Vector3(0,0,1000);
+            //this.camera.lookAt(new THREE.Vector3(0,0,0));
+            while (this.objects.length > 0) {
+                this.scene.remove(this.objects.pop());
+            }
+            while (this.selections.length > 0) {
+                this.scene.remove(this.selections.pop());
+            }
+            //this.renderer.clear(true, true, true);
+            this.objects = [];
+            this.selections = [];
         }
 
 
@@ -363,8 +379,8 @@ m            }
 
             event.preventDefault();
 
-            console.info("event.clientX " + event.clientX);
-            console.info("event.clientY " + event.clientY);
+            //console.info("event.clientX " + event.clientX);
+            //console.info("event.clientY " + event.clientY);
 
             var vector:THREE.Vector3 = new THREE.Vector3( ( (event.clientX-this.renderer.domElement.offsetLeft) / this.renderer.domElement.clientWidth ) * 2 - 1,
                 - ( (event.clientY-this.renderer.domElement.offsetTop) / this.renderer.domElement.clientHeight) * 2 + 1, 0.5 );

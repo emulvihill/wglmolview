@@ -27,6 +27,9 @@ function init() {
     $("#selectionTorsion").click(function () {
         mv.setSelectionMode(molview.Constants.SELECTIONMODE_TORSION);
     });
+    $("#pdbSelect").change(function () {
+        mv.loadPDB($("#pdbSelect").val());
+    });
 }
 function makeLog() {
     if(!window.console) {
