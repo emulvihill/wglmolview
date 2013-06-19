@@ -10,6 +10,7 @@
 
 export interface AtomInitializer {
     serial:number;
+    elemName:string;
     element:string;
     altLoc:number;
     resName:string;
@@ -34,8 +35,9 @@ export class Atom extends molview.model.RenderableObject
 
     name:string;
 
-    element:string;
+    element:string;   // first chars of elemName
     element2:string;
+    elemName:string;  // short 4-char pdb name
 
     private altLoc:number;
     private tempFactor:number;

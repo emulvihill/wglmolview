@@ -17,9 +17,8 @@ export class ElementData
                     ElementData.atomData = {};
                     var json:Object = (typeof data === "string") ? JSON.parse(data) : data;
                     $.each(json, (item)=> {
-                        json[item].name = item;
                         var obj:DataObject = new DataObject(json[item]);
-                        atomData[json[item].symbol.toUpperCase()] = obj;
+                        atomData[obj.symbol.toUpperCase()] = obj;
                     })
                 }});
         }
@@ -38,32 +37,10 @@ export class ElementData
         constructor(json) {
             this.name = json.name;
             this.symbol = json.symbol;
-            this.number = json.atomic_number;
-            this.radius = json["atomic_radius pm"];
-            this.color = (typeof json.color !== "string") ? 0xCCCCCC : parseInt(json.color, 16);     // http://jmol.sourceforge.net/jscolors/#Jmol colors
+            this.number = json.number;
+            this.radius = json.radius;
+            this.color = parseInt(json.color, 16);     // http://jmol.sourceforge.net/jscolors/#Jmol colors
         }
     }
 
-/*   JSON format:
-    "name":"Phosphorus",
-    "symbol" : "P",
-    "atomic_number" : 15,
-    "atomic_weight" : 30.973762,
-    "density g/cm" : "1.82 (white phosphorus)",
-    "melting_point K" : 317.3,
-    "boiling_point K" : 553,
-    "atomic_radius pm" : 128,
-    "covalent_radius pm" : 106,
-    "ionic_radius pm" : "",
-    "atomic_volume cm3/mol" : 17.0,
-    "specific_heat (@20°C J/g mol)" : 0.757,
-    "fusion_heat (kJ/mol)" : 2.51,
-    "evaporation_heat (kJ/mol)" : 49.8,
-    "thermal_conductivity (@25°C W/m K) " : "(0.236)",
-    "pauling_negativity" : 2.19,
-    "first_ionizing kJ/mol" : 1011.2,
-    "oxidation_states" : "5, 3, -3",
-    "electronic_configuration" : "[Ne]3s²3p³",
-    "lattice_structure" : "CUB",
-    "lattice_constant ang" : 7.170*/
 }

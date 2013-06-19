@@ -157,7 +157,8 @@ export class Molecule extends molview.model.RenderableObject
 
 		        var init:AtomInitializer = {
                     serial: parseInt(currLine.substring(6,11)),
-                    element: $.trim(currLine.substring(12,16)),
+                    elemName: $.trim(currLine.substring(12,16)),
+                    element: $.trim(currLine.substring(12,14)),
                     altLoc: parseInt(currLine.substring(16,17)),
                     resName: currLine.substring(17,20),
                     chainId: parseInt(currLine.substring(21,22)),

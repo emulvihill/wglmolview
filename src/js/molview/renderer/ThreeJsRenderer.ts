@@ -38,7 +38,7 @@ module molview.renderer {
             var VIEW_ANGLE = 45,
                 ASPECT = WIDTH / HEIGHT,
                 NEAR = 0.1,
-                FAR = 10000;
+                FAR = 1000000;
 
             // create a WebGL renderer, camera
             // and a scene

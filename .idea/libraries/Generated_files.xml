@@ -3,14 +3,17 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/testRunner.js" />
+        <item url="file://$PROJECT_DIR$/src/js/Main.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/Configuration.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/ElementData.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/renderer/IRenderer.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/model/Molecule.js" />
         <item url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/src/io.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/Utility.js" />
         <item url="file://$PROJECT_DIR$/src/js/molview/AminoAcidData.js" />
         <item url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/src/exec.js" />
-        <item url="file://$PROJECT_DIR$/src/js/Main.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/model/Atom.js" />
+        <item url="file://$PROJECT_DIR$/src/js/molview/renderer/ThreeJsRenderer.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
@@ -156,8 +159,8 @@
       <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/underscore/underscore-tests.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/Configuration.js" />
       <root url="file://$PROJECT_DIR$/src/ts/Signal.js" />
-      <root url="file://$PROJECT_DIR$/src/js/molview/ElementData.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/renderer/IRenderer.js" />
+      <root url="file://$PROJECT_DIR$/src/js/molview/ElementData.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/MolView.js" />
       <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/src/io.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/model/Molecule.js" />
@@ -169,8 +172,8 @@
       <root url="file://$PROJECT_DIR$/src/js/molview/model/RenderableObject.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/renderer/ThreeJsRenderer.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/renderer/MockRenderer.js" />
-      <root url="file://$PROJECT_DIR$/src/js/Main.js" />
       <root url="file://$PROJECT_DIR$/src/ts/DefinitelyTyped/_infrastructure/tests/testRunner.js" />
+      <root url="file://$PROJECT_DIR$/src/js/Main.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/Utility.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/AminoAcidData.js" />
       <root url="file://$PROJECT_DIR$/src/js/molview/Constants.js" />
