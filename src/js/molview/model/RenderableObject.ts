@@ -12,7 +12,7 @@
 module molview.model
 {
 
-    /// <reference path="../../../ts/DefinitelyTyped/threejs/three.d.ts" />
+    /// <reference path="../../../ts/DefinitelyTyped-0.8/threejs/three.d.ts" />
 
     /// <reference path="../renderer/IMolRenderer.ts" />
     /// <reference path="../Configuration.ts" />

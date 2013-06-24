@@ -11,8 +11,8 @@
  */
 module molview.model
 {
-    /// <reference path="../../../ts/DefinitelyTyped/jquery/jquery.d.ts" />
-    /// <reference path="../../../ts/DefinitelyTyped/threejs/three.d.ts" />
+    /// <reference path="../../../ts/DefinitelyTyped-0.8/jquery/jquery.d.ts" />
+    /// <reference path="../../../ts/DefinitelyTyped-0.8/threejs/three.d.ts" />
 
     /// <reference path="../renderer/IMolRenderer.ts/>
     /// <reference path="RenderableObject.ts" />

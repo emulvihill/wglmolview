@@ -11,7 +11,7 @@
  */
 module molview
 {
-    /// <reference path="../../ts/DefinitelyTyped/jquery/jquery.d.ts" />
+    /// <reference path="../../ts/DefinitelyTyped-0.8/jquery/jquery.d.ts" />
     /// <reference path="Configuration.ts" />
 
 export class ElementData

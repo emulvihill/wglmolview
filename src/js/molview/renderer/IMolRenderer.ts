@@ -12,7 +12,7 @@
 module molview.renderer
 {
 
-    /// <reference path="../../../ts/DefinitelyTyped/jquery/jquery.d.ts" />
+    /// <reference path="../../../ts/DefinitelyTyped-0.8/jquery/jquery.d.ts" />
     /// <reference path="../model/RenderableObject.ts" />
 
 	export interface IMolRenderer
