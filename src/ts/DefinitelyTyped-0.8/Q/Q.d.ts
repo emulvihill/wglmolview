@@ -8,13 +8,13 @@ interface Qdeferred {
     resolve(value: any): any;
     reject(reason: any);
     notify(value: any);
-    makeNodeResolver(): Function;
+    makeNodeResolver(): () => void;
 }
 
 interface Qpromise {
     fail(errorCallback: Function): Qpromise;
     fin(finallyCallback: Function): Qpromise;
-    then(onFulfilled: Function, onRejected?: Function, onProgress?: Function): Qpromise;
+    then(onFulfilled?: Function, onRejected?: Function, onProgress?: Function): Qpromise;
     spread(onFulfilled: Function, onRejected?: Function): Qpromise;
     catch(onRejected: Function): Qpromise;
     progress(onProgress: Function): Qpromise;
@@ -36,13 +36,13 @@ interface Qpromise {
 }
 
 interface QStatic {
-    when(value: any, onFulfilled: Function, onRejected?: Function): Qpromise;
+    when(value: any, onFulfilled?: Function, onRejected?: Function): Qpromise;
     try(method: Function, ...args: any[]): Qpromise;
     fbind(method: Function, ...args: any[]): Qpromise;
     fcall(method: Function, ...args: any[]): Qpromise;
     all(promises: Qpromise[]): Qpromise;
     allResolved(promises: Qpromise[]): Qpromise;
-    resolve(object?:Qpromise);
+    resolve(object:any):Qpromise;
     spread(onFulfilled: Function, onRejected: Function): Qpromise;
     timeout(ms: number): Qpromise;
     delay(ms: number): Qpromise;

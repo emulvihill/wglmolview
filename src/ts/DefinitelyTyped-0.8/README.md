@@ -3,11 +3,15 @@ DefinitelyTyped [![Build Status](https://travis-ci.org/borisyankov/DefinitelyTyp
 
 The repository for *high quality* TypeScript type definitions.
 
-Use a definition file like this:
+Usage
+-----
+Include a line like this:
 
 ```
 /// <reference path="jquery.d.ts" />
 ```
+
+[TypeScript Directory: tools, libraries, projects and learning resources](https://github.com/DefinitelyTyped/typescript-directory)
 
 Contributor Guidelines
 ----------------------
@@ -16,11 +20,8 @@ See the section: [How to contribute](https://github.com/borisyankov/DefinitelyTy
 
 Other means to get the definitions
 ----------------------------------
-
 * [NuGet packages](http://nuget.org/packages?q=Definitelytyped)
-
 * [TypeScript definition package manager](https://github.com/Diullei/tsd)
-
 * [tsdpm](http://www.tsdpm.com/) - Online search
 
 List of Definitions
@@ -28,8 +29,10 @@ List of Definitions
 * [Ace Cloud9 Editor](http://ace.ajax.org/) (by [Diullei Gomes](https://github.com/Diullei))
 * [AmCharts](http://www.amcharts.com/) (by [Covobonomo](https://github.com/covobonomo/))
 * [AngularJS](http://angularjs.org) (by [Diego Vilar](https://github.com/diegovilar)) ([wiki](https://github.com/borisyankov/DefinitelyTyped/wiki/AngularJS-Definitions-Usage-Notes))
+* [Arbiter](http://arbiterjs.com/) (by [Arash Shakery](https://github.com/arash16))
 * [async](https://github.com/caolan/async) (by [Boris Yankov](https://github.com/borisyankov))
 * [Backbone.js](http://backbonejs.org/) (by [Boris Yankov](https://github.com/borisyankov))
+* [Backbone Relational](http://backbonerelational.org/) (by [Eirik Hoem](https://github.com/eirikhm))
 * [Bootbox](https://github.com/makeusabrew/bootbox) (by [Vincent Bortone](https://github.com/vbortone/))
 * [Bootstrap](http://twitter.github.com/bootstrap/) (by [Boris Yankov](https://github.com/borisyankov))
 * [bootstrap-notify](https://github.com/Nijikokun/bootstrap-notify) (by [Blake Niemyjski](https://github.com/niemyjski))
@@ -50,6 +53,7 @@ List of Definitions
 * [EpicEditor](http://epiceditor.com/) (by [Boris Yankov](https://github.com/borisyankov))
 * [expect.js](https://github.com/LearnBoost/expect.js) (by [Teppei Sato](https://github.com/teppeis))
 * [Express](http://expressjs.com/) (by [Boris Yankov](https://github.com/borisyankov))
+* [Ext JS](http://www.sencha.com/products/extjs/) (by [Brian Kotek](https://github.com/brian428))
 * [Fabric.js](http://fabricjs.com/) (by [Oliver Klemencic](https://github.com/oklemencic/))
 * [Fancybox](http://fancybox.net/) (by [Boris Yankov](https://github.com/borisyankov))
 * [File API: Directories and System](http://www.w3.org/TR/file-system-api/) (by [Kon](http://phyzkit.net/))
@@ -81,12 +85,14 @@ List of Definitions
 * [jQuery](http://jquery.com/) (from TypeScript samples)
 * [jQuery Mobile](http://jquerymobile.com) (by [Boris Yankov](https://github.com/borisyankov))
 * [jQuery UI](http://jqueryui.com/) (by [Boris Yankov](https://github.com/borisyankov))
+* [jQuery.autosize](http://www.jacklmoore.com/autosize/) (by [Jack Moore](http://www.jacklmoore.com/))
 * [jQuery.BBQ](http://benalman.com/projects/jquery-bbq-plugin/) (by [Adam R. Smith](https://github.com/sunetos))
 * [jQuery.contextMenu](http://medialize.github.com/jQuery-contextMenu/) (by [Natan Vivo](https://github.com/nvivo/))
 * [jQuery.clientSideLogging](https://github.com/remybach/jQuery.clientSideLogging/) (by [Diullei Gomes](https://github.com/diullei/))
 * [jQuery.Colorbox](http://www.jacklmoore.com/colorbox/) (by [Gidon Junge](https://github.com/gjunge))
 * [jQuery.Cookie](https://github.com/carhartl/jquery-cookie) (by [Roy Goode](https://github.com/RoyGoode))
 * [jQuery.Cycle](http://jquery.malsup.com/cycle/) (by [Fran�ois Guillot](http://fguillot.developpez.com/))
+* [jQuery.dataTables](http://www.datatables.net) (by [Armin Sander](https://github.com/pragmatrix))
 * [jQuery.dynatree](http://code.google.com/p/dynatree/) (by [Fran�ois de Campredon](https://github.com/fdecampredon))
 * [jQuery.Flot](http://www.flotcharts.org/) (by [Matt Burland](https://github.com/burlandm))
 * [jQuery.form](http://malsup.com/jquery/form/) (by [Fran�ois Guillot](http://fguillot.developpez.com/))
@@ -136,9 +142,11 @@ List of Definitions
 * [Restify](https://github.com/mcavage/node-restify) (by [Bret Little](https://github.com/blittle))
 * [Rx.js](http://rx.codeplex.com/) (by [gsino](http://www.codeplex.com/site/users/view/gsino))
 * [Raphael](http://raphaeljs.com/) (by [CheCoxshall](https://github.com/CheCoxshall))
+* [Restangular](https://github.com/mgonto/restangular/) (by [Boris Yankov](https://github.com/borisyankov))
 * [require.js](http://requirejs.org/) (by [Josh Baldwin](https://github.com/jbaldwin/))
 * [Sammy.js](http://sammyjs.org/) (by [Boris Yankov](https://github.com/borisyankov))
 * [Select2](http://ivaynberg.github.com/select2/) (by [Boris Yankov](https://github.com/borisyankov))
+* [Sencha Touch](http://www.sencha.com/products/touch/) (by [Brian Kotek](https://github.com/brian428))
 * [SignalR](http://www.asp.net/signalr) (by [Boris Yankov](https://github.com/borisyankov))
 * [Sinon](http://sinonjs.org/) (by [William Sears](https://github.com/mrbigdog2u))
 * [socket.io](http://socket.io) (by [William Orr](https://github.com/worr))
@@ -164,6 +172,7 @@ List of Definitions
 * [Vimeo](http://developer.vimeo.com/player/js-api) (by [Daz Wilkin](https://github.com/DazWilkin/))
 * [WebRTC](http://dev.w3.org/2011/webrtc/editor/webrtc.html) (by [Ken Smith](https://github.com/smithkl42))
 * [YouTube](https://developers.google.com/youtube/) (by [Daz Wilkin](https://github.com/DazWilkin/))
+* [Zepto.js] (http://zeptojs.com/) (by [Josh Baldwin](https://github.com/jbaldwin))
 * [Zynga Scroller](https://github.com/zynga/scroller) (by [Boris Yankov](https://github.com/borisyankov))
 * [ZeroClipboard](https://github.com/jonrohan/ZeroClipboard) (by [Eric J. Smith](https://github.com/ejsmith))
 
