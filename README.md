@@ -1,4 +1,5 @@
 # WebGL MolView
+Written and maintained by Eric Mulvihill (eric@snazzyrobot.com)
 
 ## What it is?
 It is an open source _Ecmascript5 + WebGL compatible PDB viewer_. Just insert into your web page, point it to a PDB file and it will display it in glorious 3 dimensions.
@@ -32,4 +33,3 @@ It is an open source _Ecmascript5 + WebGL compatible PDB viewer_. Just insert in
 /src/js/vendor - required third party libraries (currently three.js, jquery, and modernizr) Modernizr is mainly used for making the sample page look nicer.
 /src/ts - Third party Typescript annotations needed for strong typing the third party libraries
 /src/pdb - example PDB files
-
