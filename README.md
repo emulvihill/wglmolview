@@ -2,14 +2,14 @@
 Written and maintained by Eric Mulvihill (eric@snazzyrobot.com)
 
 ## What it is?
-It is an open source _Ecmascript5 + WebGL compatible PDB viewer_. Just insert into your web page, point it to a PDB file and it will display it in glorious 3 dimensions.
+It is an open source _ECMAScript 5 + WebGL compatible PDB viewer_. Just insert into your web page, point it to a PDB file and it will display it in glorious 3 dimensions.
 
 + written in _Typescript_ (0.83 preview) and utilizes the wonderful _three.js_ 3D support library written by MrDoob.
 
 + supports interactions such as:
-- zooming/rotating
-- Selecting atoms for identification
-- Selecting multiple atoms for calculating distance, bond angle or torsion angle.
+   + zooming/rotating
+   + Selecting atoms for identification
+   + Selecting multiple atoms for calculating distance, bond angle or torsion angle.
 
 + Licensed under Apache license which was chosen for friendliness to most personal and commercial applications. (giving back improvements is always appreciated though)
 
@@ -18,7 +18,7 @@ It is an open source _Ecmascript5 + WebGL compatible PDB viewer_. Just insert in
 + Compatible with browsers that don't support WebGL (Internet Explorer 10 and below, and old versions of Safari & Firefox)
 
 ### What it could be with your help:
-+ A more-full featured viewer. More color modes, possibly supporting some proetin structures, maybe PDB animations?
++ A more-full featured viewer. More color modes, possibly supporting some protein structures, maybe PDB animations?
 + A better tool for e-learning. I'd like to add support for querying the state of selections, for entering answers in web quizzes.
 
 ## How to use it
@@ -28,8 +28,8 @@ It is an open source _Ecmascript5 + WebGL compatible PDB viewer_. Just insert in
 
 
 # What's included
-/src/js/Main.ts - stub code to get a web page to display a molecule. Your application would replicate this stub code in some way.
-/src/js/molview - All WGLMolView source
-/src/js/vendor - required third party libraries (currently three.js, jquery, and modernizr) Modernizr is mainly used for making the sample page look nicer.
-/src/ts - Third party Typescript annotations needed for strong typing the third party libraries
-/src/pdb - example PDB files
++ /src/js/Main.ts - stub code to get a web page to display a molecule. Your application would replicate this stub code in some way.
++ /src/js/molview - All WGLMolView source
++ /src/js/vendor - required third party libraries (currently three.js, jquery, and modernizr) Modernizr is mainly used for making the sample page look nicer.
++ /src/ts - Third party Typescript annotations needed for strong typing the third party libraries
++ /src/pdb - example PDB files
