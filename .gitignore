@@ -1,8 +1,9 @@
 /target
 
-
-
-
+node_modules/
+platforms/
+plugins/
+hooks/
 
 
 ### JetBrains template
@@ -19,9 +20,10 @@
 .idea/tasks.xml
 .idea/dictionaries
 
-# Sensitive or high-churn files:
-# .idea/dataSources.ids
-# .idea/dataSources.xml
-# .idea/sqlDataSources.xml
-# .idea/dynamic.xml
-# .idea/uiDesigner.xml
+# unneeded bower dependencies
+www/lib/angular
+www/lib/angular-animate
+www/lib/angular-sanitize
+www/lib/angular-ui-router
+www/css/*.css
+www/js/molview

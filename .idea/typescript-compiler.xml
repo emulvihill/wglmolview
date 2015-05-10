@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="TypeScriptCompiler">
+    <option name="isCompilerEnabled" value="true" />
+    <option name="typeScriptServiceDirectory" value="$USER_HOME$/.npm/typescript/1.5.0-beta/package/bin" />
+    <option name="hasOutDirectory" value="true" />
+    <option name="outDirectory" value="$PROJECT_DIR$/www/js/molview" />
+    <option name="versionType" value="SERVICE_DIRECTORY" />
+  </component>
+</project>
