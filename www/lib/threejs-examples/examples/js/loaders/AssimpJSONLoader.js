@@ -60,7 +60,7 @@ THREE.AssimpJSONLoader.prototype = {
 		this.crossOrigin = value;
 	},
 
-	extractUrlBase: function ( url ) { // from three/src/loaders/Loader.js
+	extractUrlBase: function ( url ) { // from three/src/loaders/Loader.src
 		var parts = url.split( '/' );
 		parts.pop();
 		return ( parts.length < 1 ? '.' : parts.join( '/' ) ) + '/';
@@ -104,7 +104,7 @@ THREE.AssimpJSONLoader.prototype = {
 			geometry.faces.push(face);
 		}
 
-		// read texture coordinates - three.js attaches them to its faces
+		// read texture coordinates - three.src attaches them to its faces
 		json.texturecoords = json.texturecoords || [];
 		for(i = 0, e = json.texturecoords.length; i < e; ++i) {
 
@@ -127,7 +127,7 @@ THREE.AssimpJSONLoader.prototype = {
 			convertTextureCoords(json.texturecoords[i], geometry.faces, geometry.faceVertexUvs[i]);
 		}
 
-		// read normals - three.js also attaches them to its faces
+		// read normals - three.src also attaches them to its faces
 		if(json.normals) {
 
 			function convertNormals(in_nor, out_faces) {
@@ -149,7 +149,7 @@ THREE.AssimpJSONLoader.prototype = {
 			convertNormals(json.normals, geometry.faces);
 		}
 
-		// read vertex colors - three.js also attaches them to its faces
+		// read vertex colors - three.src also attaches them to its faces
 		if(json.colors && json.colors[0]) {
 
 			function convertColors(in_color, out_faces) {
@@ -285,7 +285,7 @@ THREE.AssimpJSONLoader.prototype = {
 			init_props.ambient = init_props.color;
 		}
 
-		// note: three.js does not like it when a texture is added after the geometry
+		// note: three.src does not like it when a texture is added after the geometry
 		// has been rendered once, see http://stackoverflow.com/questions/16531759/.
 		// for this reason we fill all slots upfront with default textures
 		if(has_textures.length) {

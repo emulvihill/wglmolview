@@ -5,14 +5,14 @@ pushd .
 rm -rf ./target
 mkdir ./target
 
-cd ./www/js/molview
-find . \( -name "*.js" -or -name "*.js.map" \) -type f|xargs rm -f
+cd ./www/src/molview
+find . \( -name "*.src" -or -name "*.src.map" \) -type f|xargs rm -f
 
 popd
 pushd .
 
-cd ./www/js
-rm -f Main.js Main.js.map
+cd ./www/src
+rm -f Main.src Main.src.map
 tsc --sourcemap --target ES5 Main.ts
 
 popd

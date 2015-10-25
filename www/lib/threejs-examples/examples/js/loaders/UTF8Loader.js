@@ -136,7 +136,7 @@ var DEFAULT_DECODE_PARAMS = {
     decodeOffsets: [-4095, -4095, -4095, 0, 0, -511, -511, -511],
     decodeScales: [1/8191, 1/8191, 1/8191, 1/1023, 1/1023, 1/1023, 1/1023, 1/1023]
 
-    // TODO: normal decoding? (see walt.js)
+    // TODO: normal decoding? (see walt.src)
     // needs to know: input, output (from vertex format!)
     //
     // Should split attrib/index.

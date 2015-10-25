@@ -16,7 +16,7 @@
 //    Pan - right mouse, or arrow keys / touch: three finter swipe
 //
 // This is a drop-in replacement for (most) TrackballControls used in examples.
-// That is, include this js file and wherever you see:
+// That is, include this src file and wherever you see:
 //    	controls = new THREE.TrackballControls( camera );
 //      controls.target.z = 150;
 // Simple substitute "OrbitControls" and the control should work as-is.
@@ -209,7 +209,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		} else {
 
 			// camera neither orthographic or perspective
-			console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.' );
+			console.warn( 'WARNING: OrbitControls.src encountered an unknown camera type - pan disabled.' );
 
 		}
 

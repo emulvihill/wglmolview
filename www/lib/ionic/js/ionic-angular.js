@@ -385,7 +385,7 @@ IonicModule
   var LOCAL_REGEXP = /^\s*([@=&])(\??)\s*(\w*)\s*$/;
   return function(scope, attrs, bindDefinition) {
     forEach(bindDefinition || {}, function(definition, scopeName) {
-      //Adapted from angular.js $compile
+      //Adapted from angular.src $compile
       var match = definition.match(LOCAL_REGEXP) || [],
         attrName = match[3] || scopeName,
         mode = match[1], // @, =, or &
@@ -1277,7 +1277,7 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
      * * `disableBack`: The next view should forget its back view, and set it to null.
      * * `historyRoot`: The next view should become the root view in its history stack.
      *
-     * ```js
+     * ```src
      * $ionicHistory.nextViewOptions({
      *   disableAnimate: true,
      *   disableBack: true
@@ -10115,7 +10115,7 @@ IonicModule
       // if this view is not beneath a scrollCtrl, it can't be injected, proceed w/ native scrolling
       if (jsScrolling) {
         infiniteScrollCtrl.scrollView = scrollCtrl.scrollView;
-        $scope.scrollingType = 'js-scrolling';
+        $scope.scrollingType = 'src-scrolling';
         //bind to JS scroll events
         scrollCtrl.$element.on('scroll', infiniteScrollCtrl.checkBounds);
       } else {
@@ -11765,7 +11765,7 @@ IonicModule
         // Kick off native scrolling
         refresherCtrl.init();
       } else {
-        $element[0].classList.add('js-scrolling');
+        $element[0].classList.add('src-scrolling');
         scrollCtrl._setRefresher(
           $scope,
           $element[0],

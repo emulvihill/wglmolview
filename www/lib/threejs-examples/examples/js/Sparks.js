@@ -72,7 +72,7 @@ SPARKS.Emitter.prototype = {
 			var maxBlock = emitter._TIMESTEP * 20;
 
 			if (elapsed >= maxBlock) {
-				//console.log('warning: sparks.js is fast fowarding engine, skipping steps', elapsed / emitter._TIMESTEP);
+				//console.log('warning: sparks.src is fast fowarding engine, skipping steps', elapsed / emitter._TIMESTEP);
 				//emitter.update( (elapsed - maxBlock) / 1000);
 				elapsed = maxBlock;
 			}

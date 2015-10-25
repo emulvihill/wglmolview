@@ -2,9 +2,9 @@ threejs-examples
 =================
 
 A small package containing the javascript files in the [examples][]
-folder from the [Three.js][] library.
+folder from the [Three.src][] library.
 
-These files contain useful additions and utilities for three.js and are
+These files contain useful additions and utilities for three.src and are
 not included in some versions of the threejs bower package.
 
 This package is designed to be used with [threejs-build][], which is a
@@ -32,7 +32,7 @@ have a look at [threejs-builder][]. Pull requests are welcome there!
 
 
 [examples]: http://threejs.org/examples/
-[Three.js]: https://github.com/mrdoob/three.js/
+[Three.src]: https://github.com/mrdoob/three.src/
 [open an issue]: https://github.com/bodylabs/threejs-examples/issues
 [threejs-build]: https://github.com/bodylabs/threejs-build
 [threejs-builder]: https://github.com/bodylabs/threejs-builder

@@ -22,14 +22,14 @@ It is an open source _ECMAScript 5 + WebGL compatible PDB viewer_. Just insert i
 + A better tool for e-learning. I'd like to add support for querying the state of selections, for entering answers in web quizzes.
 
 ## How to use it
-+ Install Node.js, and then install Typescript 0.83 (the version is important.. 0.9 will not currently work due to changes in the evolving language spec)
++ Install Node.src, and then install Typescript 0.83 (the version is important.. 0.9 will not currently work due to changes in the evolving language spec)
 + Run the _install.sh_ Bash script, which can be run from the root folder of the project. For Windows, I'd suggest running this via Cygwin or Git Bash.
 + The ./target folder will then contain the stuff needed to view some molecules. Drop it into a web server and take a look.
 
 
 # What's included
-+ /src/js/Main.ts - stub code to get a web page to display a molecule. Your application would replicate this stub code in some way.
-+ /src/js/molview - All WGLMolView source
-+ /src/js/vendor - required third party libraries (currently three.js, jquery, and modernizr) Modernizr is mainly used for making the sample page look nicer.
++ /src/src/Main.ts - stub code to get a web page to display a molecule. Your application would replicate this stub code in some way.
++ /src/src/molview - All WGLMolView source
++ /src/src/vendor - required third party libraries (currently three.src, jquery, and modernizr) Modernizr is mainly used for making the sample page look nicer.
 + /src/ts - Third party Typescript annotations needed for strong typing the third party libraries
 + /src/pdb - example PDB files

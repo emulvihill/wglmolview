@@ -448,7 +448,7 @@ window.ionic.version = '1.0.0-rc.5';
 })(window, document, ionic);
 
 /**
- * ion-events.js
+ * ion-events.src
  *
  * Author: Max Lynch <max@drifty.com>
  *
@@ -456,7 +456,7 @@ window.ionic.version = '1.0.0-rc.5';
  * detects special events like tap/swipe/etc. and emits them
  * as custom events that can be used in an app.
  *
- * Portions lovingly adapted from github.com/maker/ratchet and github.com/alexgibson/tap.js - thanks guys!
+ * Portions lovingly adapted from github.com/maker/ratchet and github.com/alexgibson/tap.src - thanks guys!
  */
 
 (function(ionic) {
@@ -565,7 +565,7 @@ window.ionic.version = '1.0.0-rc.5';
      * @alias ionic.onGesture
      * @description Add an event listener for a gesture on an element.
      *
-     * Available eventTypes (from [hammer.js](http://eightmedia.github.io/hammer.js/)):
+     * Available eventTypes (from [hammer.src](http://eightmedia.github.io/hammer.js/)):
      *
      * `hold`, `tap`, `doubletap`, `drag`, `dragstart`, `dragend`, `dragup`, `dragdown`, <br/>
      * `dragleft`, `dragright`, `swipe`, `swipeup`, `swipedown`, `swipeleft`, `swiperight`, <br/>
@@ -617,7 +617,7 @@ window.ionic.version = '1.0.0-rc.5';
   * Simple gesture controllers with some common gestures that emit
   * gesture events.
   *
-  * Ported from github.com/EightMedia/hammer.js Gestures - thanks!
+  * Ported from github.com/EightMedia/hammer.src Gestures - thanks!
   */
 (function(ionic) {
 
@@ -814,7 +814,7 @@ window.ionic.version = '1.0.0-rc.5';
 
 
     /**
-     * enable of disable hammer.js detection
+     * enable of disable hammer.src detection
      * @param   {Boolean}   state
      * @returns {ionic.Gestures.Instance}
      */
@@ -1013,7 +1013,7 @@ window.ionic.version = '1.0.0-rc.5';
 
 
     /**
-     * collect event data for ionic.Gestures js
+     * collect event data for ionic.Gestures src
      * @param   {HTMLElement}   element
      * @param   {String}        eventType        like ionic.Gestures.EVENT_MOVE
      * @param   {Object}        eventData
@@ -1314,7 +1314,7 @@ window.ionic.version = '1.0.0-rc.5';
     stopDefaultBrowserBehavior: function stopDefaultBrowserBehavior(element, css_class) {
       // changed from making many style changes to just adding a preset classname
       // less DOM manipulations, less code, and easier to control in the CSS side of things
-      // hammer.js doesn't come with CSS, but ionic does, which is why we prefer this method
+      // hammer.src doesn't come with CSS, but ionic does, which is why we prefer this method
       if(element && element.classList) {
         element.classList.add(css_class);
         element.onselectstart = function() {
@@ -1474,7 +1474,7 @@ window.ionic.version = '1.0.0-rc.5';
 
     /**
      * register new gesture
-     * @param   {Object}    gesture object, see gestures.js for documentation
+     * @param   {Object}    gesture object, see gestures.src for documentation
      * @returns {Array}     gestures
      */
     register: function register(gesture) {
@@ -3247,7 +3247,7 @@ ionic.DomUtil.ready(function() {
   /**
    * Various utilities used throughout Ionic
    *
-   * Some of these are adopted from underscore.js and backbone.js, both also MIT licensed.
+   * Some of these are adopted from underscore.src and backbone.src, both also MIT licensed.
    */
   ionic.Utils = {
 
@@ -3334,7 +3334,7 @@ ionic.DomUtil.ready(function() {
         return result;
       };
     },
-     // Borrowed from Backbone.js's extend
+     // Borrowed from Backbone.src's extend
      // Helper function to correctly set up the prototype chain, for subclasses.
      // Similar to `goog.inherits`, but uses a hash of prototype properties and
      // class properties to be extended.
@@ -3371,7 +3371,7 @@ ionic.DomUtil.ready(function() {
       return child;
     },
 
-    // Extend adapted from Underscore.js
+    // Extend adapted from Underscore.src
     extend: function(obj) {
        var args = Array.prototype.slice.call(arguments, 1);
        for (var i = 0; i < args.length; i++) {
@@ -4261,7 +4261,7 @@ function viewportLoadTag() {
 }
 
 function viewportUpdate() {
-  // unit tests in viewport.unit.js
+  // unit tests in viewport.unit.src
 
   var initWidth = viewportProperties.width;
   var initHeight = viewportProperties.height;
@@ -5138,7 +5138,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
     };
 
     //Broadcasted when keyboard is shown on some platforms.
-    //See js/utils/keyboard.js
+    //See src/utils/keyboard.src
     container.addEventListener('scrollChildIntoView', self.scrollChildIntoView);
 
     // Listen on document because container may not have had the last
@@ -7174,7 +7174,7 @@ ionic.scroll = {
       container.addEventListener('scroll', self.onScroll);
 
       //Broadcasted when keyboard is shown on some platforms.
-      //See js/utils/keyboard.js
+      //See src/utils/keyboard.src
       container.addEventListener('scrollChildIntoView', self.scrollChildIntoView);
       container.addEventListener('resetScrollView', self.resetScrollView);
     },
@@ -7931,7 +7931,7 @@ ionic.scroll = {
 })(ionic);
 
 /*
- * Adapted from Swipe.js 2.0
+ * Adapted from Swipe.src 2.0
  *
  * Brad Birdsall
  * Copyright 2013, MIT License
@@ -8691,10 +8691,10 @@ ionic.views.Slider = ionic.views.View.inherit({
 
 })();
 /*!
- * ionic.bundle.js is a concatenation of:
- * ionic.js, angular.js, angular-animate.js,
- * angular-sanitize.js, angular-ui-router.js,
- * and ionic-angular.js
+ * ionic.bundle.src is a concatenation of:
+ * ionic.src, angular.src, angular-animate.src,
+ * angular-sanitize.src, angular-ui-router.src,
+ * and ionic-angular.src
  */
 
 /**
@@ -13210,7 +13210,7 @@ var $AnimateProvider = ['$provide', function($provide) {
    *   triggered.
    *
    *
-   * ```js
+   * ```src
    *   return {
      *     eventFn : function(element, done) {
      *       //code to run the animation
@@ -19532,7 +19532,7 @@ var locationPrototype = {
    * [RFC 3986](http://www.ietf.org/rfc/rfc3986.txt).
    *
    *
-   * ```js
+   * ```src
    * // given url http://example.com/#/some/path?foo=bar&baz=xoxo
    * var absUrl = $location.absUrl();
    * // => "http://example.com/#/some/path?foo=bar&baz=xoxo"
@@ -19554,7 +19554,7 @@ var locationPrototype = {
    * Change path, search and hash, when called with parameter and return `$location`.
    *
    *
-   * ```js
+   * ```src
    * // given url http://example.com/#/some/path?foo=bar&baz=xoxo
    * var url = $location.url();
    * // => "/some/path?foo=bar&baz=xoxo"
@@ -19585,7 +19585,7 @@ var locationPrototype = {
    * Return protocol of current url.
    *
    *
-   * ```js
+   * ```src
    * // given url http://example.com/#/some/path?foo=bar&baz=xoxo
    * var protocol = $location.protocol();
    * // => "http"
@@ -19605,7 +19605,7 @@ var locationPrototype = {
    * Return host of current url.
    *
    *
-   * ```js
+   * ```src
    * // given url http://example.com/#/some/path?foo=bar&baz=xoxo
    * var host = $location.host();
    * // => "example.com"
@@ -19625,7 +19625,7 @@ var locationPrototype = {
    * Return port of current url.
    *
    *
-   * ```js
+   * ```src
    * // given url http://example.com/#/some/path?foo=bar&baz=xoxo
    * var port = $location.port();
    * // => 80
@@ -19650,7 +19650,7 @@ var locationPrototype = {
    * if it is missing.
    *
    *
-   * ```js
+   * ```src
    * // given url http://example.com/#/some/path?foo=bar&baz=xoxo
    * var path = $location.path();
    * // => "/some/path"
@@ -19676,7 +19676,7 @@ var locationPrototype = {
    * Change search part when called with parameter and return `$location`.
    *
    *
-   * ```js
+   * ```src
    * // given url http://example.com/#/some/path?foo=bar&baz=xoxo
    * var searchObject = $location.search();
    * // => {foo: 'bar', baz: 'xoxo'}
@@ -19754,7 +19754,7 @@ var locationPrototype = {
    * Change hash fragment when called with parameter and return `$location`.
    *
    *
-   * ```js
+   * ```src
    * // given url http://example.com/#/some/path?foo=bar&baz=xoxo#hashValue
    * var hash = $location.hash();
    * // => "hashValue"
@@ -21993,7 +21993,7 @@ function qFactory(nextTick, exceptionHandler) {
    * current promise, you have to "rethrow" the error by returning a rejection constructed via
    * `reject`.
    *
-   * ```js
+   * ```src
    *   promiseB = promiseA.then(function(result) {
    *     // success: do something and resolve promiseB
    *     //          with the old or a new result
@@ -22266,12 +22266,12 @@ function $RootScopeProvider() {
      *
      * Here is a simple scope snippet to show how you can interact with the scope.
      * ```html
-     * <file src="./test/ng/rootScopeSpec.js" tag="docs1" />
+     * <file src="./test/ng/rootScopeSpec.src" tag="docs1" />
      * ```
      *
      * # Inheritance
      * A scope can inherit from a parent scope, as in this example:
-     * ```js
+     * ```src
          var parent = $rootScope;
          var child = parent.$new();
 
@@ -22454,7 +22454,7 @@ function $RootScopeProvider() {
        *
        *
        * # Example
-       * ```js
+       * ```src
            // let's assume that scope was dependency injected as the $rootScope
            var scope = $rootScope;
            scope.name = 'misko';
@@ -22663,7 +22663,7 @@ function $RootScopeProvider() {
        *
        *
        * # Example
-       * ```js
+       * ```src
           $scope.names = ['igor', 'matias', 'misko', 'james'];
           $scope.dataCount = 4;
 
@@ -22859,7 +22859,7 @@ function $RootScopeProvider() {
        * In unit tests, you may need to call `$digest()` to simulate the scope life cycle.
        *
        * # Example
-       * ```js
+       * ```src
            var scope = ...;
            scope.name = 'misko';
            scope.counter = 0;
@@ -23079,7 +23079,7 @@ function $RootScopeProvider() {
        * expressions.
        *
        * # Example
-       * ```js
+       * ```src
            var scope = ng.$rootScope.Scope();
            scope.a = 1;
            scope.b = 2;
@@ -23163,7 +23163,7 @@ function $RootScopeProvider() {
        * ## Life cycle
        *
        * # Pseudo-Code of `$apply()`
-       * ```js
+       * ```src
            function $apply(expr) {
              try {
                return $eval(expr);
@@ -23578,7 +23578,7 @@ var SCE_CONTEXTS = {
   // RESOURCE_URL is a subtype of URL used in contexts where a privileged resource is sourced from a
   // url.  (e.g. ng-include, script src, templateUrl)
   RESOURCE_URL: 'resourceUrl',
-  JS: 'js'
+  JS: 'src'
 };
 
 // Helper functions follow.
@@ -23840,7 +23840,7 @@ function $SceDelegateProvider() {
      * See {@link ng.$sce $sce} for enabling strict contextual escaping.
      *
      * @param {string} type The kind of context in which this value is safe for use.  e.g. url,
-     *   resourceUrl, html, js and css.
+     *   resourceUrl, html, src and css.
      * @param {*} value The value that that should be considered trusted/safe.
      * @returns {*} A value that can be used to stand in for the provided `value` in places
      * where Angular expects a $sce.trustAs() return value.
@@ -24284,7 +24284,7 @@ function $SceProvider() {
    *
    * Inheritance happens to capture this in a natural way.  In some future, we
    * may not use inheritance anymore.  That is OK because no code outside of
-   * sce.js and sceSpecs.js would need to be aware of this detail.
+   * sce.src and sceSpecs.src would need to be aware of this detail.
    */
 
   this.$get = ['$parse', '$sceDelegate', function(
@@ -34829,10 +34829,10 @@ var minlengthDirective = function() {
 !window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}</style>');
 
 /*!
- * ionic.bundle.js is a concatenation of:
- * ionic.js, angular.js, angular-animate.js,
- * angular-sanitize.js, angular-ui-router.js,
- * and ionic-angular.js
+ * ionic.bundle.src is a concatenation of:
+ * ionic.src, angular.src, angular-animate.src,
+ * angular-sanitize.src, angular-ui-router.src,
+ * and ionic-angular.src
  */
 
 /**
@@ -35704,7 +35704,7 @@ angular.module('ngAnimate', ['ng'])
          * provided `from` and `to` styles will be applied alongside the given transition. If a JavaScript animation is
          * detected then the provided styles will be given in as function paramters.
          *
-         * ```js
+         * ```src
          * ngModule.animation('.my-inline-animation', function() {
          *   return {
          *     animate : function(element, className, from, to, done) {
@@ -36974,10 +36974,10 @@ angular.module('ngAnimate', ['ng'])
 })(window, window.angular);
 
 /*!
- * ionic.bundle.js is a concatenation of:
- * ionic.js, angular.js, angular-animate.js,
- * angular-sanitize.js, angular-ui-router.js,
- * and ionic-angular.js
+ * ionic.bundle.src is a concatenation of:
+ * ionic.src, angular.src, angular-animate.src,
+ * angular-sanitize.src, angular-ui-router.src,
+ * and ionic-angular.src
  */
 
 /**
@@ -37663,10 +37663,10 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 })(window, window.angular);
 
 /*!
- * ionic.bundle.js is a concatenation of:
- * ionic.js, angular.js, angular-animate.js,
- * angular-sanitize.js, angular-ui-router.js,
- * and ionic-angular.js
+ * ionic.bundle.src is a concatenation of:
+ * ionic.src, angular.src, angular-animate.src,
+ * angular-sanitize.src, angular-ui-router.src,
+ * and ionic-angular.src
  */
 
 /**
@@ -37841,7 +37841,7 @@ function indexBy(array, propName) {
   return result;
 }
 
-// extracted from underscore.js
+// extracted from underscore.src
 // Return a copy of the object only containing the whitelisted properties.
 function pick(obj) {
   var copy = {};
@@ -37852,7 +37852,7 @@ function pick(obj) {
   return copy;
 }
 
-// extracted from underscore.js
+// extracted from underscore.src
 // Return a copy of the object omitting the blacklisted properties.
 function omit(obj) {
   var copy = {};
@@ -41902,10 +41902,10 @@ angular.module('ui.router.state')
   .filter('includedByState', $IncludedByStateFilter);
 })(window, window.angular);
 /*!
- * ionic.bundle.js is a concatenation of:
- * ionic.js, angular.js, angular-animate.js,
- * angular-sanitize.js, angular-ui-router.js,
- * and ionic-angular.js
+ * ionic.bundle.src is a concatenation of:
+ * ionic.src, angular.src, angular-animate.src,
+ * angular-sanitize.src, angular-ui-router.src,
+ * and ionic-angular.src
  */
 
 /*!
@@ -42295,7 +42295,7 @@ IonicModule
   var LOCAL_REGEXP = /^\s*([@=&])(\??)\s*(\w*)\s*$/;
   return function(scope, attrs, bindDefinition) {
     forEach(bindDefinition || {}, function(definition, scopeName) {
-      //Adapted from angular.js $compile
+      //Adapted from angular.src $compile
       var match = definition.match(LOCAL_REGEXP) || [],
         attrName = match[3] || scopeName,
         mode = match[1], // @, =, or &
@@ -43187,7 +43187,7 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
      * * `disableBack`: The next view should forget its back view, and set it to null.
      * * `historyRoot`: The next view should become the root view in its history stack.
      *
-     * ```js
+     * ```src
      * $ionicHistory.nextViewOptions({
      *   disableAnimate: true,
      *   disableBack: true
@@ -52025,7 +52025,7 @@ IonicModule
       // if this view is not beneath a scrollCtrl, it can't be injected, proceed w/ native scrolling
       if (jsScrolling) {
         infiniteScrollCtrl.scrollView = scrollCtrl.scrollView;
-        $scope.scrollingType = 'js-scrolling';
+        $scope.scrollingType = 'src-scrolling';
         //bind to JS scroll events
         scrollCtrl.$element.on('scroll', infiniteScrollCtrl.checkBounds);
       } else {
@@ -53675,7 +53675,7 @@ IonicModule
         // Kick off native scrolling
         refresherCtrl.init();
       } else {
-        $element[0].classList.add('js-scrolling');
+        $element[0].classList.add('src-scrolling');
         scrollCtrl._setRefresher(
           $scope,
           $element[0],

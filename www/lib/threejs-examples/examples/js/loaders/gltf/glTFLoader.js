@@ -364,7 +364,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
     // Animations
     var Animation = function() {
 
-    	// create Three.js keyframe here
+    	// create Three.src keyframe here
         this.totalParameters = 0;
         this.loadedParameters = 0;
         this.parameters = {};
@@ -808,7 +808,7 @@ THREE.glTFLoader.prototype.load = function( url, callback ) {
         handleMaterial: {
             value: function(entryID, description, userInfo) {
                 //this should be rewritten using the meta datas that actually create the shader.
-                //here we will infer what needs to be pass to Three.js by looking inside the technique parameters.
+                //here we will infer what needs to be pass to Three.src by looking inside the technique parameters.
                 var technique = this.resources.getEntry(description.instanceTechnique.technique);
                 var materialParams = {};
                 var values = description.instanceTechnique.values;

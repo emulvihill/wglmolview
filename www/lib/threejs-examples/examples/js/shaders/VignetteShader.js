@@ -47,7 +47,7 @@ THREE.VignetteShader = {
 			"gl_FragColor = vec4( mix( texel.rgb, vec3( 1.0 - darkness ), dot( uv, uv ) ), texel.a );",
 
 			/*
-			// alternative version from glfx.js
+			// alternative version from glfx.src
 			// this one makes more "dusty" look (as opposed to "burned")
 
 			"vec4 color = texture2D( tDiffuse, vUv );",
