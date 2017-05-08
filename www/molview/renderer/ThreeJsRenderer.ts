@@ -2,7 +2,7 @@
  * =================================================================================================
  *
  * 	WebGL MolView
- * 	Copyright 2013-2015 Eric Mulvihill. All Rights Reserved.
+ * 	Copyright 2013-2017 Eric Mulvihill. All Rights Reserved.
  *
  * 	This program is free software. You can redistribute and/or modify it
  * 	in accordance with the terms of the accompanying license agreement.
@@ -11,52 +11,43 @@
  */
 module molview.renderer {
 
-
-
-
-    /// <reference path="IMolRenderer.ts" />
-    /// <reference path="../model/RenderableObject.ts" />
-    /// <reference path="../model/Atom.ts" />
-    /// <reference path="../model/Bond.ts" />
-
     class ViewObject extends THREE.Mesh {
-        modelObject:molview.model.RenderableObject;
+        modelObject: molview.model.RenderableObject;
     }
-
 
     export class ThreeJsRenderer implements IMolRenderer {
 
-        private static SCALE:number = 100;
+        private static SCALE: number = 100;
 
-        private scene:THREE.Scene;
-        private renderer:THREE.WebGLRenderer;
-        private camera:THREE.PerspectiveCamera;
+        private scene: THREE.Scene;
+        private renderer: THREE.WebGLRenderer;
+        private camera: THREE.PerspectiveCamera;
 
         //private projector:THREE.Projector;
         /* Projector has been removed. New pattern:
-         var raycaster = new THREE.Raycaster(); // create once
-         var mouse = new THREE.Vector2(); // create once
+         let raycaster = new THREE.Raycaster(); // create once
+         let mouse = new THREE.Vector2(); // create once
          ...
          mouse.x = ( event.clientX / renderer.domElement.width ) * 2 - 1;
          mouse.y = - ( event.clientY / renderer.domElement.height ) * 2 + 1;
          raycaster.setFromCamera( mouse, camera );
-         var intersects = raycaster.intersectObjects( objects, recursiveFlag );*/
+         let intersects = raycaster.intersectObjects( objects, recursiveFlag );*/
 
-        private light:THREE.Light;
+        private light: THREE.Light;
         private controls;
-        private domElement:JQuery;
-        private objects:ViewObject[] = [];
-        private selections:ViewObject[] = [];
+        private domElement: HTMLDivElement;
+        private objects: ViewObject[] = [];
+        private selections: ViewObject[] = [];
 
-        init(domElement:JQuery):void {
-            this.domElement = domElement;
+        init(domElement: HTMLElement): void {
+            this.domElement = <HTMLDivElement>domElement;
 
             // set the scene size
-            var WIDTH = 800,
+            let WIDTH = 800,
                 HEIGHT = 600;
 
             // set some camera attributes
-            var VIEW_ANGLE = 45,
+            let VIEW_ANGLE = 45,
                 ASPECT = WIDTH / HEIGHT,
                 NEAR = 0.1,
                 FAR = 1000000;
@@ -101,12 +92,12 @@ module molview.renderer {
             this.camera.add(this.light);
 
             // attach the render-supplied DOM element
-            this.domElement.append(this.renderer.domElement);
+            this.domElement.appendChild(this.renderer.domElement);
 
             this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
             this.controls.rotateSpeed = 0.5;
             this.controls.addEventListener('change', () => this.render);
-            window.addEventListener('resize', ()=> {
+            window.addEventListener('resize', () => {
                 this.onWindowResize()
             }, false);
 
@@ -116,7 +107,7 @@ module molview.renderer {
         }
 
 
-        reset():void {
+        reset(): void {
             //this.camera.position = new THREE.Vector3(0,0,1000);
             //this.camera.lookAt(new THREE.Vector3(0,0,0));
             while (this.objects.length > 0) {
@@ -131,9 +122,9 @@ module molview.renderer {
         }
 
 
-        addRenderableObject(modelObject:molview.model.RenderableObject):void {
+        addRenderableObject(modelObject: molview.model.RenderableObject): void {
 
-            var viewObject:ViewObject;
+            let viewObject: ViewObject;
 
             if (modelObject instanceof molview.model.Atom) {
                 viewObject = this.renderAtom(<molview.model.Atom>modelObject);
@@ -150,13 +141,13 @@ module molview.renderer {
         }
 
 
-        select(modelObject:molview.model.RenderableObject):void {
+        select(modelObject: molview.model.RenderableObject): void {
 
-            var viewObject:ViewObject = <ViewObject>modelObject.viewObject;
+            let viewObject: ViewObject = <ViewObject>modelObject.viewObject;
 
             if (!viewObject) throw new Error("cannot find view object for " + modelObject);
 
-            for (var i:number = 0; i < this.selections.length; i++) {
+            for (let i: number = 0; i < this.selections.length; i++) {
                 if (this.selections[i].modelObject === modelObject) {
                     // we've already selected.. unselect
                     this.deselect(modelObject);
@@ -173,27 +164,27 @@ module molview.renderer {
         }
 
 
-        deselect(modelObject:molview.model.RenderableObject):void {
+        deselect(modelObject: molview.model.RenderableObject): void {
 
-            for (var i:number = 0; i < this.selections.length; i++) {
+            for (let i: number = 0; i < this.selections.length; i++) {
                 if (this.selections[i].modelObject === modelObject) {
-                    var sels:ViewObject[] = this.selections.splice(i, 1);
+                    let sels: ViewObject[] = this.selections.splice(i, 1);
                     this.scene.remove(sels[0]);
                 }
             }
         }
 
 
-        deselectAll():void {
+        deselectAll(): void {
 
-            for (var i:number = 0; i < this.selections.length; i++) {
+            for (let i: number = 0; i < this.selections.length; i++) {
                 this.scene.remove(this.selections[i]);
             }
             this.selections = [];
         }
 
 
-        setRenderMode(mode:string):void {
+        setRenderMode(mode: string): void {
 
             switch (mode) {
                 case Constants.RENDERMODE_BALL_AND_STICK :
@@ -211,14 +202,14 @@ module molview.renderer {
         }
 
 
-        private animate():void {
+        private animate(): void {
 
-            requestAnimationFrame(()=> {
+            requestAnimationFrame(() => {
                 this.animate();
             });
             this.controls.update();
 
-            var rot = Date.now() * 0.0004;
+            let rot = Date.now() * 0.0004;
 
             this.light.rotation.x = this.scene.rotation.x = rot;
             this.light.rotation.y = this.scene.rotation.y = rot * 0.7;
@@ -227,26 +218,26 @@ module molview.renderer {
         }
 
 
-        render():void {
+        render(): void {
             // draw!
             this.renderer.render(this.scene, this.camera);
         }
 
 
-        private renderAtom(atom:molview.model.Atom):ViewObject {
+        private renderAtom(atom: molview.model.Atom): ViewObject {
 
-            var quality:string = Configuration.getConfig().renderQuality;
+            let quality: string = Configuration.getConfig().renderQuality;
 
             // set up the sphere vars
-            var radius = this.radiusConversion(atom.radius),
+            let radius = this.radiusConversion(atom.radius),
                 segments = 16,
                 rings = 16;
 
             // create the sphere's material
-            var sphereMaterial:THREE.MeshLambertMaterial = new THREE.MeshLambertMaterial({color: atom.color});
+            let sphereMaterial: THREE.MeshLambertMaterial = new THREE.MeshLambertMaterial({color: atom.color});
             // create a new mesh with sphere geometry
-            var geometry:THREE.SphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
-            var sphere:ViewObject = new ViewObject(geometry, sphereMaterial);
+            let geometry: THREE.SphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
+            let sphere: ViewObject = new ViewObject(geometry, sphereMaterial);
 
             sphere.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
@@ -257,16 +248,16 @@ module molview.renderer {
         }
 
 
-        private renderBond(bond:molview.model.Bond):ViewObject {
+        private renderBond(bond: molview.model.Bond): ViewObject {
 
-            var quality:string = Configuration.getConfig().renderQuality;
-            var mode:string = Configuration.getConfig().renderMode;
+            let quality: string = Configuration.getConfig().renderQuality;
+            let mode: string = Configuration.getConfig().renderMode;
 
-            var tubes:ViewObject[] = [];
+            let tubes: ViewObject[] = [];
 
-            var m:number[] = this.getBondMetrics(bond, mode);
-            var bondMaterial:THREE.MeshLambertMaterial = new THREE.MeshLambertMaterial({color: 0x0000FF});
-            var bondLength = bond.length; // 10 * m[2];
+            let m: number[] = this.getBondMetrics(bond, mode);
+            let bondMaterial: THREE.MeshLambertMaterial = new THREE.MeshLambertMaterial({color: 0x0000FF});
+            let bondLength = bond.length; // 10 * m[2];
             switch (bond.type) {
                 case 1:
                     tubes.push(this.makeCylinder(6, bondLength, bondMaterial));
@@ -291,16 +282,16 @@ module molview.renderer {
                     break;
             }
 
-            var bondObj:ViewObject = tubes[0];
-            for (var i:number = 1; i < tubes.length; i++) {
+            let bondObj: ViewObject = tubes[0];
+            for (let i: number = 1; i < tubes.length; i++) {
 
                 THREE.GeometryUtils.merge(tubes[0].geometry, tubes[i].geometry, 0);
                 //bondObj.add(tubes[i]);
                 m
             }
 
-            var v0:THREE.Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
-            var v1:THREE.Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+            let v0: THREE.Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+            let v1: THREE.Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
             bondObj.position = v0.add(v1).divideScalar(2);
             bondObj.lookAt(v1);
 
@@ -310,24 +301,24 @@ module molview.renderer {
         }
 
 
-        private renderAtomSelection(atom:molview.model.Atom):ViewObject {
+        private renderAtomSelection(atom: molview.model.Atom): ViewObject {
 
-            var quality:string = Configuration.getConfig().renderQuality;
+            let quality: string = Configuration.getConfig().renderQuality;
 
             // set up the sphere vars
-            var radius = 1.1 * this.radiusConversion(atom.radius),
+            let radius = 1.1 * this.radiusConversion(atom.radius),
                 segments = 16,
                 rings = 16
 
             // create the sphere's material
-            var sphereMaterial:THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({
+            let sphereMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({
                 color: 0xFF0000,
                 opacity: 0.5,
                 transparent: true
             });
             // create a new mesh with sphere geometry
-            var geometry:THREE.SphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
-            var selObj = new ViewObject(geometry, sphereMaterial);
+            let geometry: THREE.SphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
+            let selObj = new ViewObject(geometry, sphereMaterial);
 
             selObj.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
@@ -340,22 +331,23 @@ module molview.renderer {
         }
 
 
-        private renderBondSelection(bond:molview.model.Bond):ViewObject {
+        private renderBondSelection(bond: molview.model.Bond): ViewObject {
 
-            var quality:string = Configuration.getConfig().renderQuality;
-            var mode:string = Configuration.getConfig().renderMode;
+            let quality: string = Configuration.getConfig().renderQuality;
+            let mode: string = Configuration.getConfig().renderMode;
 
-            var m:number[] = this.getBondMetrics(bond, mode);
-            var selMaterial:THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({
+            let m: number[] = this.getBondMetrics(bond, mode);
+            let selMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({
                 color: 0xFF0000,
                 opacity: 0.5,
                 transparent: true
             });
-            var selObj:ViewObject = this.makeCylinder(10, bondLength, selMaterial);
-            var bondLength = bond.length;
+            let bondLength = bond.length;
 
-            var v0:THREE.Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
-            var v1:THREE.Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+            let selObj: ViewObject = this.makeCylinder(10, bondLength, selMaterial);
+
+            let v0: THREE.Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+            let v1: THREE.Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
             selObj.position = v0.add(v1).divideScalar(2);
             selObj.lookAt(v1);
 
@@ -366,11 +358,11 @@ module molview.renderer {
         }
 
 
-        private makeCylinder(width:number, height:number, material:any) {
+        private makeCylinder(width: number, height: number, material: any) {
 
-            var g:THREE.CylinderGeometry = new THREE.CylinderGeometry(width, width, height, 24, 1, true);
+            let g: THREE.CylinderGeometry = new THREE.CylinderGeometry(width, width, height, 24, 1, true);
             g.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI / 2));
-            var m:ViewObject = new ViewObject(g, material);
+            let m: ViewObject = new ViewObject(g, material);
             return m;
         }
 
@@ -378,7 +370,7 @@ module molview.renderer {
          * Measure the "empty space" at the ends of bonds, to make it look right with drawing between atoms
          * [length between atom0 & start of bond, length between end of bond & atom1, bond length as drawn]
          */
-        private getBondMetrics(bond:molview.model.Bond, mode:string):number[] {
+        private getBondMetrics(bond: molview.model.Bond, mode: string): number[] {
 
             if (mode === Constants.RENDERMODE_STICKS) {
                 return [0, bond.length, bond.length];
@@ -391,7 +383,7 @@ module molview.renderer {
         }
 
 
-        private onWindowResize():void {
+        private onWindowResize(): void {
 
             this.camera.aspect = window.innerWidth / window.innerHeight;
             this.camera.updateProjectionMatrix();
@@ -402,36 +394,35 @@ module molview.renderer {
         }
 
 
-        public getSelectedObject(event):molview.model.RenderableObject {
+        public getSelectedObject(event): molview.model.RenderableObject {
 
             event.preventDefault();
 
             //console.info("event.clientX " + event.clientX);
             //console.info("event.clientY " + event.clientY);
 
-            var vector:THREE.Vector3 = new THREE.Vector3(( (event.clientX - this.renderer.domElement.offsetLeft) / this.renderer.domElement.clientWidth ) * 2 - 1,
+            let vector: THREE.Vector3 = new THREE.Vector3(( (event.clientX - this.renderer.domElement.offsetLeft) / this.renderer.domElement.clientWidth ) * 2 - 1,
                 -( (event.clientY - this.renderer.domElement.offsetTop) / this.renderer.domElement.clientHeight) * 2 + 1, 0.5);
-            var ray = this.projector.pickingRay(vector, this.camera);
-            var intersects:THREE.Intersection[] = ray.intersectObjects(this.objects);
+            let ray = this.projector.pickingRay(vector, this.camera);
+            let intersects: THREE.Intersection[] = ray.intersectObjects(this.objects);
 
             if (intersects.length > 0) {
-                var viewObject:ViewObject = <ViewObject>intersects[0].object;
-                var modelObject:molview.model.RenderableObject = viewObject.modelObject;
+                let viewObject: ViewObject = <ViewObject>intersects[0].object;
+                let modelObject: molview.model.RenderableObject = viewObject.modelObject;
                 return modelObject;
             }
 
             return null;
-
         }
 
 
-        private radiusConversion(radius:number):number {
+        private radiusConversion(radius: number): number {
 
             return 5 * Math.log(8 * radius);
         }
 
 
-        private testWebGL():Boolean {
+        private testWebGL(): Boolean {
             //  try { return !! window. && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; }
             return true;
         }

@@ -2,7 +2,7 @@
  * =================================================================================================
  *
  * 	WebGL MolView
- * 	Copyright 2013-2015 Eric Mulvihill. All Rights Reserved.
+ * 	Copyright 2013-2017 Eric Mulvihill. All Rights Reserved.
  *
  * 	This program is free software. You can redistribute and/or modify it
  * 	in accordance with the terms of the accompanying license agreement.
@@ -12,19 +12,20 @@
 module molview {
 
     import RenderableObject = molview.model.RenderableObject;
-    export class MolView {
-        private selections:model.Atom[];
-        private molecule:molview.model.Molecule;
-        private renderer:renderer.IMolRenderer;
-        private domElement:JQuery;
-        private infoElement:JQuery;
-        private display:HTMLTextAreaElement;
-        private renderToolbar:HTMLDivElement;
-        private selectionToolbar:HTMLDivElement;
-        private config:Configuration;
-        private initialized:Boolean;
 
-        constructor(params?:Object) {
+    export class MolView {
+        private selections: model.Atom[];
+        private molecule: molview.model.Molecule;
+        private renderer: renderer.IMolRenderer;
+        private domElement: HTMLElement;
+        private infoElement: HTMLElement;
+        private display: HTMLTextAreaElement;
+        private renderToolbar: HTMLDivElement;
+        private selectionToolbar: HTMLDivElement;
+        private config: Configuration;
+        private initialized: Boolean;
+
+        constructor(params?: Object) {
             Configuration.newConfig(params);
             this.config = Configuration.getConfig();
             this.renderer = new molview.renderer.ThreeJsRenderer();
@@ -40,43 +41,46 @@ module molview {
             }
         }
 
-        private onMouseWheel(event:MouseWheelEvent):void {
-            var oldZoom:number = this.config.zoom;
+        private onMouseWheel(event: MouseWheelEvent): void {
+            let oldZoom: number = this.config.zoom;
             this.config.zoom = oldZoom + event.wheelDelta / 50.0;
             this.renderer.render();
         }
 
-        public loadPDB(pdbUrl:string):void {
+        public loadPDB(pdbUrl: string): void {
             if (!pdbUrl) {
                 console.warn("empty 3D molecule name");
             }
-            $.get(pdbUrl, (data:string) => {
-                this.config.pdbData = data;
-                this.renderPDBData();
+            fetch(pdbUrl).then(response => {
+                response.text().then(data => {
+                    this.config.pdbData = data;
+                    this.renderPDBData();
+                })
+
             });
         }
 
-        setRenderMode(mode:string):void {
+        setRenderMode(mode: string): void {
             this.config.renderMode = mode;
             this.clearSelections();
             this.renderer.render();
         }
 
-        setSelectionMode(mode:string):void {
+        setSelectionMode(mode: string): void {
             this.config.selectionMode = mode;
             this.clearSelections();
             this.renderer.render();
         }
 
-        private renderPDBData():void {
+        private renderPDBData(): void {
             this.molecule = new molview.model.Molecule();
 
             // get the DOM element to attach to
             // - assume we've got jQuery to hand
-            this.domElement = $('#' + this.config.domElement);
+            this.domElement = document.getElementById(this.config.domElement);
             //this.domElement.empty();
-            this.infoElement = $('#' + this.config.infoElement);
-            this.infoElement.empty();
+            this.infoElement = document.getElementById(this.config.infoElement);
+            this.infoElement.innerHTML = "";
 
             if (!this.initialized) {
                 this.renderer.init(this.domElement);
@@ -84,12 +88,13 @@ module molview {
                 this.renderer.reset();
             }
             if (!this.initialized) {
-                this.domElement.click(null, (event)=> {
-                    this.handleSelect(<MouseEvent><any>event)
-                });
-                this.domElement.click(null, ()=> {
-                    this.updateInfoDisplay()
-                });
+                this.domElement.click = () => {
+                    this.handleSelect(<MouseEvent><any>event);
+                }
+                this.domElement.click = () => {
+                    this.updateInfoDisplay();
+                }
+
             }
 
             this.molecule.parsePDB(this.config.pdbData);
@@ -111,19 +116,19 @@ module molview {
         }
 
 
-        private handleSelect(event:MouseEvent):void {
+        private handleSelect(event: MouseEvent): void {
             if (this.config.selectable === false) return;
 
-            var obj:model.RenderableObject = this.renderer.getSelectedObject(event);
+            let obj: model.RenderableObject = this.renderer.getSelectedObject(event);
             if (!(obj instanceof model.Atom)) return;
 
-            var selAtom = <model.Atom>obj;
+            let selAtom = <model.Atom>obj;
 
-            var index:number = this.selections.indexOf(selAtom);
+            let index: number = this.selections.indexOf(selAtom);
 
             if (index > -1) {
                 // already selected so deselect	if possible
-                var connectingBonds:model.Bond[];
+                let connectingBonds: model.Bond[];
                 if (index === 0) {
                     this.renderer.deselect(selAtom);
                     if (this.selections.length >= 2) {
@@ -160,7 +165,7 @@ module molview {
             if (this.selections.length > 0 &&
                 (this.config.selectionMode === Constants.SELECTIONMODE_ROTATION || this.config.selectionMode === Constants.SELECTIONMODE_TORSION)) {
                 // check for neighborness before selecting
-                var neighbors:RenderableObject[] = this.molecule.getNeighbors(selAtom);
+                let neighbors: RenderableObject[] = this.molecule.getNeighbors(selAtom);
 
                 if (neighbors.indexOf(this.selections[0]) > -1) {
                     this.renderer.select(selAtom);
@@ -183,13 +188,13 @@ module molview {
         }
 
 
-        private clearSelections():void {
+        private clearSelections(): void {
             this.renderer.deselectAll();
             this.selections = [];
         }
 
 
-        private updateInfoDisplay():void {
+        private updateInfoDisplay(): void {
             switch (this.config.selectionMode) {
                 case Constants.SELECTIONMODE_IDENTIFY :
                     this.displayIdentify();
@@ -207,74 +212,74 @@ module molview {
         }
 
 
-        private displayIdentify():void {
+        private displayIdentify(): void {
             if (this.selections.length < 1) {
                 this.updateDisplay(Messages.INSTRUCT_IDENTIFY);
                 return;
             }
-            var a:model.Atom = this.selections[0];
-            var text:string = a.name + " (" + a.element + ")";
+            let a: model.Atom = this.selections[0];
+            let text: string = a.name + " (" + a.element + ")";
 
             this.updateDisplay(text);
         }
 
 
-        private displayDistance():void {
+        private displayDistance(): void {
             if (this.selections.length < 2) {
                 this.updateDisplay(Messages.INSTRUCT_DISTANCE);
                 return;
             }
-            var d:number = this.selections[0].loc.distanceTo(this.selections[1].loc);
-            var text:string = d.toFixed(4) + " nm\n" + this.selections[0].element + " - " + this.selections[1].element;
+            let d: number = this.selections[0].loc.distanceTo(this.selections[1].loc);
+            let text: string = d.toFixed(4) + " nm\n" + this.selections[0].element + " - " + this.selections[1].element;
 
             this.updateDisplay(text);
         }
 
 
-        private displayRotation():void {
+        private displayRotation(): void {
             if (this.selections.length < 3) {
                 this.updateDisplay(Messages.INSTRUCT_ROTATION);
                 return;
             }
-            var v:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[0].loc, this.selections[1].loc);
-            var w:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
-            var ang:number = v.angleTo(w);
+            let v: THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[0].loc, this.selections[1].loc);
+            let w: THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
+            let ang: number = v.angleTo(w);
 
             if (!ang) {
                 this.updateDisplay("Invalid atoms selected. Please select a chain of 3 atoms.");
                 return;
             }
 
-            var text:string = Utility.r2d(ang).toFixed(4) + " degrees\n" +
+            let text: string = Utility.r2d(ang).toFixed(4) + " degrees\n" +
                 this.selections[0].element + " - " + this.selections[1].element + " - " + this.selections[2].element;
             this.updateDisplay(text);
         }
 
 
-        private displayTorsion():void {
+        private displayTorsion(): void {
             if (this.selections.length < 4) {
                 this.updateDisplay(Messages.INSTRUCT_TORSION);
                 return;
             }
-            var u:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[1].loc, this.selections[0].loc);
-            var v:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
-            var w:THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[3].loc, this.selections[2].loc);
-            var uXv:THREE.Vector3 = u.cross(v);
-            var vXw:THREE.Vector3 = v.cross(w);
-            var ang:number = (uXv && vXw) ? uXv.angleTo(vXw) : null;
+            let u: THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[1].loc, this.selections[0].loc);
+            let v: THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
+            let w: THREE.Vector3 = new THREE.Vector3().subVectors(this.selections[3].loc, this.selections[2].loc);
+            let uXv: THREE.Vector3 = u.cross(v);
+            let vXw: THREE.Vector3 = v.cross(w);
+            let ang: number = (uXv && vXw) ? uXv.angleTo(vXw) : null;
             if (ang === null) {
                 this.updateDisplay("Invalid atoms selected. Please select a chain of 4 atoms.");
                 return;
             }
 
-            var text:string = Utility.r2d(ang).toFixed(4) + " degrees\n" +
+            let text: string = Utility.r2d(ang).toFixed(4) + " degrees\n" +
                 this.selections[0].element + " - " + this.selections[1].element + " - " +
                 this.selections[2].element + " - " + this.selections[3].element;
             this.updateDisplay(text);
         }
 
-        private updateDisplay(str:string):void {
-            this.infoElement.text(str);
+        private updateDisplay(str: string): void {
+            this.infoElement.innerText = str;
         }
 
     }

@@ -2,7 +2,7 @@
  * =================================================================================================
  *
  * 	WebGL MolView
- * 	Copyright 2013-2015 Eric Mulvihill. All Rights Reserved.
+ * 	Copyright 2013-2017 Eric Mulvihill. All Rights Reserved.
  *
  * 	This program is free software. You can redistribute and/or modify it
  * 	in accordance with the terms of the accompanying license agreement.
@@ -12,53 +12,53 @@
 module molview.model {
 
     export interface AtomInitializer {
-        serial:number;
-        elemName:string;
-        element:string;
-        altLoc:number;
-        resName:string;
-        chainId:number;
-        resSeq:string;
-        iCode:string;
-        x:number;
-        y:number;
-        z:number;
-        occupancy:string;
-        tempFactor:number;
-        segId:number;
-        element2:string;
-        charge:number;
+        serial: number;
+        elemName: string;
+        element: string;
+        altLoc: number;
+        resName: string;
+        chainId: number;
+        resSeq: string;
+        iCode: string;
+        x: number;
+        y: number;
+        z: number;
+        occupancy: string;
+        tempFactor: number;
+        segId: number;
+        element2: string;
+        charge: number;
     }
 
     export class Atom extends RenderableObject {
-        radius:number;
-        color:number;
-        name:string;
-        element:string;   // first chars of elemName
-        element2:string;
-        elemName:string;  // short 4-char pdb name
+        radius: number;
+        color: number;
+        name: string;
+        element: string;   // first chars of elemName
+        element2: string;
+        elemName: string;  // short 4-char pdb name
 
-        private altLoc:number;
-        private tempFactor:number;
-        private serial:number;
-        private chainID:number;
-        private segID:number;
-        private charge:number[];
-        private resName:string;
-        private resSeq:string;
-        private iCode:string;
-        private occupancy:string;
+        private altLoc: number;
+        private tempFactor: number;
+        private serial: number;
+        private chainID: number;
+        private segID: number;
+        private charge: number[];
+        private resName: string;
+        private resSeq: string;
+        private iCode: string;
+        private occupancy: string;
 
-        private _bonds:Bond[][];
-        public get bonds():Bond[] {
+        private _bonds: Bond[][];
+        public get bonds(): Bond[] {
             return this._bonds[this.mframe];
         }
 
-        constructor(init:AtomInitializer) {
+        constructor(init: AtomInitializer) {
             super();
 
 
-            var edata:DataObject = ElementData.getData(init.element);
+            let edata: DataObject = ElementData.getData(init.element);
             if (!edata) {
                 // unsupported ATOM record
                 console.warn("bad ATOM symbol: " + init.element);
@@ -80,7 +80,7 @@ module molview.model {
             this.name = edata.name;
             this.color = edata.color;
 
-            var radiusScale:number = Configuration.getConfig().atomRadiusScale;
+            let radiusScale: number = Configuration.getConfig().atomRadiusScale;
             switch (Configuration.getConfig().atomRadiusMode) {
                 case Constants.ATOM_RADIUS_ACCURATE:
                     this.radius = radiusScale * edata.radius;
@@ -95,39 +95,39 @@ module molview.model {
 
             this.charge = new Array(Configuration.getConfig().maxFrames);  // per frame
             this._bonds = new Array(Configuration.getConfig().maxFrames);   // per frame
-            for (var i:number = 0; i <= Configuration.getConfig().maxFrames; i++) {
+            for (let i: number = 0; i <= Configuration.getConfig().maxFrames; i++) {
                 this._bonds[i] = [];
             }
 
         }
 
-        public addToMframe(x:number, y:number, z:number, c:number, mframe:number):void {
+        public addToMframe(x: number, y: number, z: number, c: number, mframe: number): void {
             this.mframe = mframe;
             this.loc = new THREE.Vector3(x, y, z);
             this.charge[mframe] = c;
         }
 
 
-        public addBond(bond:Bond):void {
+        public addBond(bond: Bond): void {
             this._bonds[this.mframe].push(bond);
         }
 
 
-        public render(renderer:molview.renderer.IMolRenderer):void {
+        public render(renderer: molview.renderer.IMolRenderer): void {
             renderer.addRenderableObject(this);
         }
 
 
-        public setColorMode(colorMode:string):void {
+        public setColorMode(colorMode: string): void {
 
             switch (colorMode) {
                 case Constants.COLORMODE_CPK:  // i.e. "element color"
-                    var edata:DataObject = ElementData.getData(this.element);
+                    let edata: DataObject = ElementData.getData(this.element);
                     this.color = edata ? edata.color : ElementData.getData("C").color;
                     break;
 
                 case Constants.COLORMODE_AMINO_ACID:
-                    var aaData = AminoAcidData.getData(this.resName).color;
+                    let aaData = AminoAcidData.getData(this.resName).color;
                     this.color = aaData ? aaData : 0xCCCCCC;
                     break;
             }

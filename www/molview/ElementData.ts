@@ -2,7 +2,7 @@
  * =================================================================================================
  *
  * 	WebGL MolView
- * 	Copyright 2013-2015 Eric Mulvihill. All Rights Reserved.
+ * 	Copyright 2013-2017 Eric Mulvihill. All Rights Reserved.
  *
  * 	This program is free software. You can redistribute and/or modify it
  * 	in accordance with the terms of the accompanying license agreement.
@@ -11,26 +11,25 @@
  */
 module molview {
     export class ElementData {
-        private static atomData:{[key:string]:DataObject} = {};
+        private static atomData: { [key: string]: DataObject } = {};
 
-        public static getData(e:string):DataObject {
+        public static getData(e: string): DataObject {
             if (!e) {
                 return null;
             }
 
             if (ElementData.atomData === null) {
-                $.ajax({
-                    url: Configuration.getConfig().baseUrl + "/src/molview/elements.json",
-                    async: false,
-                    dataType: "json",
-                    success: (data)=> {
+
+                let url = Configuration.getConfig().baseUrl + "/src/molview/elements.json";
+                fetch(url).then(value => {
+                    value.json().then(data => {
                         ElementData.atomData = {};
-                        var json:Object = (typeof data === "string") ? JSON.parse(data) : data;
-                        $.each(json, (item)=> {
-                            var obj:DataObject = new DataObject(json[item]);
+                        let json: Object = (typeof data === "string") ? JSON.parse(data) : data;
+                        for (let item in json) {
+                            let obj: DataObject = new DataObject(json[item]);
                             ElementData.atomData[obj.symbol.toUpperCase()] = obj;
-                        })
-                    }
+                        }
+                    });
                 });
             }
             return ElementData.atomData[e.toUpperCase()];
@@ -39,11 +38,11 @@ module molview {
 
     export class DataObject {
 
-        public name:string;
-        public symbol:string;
-        public number:number;
-        public radius:number;
-        public color:number;
+        public name: string;
+        public symbol: string;
+        public number: number;
+        public radius: number;
+        public color: number;
 
         constructor(json) {
             this.name = json.name;

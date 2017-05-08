@@ -7,10 +7,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Node.js v0.10.25 Core Modules" level="application" />
     <orderEntry type="library" name="threejs-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="angularjs-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="cordova-ionic-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="wglmolview node_modules" level="project" />
   </component>
 </module>

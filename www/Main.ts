@@ -1,22 +1,43 @@
-/// <reference path="../typings/tsd.d.ts" />
-
 function init() {
 
     // Modify baseUrl & pdbUrl as appropriate to your deployment environment
-    var mv:molview.MolView = new molview.MolView({baseUrl:"/target", pdbUrl:"pdb/helix2.pdb", domElement:"container", infoElement:"infoText"});
+    var mv: molview.MolView = new molview.MolView({
+        baseUrl: "/target",
+        pdbUrl: "pdb/helix2.pdb",
+        domElement: "container",
+        infoElement: "infoText"
+    });
 
-    $("#renderStick").click(()=>{mv.setRenderMode(molview.Constants.RENDERMODE_STICKS)});
-    $("#renderBall").click(()=>{mv.setRenderMode(molview.Constants.RENDERMODE_BALL_AND_STICK)});
-    $("#renderBlob").click(()=>{mv.setRenderMode(molview.Constants.RENDERMODE_SPACE_FILL)});
+    function getElement(s: string): HTMLElement {
+        return document.getElementById(s);
+    }
 
-    $("#selectionInfo").click(()=>{mv.setSelectionMode(molview.Constants.SELECTIONMODE_IDENTIFY)});
-    $("#selectionDistance").click(()=>{mv.setSelectionMode(molview.Constants.SELECTIONMODE_DISTANCE)});
-    $("#selectionRotation").click(()=>{mv.setSelectionMode(molview.Constants.SELECTIONMODE_ROTATION)});
-    $("#selectionTorsion").click(()=>{mv.setSelectionMode(molview.Constants.SELECTIONMODE_TORSION)});
+    getElement("#renderStick").click = () => {
+        mv.setRenderMode(molview.Constants.RENDERMODE_STICKS)
+    };
+    getElement("#renderBall").click = () => {
+        mv.setRenderMode(molview.Constants.RENDERMODE_BALL_AND_STICK)
+    };
+    getElement("#renderBlob").click = () => {
+        mv.setRenderMode(molview.Constants.RENDERMODE_SPACE_FILL)
+    };
+
+    getElement("#selectionInfo").click = () => {
+        mv.setSelectionMode(molview.Constants.SELECTIONMODE_IDENTIFY)
+    };
+    getElement("#selectionDistance").click = () => {
+        mv.setSelectionMode(molview.Constants.SELECTIONMODE_DISTANCE)
+    };
+    getElement("#selectionRotation").click = () => {
+        mv.setSelectionMode(molview.Constants.SELECTIONMODE_ROTATION)
+    };
+    getElement("#selectionTorsion").click = () => {
+        mv.setSelectionMode(molview.Constants.SELECTIONMODE_TORSION)
+    };
 
     // molecule selection dropdown
-    $("#pdbSelect").change(()=> {
-        mv.loadPDB($("#pdbSelect").val());
-    });
+    getElement("#pdbSelect").onchange = (event) => {
+        let value = (<HTMLSelectElement> getElement("#pdbSelect")).value;
+        mv.loadPDB(value);
+    };
 }
-

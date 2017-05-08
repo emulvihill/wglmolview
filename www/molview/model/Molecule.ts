@@ -2,7 +2,7 @@
  * =================================================================================================
  *
  * 	WebGL MolView
- * 	Copyright 2013-2015 Eric Mulvihill. All Rights Reserved.
+ * 	Copyright 2013-2017 Eric Mulvihill. All Rights Reserved.
  *
  * 	This program is free software. You can redistribute and/or modify it
  * 	in accordance with the terms of the accompanying license agreement.
@@ -13,14 +13,14 @@ module molview.model {
 
     export class Molecule extends RenderableObject {
 
-        private maxMframe:number;
-        private currentMframe:number;
-        private title:string;
-        private header:Object;
-        private compound:Object;
-        private residueSequence:Object;
-        private objects:{[key:string]:Atom|Bond};
-        private selections:RenderableObject[];
+        private maxMframe: number;
+        private currentMframe: number;
+        private title: string;
+        private header: Object;
+        private compound: Object;
+        private residueSequence: Object;
+        private objects: { [key: string]: Atom | Bond };
+        private selections: RenderableObject[];
 
         constructor() {
             super();
@@ -32,13 +32,13 @@ module molview.model {
             this.maxMframe = 0;
         }
 
-        public parsePDB(pdb:string, mframe:number = 0):void {
-            var pdbArray:string[] = pdb.split("\n");
+        public parsePDB(pdb: string, mframe: number = 0): void {
+            let pdbArray: string[] = pdb.split("\n");
 
-            for (var i:number = 0; i < pdbArray.length; i++) {
+            for (let i: number = 0; i < pdbArray.length; i++) {
 
-                var currLine:string = String(pdbArray[i]);
-                var recordType:string = currLine.substring(0, 6);
+                let currLine: string = String(pdbArray[i]);
+                let recordType: string = currLine.substring(0, 6);
 
                 switch (recordType) {
                     case "SEQRES":
@@ -119,9 +119,9 @@ module molview.model {
                          --   7 - 30        String            id             identifier for the object to be recolored
                          --   31 - 36       RRGGBB            newcolor       new color in RRGGBB hex string format
                          */
-                        this.id = $.trim(currLine.substring(6, 30));
-                        var newcolor:string = currLine.substring(30, 36);
-                        var obj:Atom|Bond = this.objects[this.id];
+                        this.id = currLine.substring(6, 30).trim();
+                        let newcolor: string = currLine.substring(30, 36);
+                        let obj: Atom | Bond = this.objects[this.id];
                         obj.color = newcolor;
                         break;
 
@@ -148,10 +148,10 @@ module molview.model {
                          -- 79 - 80        LString(2)      charge         Charge on the atom.
                          */
 
-                        var init:AtomInitializer = {
+                        let init: AtomInitializer = {
                             serial: parseInt(currLine.substring(6, 11)),
-                            elemName: $.trim(currLine.substring(12, 16)),
-                            element: $.trim(currLine.substring(12, 14)),
+                            elemName: currLine.substring(12, 16).trim(),
+                            element: currLine.substring(12, 14).trim(),
                             altLoc: parseInt(currLine.substring(16, 17)),
                             resName: currLine.substring(17, 20),
                             chainId: parseInt(currLine.substring(21, 22)),
@@ -163,11 +163,11 @@ module molview.model {
                             occupancy: currLine.substring(60, 66),
                             tempFactor: parseFloat(currLine.substring(72, 76)),
                             segId: parseInt(currLine.substring(76, 78)),
-                            element2: $.trim(currLine.substring(78, 80)),
+                            element2: currLine.substring(78, 80).trim(),
                             charge: parseInt(currLine.substring(80, 81))
                         };
 
-                        var atom:Atom = <Atom>(this.objects["atom" + init.serial]);
+                        let atom: Atom = <Atom>(this.objects["atom" + init.serial]);
 
                         if (!atom) {
                             // make a new atom object
@@ -201,11 +201,13 @@ module molview.model {
                          -- 52 - 56         Integer          serial          Serial number of hydrogen bonded atom
                          -- 57 - 61         Integer          serial          Serial number of salt bridged atom
                          */
-                        var cAtom:number = parseInt(currLine.substring(6, 11));
-                        var s:number[] = [parseInt(currLine.substring(11, 16)), parseInt(currLine.substring(16, 21)), parseInt(currLine.substring(21, 26)), parseInt(currLine.substring(26, 31))];
-                        var h:number[] = [parseInt(currLine.substring(31, 36)), parseInt(currLine.substring(36, 41)), parseInt(currLine.substring(41, 46)), parseInt(currLine.substring(46, 51))];
-                        var sb:number[] = [parseInt(currLine.substring(51, 56)), parseInt(currLine.substring(56, 61))];
-                        var t:number = 1;
+                        let cAtom: number = parseInt(currLine.substring(6, 11));
+                        let s: number[] = [parseInt(currLine.substring(11, 16)), parseInt(currLine.substring(16, 21)),
+                            parseInt(currLine.substring(21, 26)), parseInt(currLine.substring(26, 31))];
+                        let h: number[] = [parseInt(currLine.substring(31, 36)), parseInt(currLine.substring(36, 41)),
+                            parseInt(currLine.substring(41, 46)), parseInt(currLine.substring(46, 51))];
+                        let sb: number[] = [parseInt(currLine.substring(51, 56)), parseInt(currLine.substring(56, 61))];
+                        let t: number = 1;
 
                         if (cAtom == 0) {
                             throw new Error("error in line: " + currLine);
@@ -218,18 +220,18 @@ module molview.model {
                             t = 3;
                         }
 
-                        for (var cb:number = 0; cb < 4; cb++) {
+                        for (let cb: number = 0; cb < 4; cb++) {
                             if (s[cb] > cAtom) // only add each bond once
                             {
-                                var a1:Atom = <Atom>this.objects["atom" + cAtom];
-                                var a2:Atom = <Atom>this.objects["atom" + s[cb]];
+                                let a1: Atom = <Atom>this.objects["atom" + cAtom];
+                                let a2: Atom = <Atom>this.objects["atom" + s[cb]];
                                 // make the bond and add to current frame
                                 if (a1 && a2) {
-                                    var id_str:string = a1.id + "-" + a2.id;
-                                    var bond:Bond = <Bond>this.objects["bond" + id_str];
+                                    let id_str: string = a1.id + "-" + a2.id;
+                                    let bond: Bond = <Bond>this.objects["bond" + id_str];
                                     if (!bond) {
                                         // no bond exists here
-                                        var init2:BondInitializer = {
+                                        let init2: BondInitializer = {
                                             t: t,
                                             a1: a1,
                                             a2: a2,
@@ -253,13 +255,13 @@ module molview.model {
             }
         }
 
-        render(renderer:molview.renderer.IMolRenderer):void {
+        render(renderer: molview.renderer.IMolRenderer): void {
             for (let obj in this.objects) {
                 this.objects[obj].render(renderer);
             }
         }
 
-        public set mframe(mframe:number) {
+        public set mframe(mframe: number) {
             // go to a particular frame in a multi frame model
 
             for (let obj in this.objects) {
@@ -270,10 +272,10 @@ module molview.model {
         }
 
 
-        public getBonds(atom1:Atom, atom2:Atom):Bond[] {
+        public getBonds(atom1: Atom, atom2: Atom): Bond[] {
             // returns either a list of names of bonds attached to single atom (one parameter)
             // or a single bond between two atoms (two parameters)
-            var res:Bond[] = [];
+            let res: Bond[] = [];
             if (!atom1) {
                 // bad call
                 throw new Error("error in call to getBonds");
@@ -282,8 +284,8 @@ module molview.model {
                 res = atom1.bonds;
             }
             else {
-                for (var i:number = 0; i < atom1.bonds.length; i++) {
-                    var b1:Bond = atom1.bonds[i];
+                for (let i: number = 0; i < atom1.bonds.length; i++) {
+                    let b1: Bond = atom1.bonds[i];
                     if (b1.atoms[0] == atom2 || b1.atoms[1] == atom2) {
                         res = [b1];
                     }
@@ -294,34 +296,34 @@ module molview.model {
         }
 
 
-        public setColorMode(m:string):void {
+        public setColorMode(m: string): void {
             for (let obj in this.objects) {
                 this.objects[obj].setColorMode(m);
             }
         }
 
 
-        public addSelection(obj:RenderableObject):void {
+        public addSelection(obj: RenderableObject): void {
             if (!obj) throw new Error("invalid selection");
 
             this.selections.push(obj);
         }
 
 
-        public removeSelection(obj:RenderableObject):void {
+        public removeSelection(obj: RenderableObject): void {
             if (!obj) throw new Error("invalid selection");
 
             this.selections.splice(this.selections.indexOf(obj), 1);
         }
 
 
-        public getNeighbors(obj:RenderableObject):RenderableObject[] {
+        public getNeighbors(obj: RenderableObject): RenderableObject[] {
             if (!obj) throw new Error("invalid object in getNeighbors()");
             // return the atoms that are directly connected to this atom / bond
-            var res:RenderableObject[] = [];
+            let res: RenderableObject[] = [];
 
             if (obj instanceof Atom) {
-                for (var i:number = 0; i < (<Atom>obj).bonds.length; i++) {
+                for (let i: number = 0; i < (<Atom>obj).bonds.length; i++) {
                     if ((<Atom>obj).bonds[i].atoms[0] == obj) {
                         res.push((<Atom>obj).bonds[i].atoms[1]);
                     }
@@ -341,9 +343,9 @@ module molview.model {
         /**
          * Adjust the loc of each object by the average offset of all objects
          **/
-        public center():void {
-            var center:THREE.Vector3 = new THREE.Vector3(0, 0, 0);
-            var numAtoms:number = 0;
+        public center(): void {
+            let center: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
+            let numAtoms: number = 0;
             for (let obj in this.objects) {
                 if (this.objects[obj] instanceof Atom) {
                     center.add(this.objects[obj].loc);

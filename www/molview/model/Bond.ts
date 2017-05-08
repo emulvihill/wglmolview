@@ -2,7 +2,7 @@
  * =================================================================================================
  *
  * 	WebGL MolView
- * 	Copyright 2013-2015 Eric Mulvihill. All Rights Reserved.
+ * 	Copyright 2013-2017 Eric Mulvihill. All Rights Reserved.
  *
  * 	This program is free software. You can redistribute and/or modify it
  * 	in accordance with the terms of the accompanying license agreement.
@@ -12,22 +12,22 @@
 module molview.model {
 
     export class Bond extends RenderableObject {
-        type:number;
+        type: number;
 
-        atoms:Atom[];
+        atoms: Atom[];
 
-        color:string;
+        color: string;
 
-        private _length:number[];
-        public get length():number {
+        private _length: number[];
+        public get length(): number {
             return this._length[this.mframe];
         }
 
-        public set length(len:number) {
+        public set length(len: number) {
             this._length[this.mframe] = len;
         }
 
-        constructor(init:BondInitializer) {
+        constructor(init: BondInitializer) {
             super();
             this.type = init.t;
             this.atoms = [init.a1, init.a2];
@@ -44,7 +44,7 @@ module molview.model {
         }
 
 
-        public addToMframe(mframe:number):void {
+        public addToMframe(mframe: number): void {
             this.loc = this.atoms[0].loc.clone();
             this.loc.add(this.atoms[1].loc);
             this.loc.multiplyScalar(0.5);
@@ -52,12 +52,12 @@ module molview.model {
         }
 
 
-        public render(renderer:molview.renderer.IMolRenderer):void {
+        public render(renderer: molview.renderer.IMolRenderer): void {
             renderer.addRenderableObject(this);
         }
 
 
-        public setColorMode(mode:string):void {
+        public setColorMode(mode: string): void {
             if (!this.type) throw new Error("bond type is undefined");
 
             switch (mode) {
@@ -73,9 +73,9 @@ module molview.model {
     }
 
     export class BondInitializer {
-        id:string;
-        t:number;
-        a1:Atom;
-        a2:Atom;
+        id: string;
+        t: number;
+        a1: Atom;
+        a2: Atom;
     }
 }
