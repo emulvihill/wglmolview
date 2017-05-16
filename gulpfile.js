@@ -3,6 +3,19 @@
 var gulp = require('gulp');
 var connect = require('gulp-connect');
 var jasmineBrowser = require('gulp-jasmine-browser');
+var gulp = require('gulp');
+var ts = require('gulp-typescript');
+
+gulp.task('compile', function () {
+    var tsProject = ts.createProject('tsconfig.json',
+        {
+            noImplicitAny: false,
+            out: 'wglmolview.js'
+        });
+    return gulp.src('src/**/*.ts')
+        .pipe(tsProject())
+        .pipe(gulp.dest('built/local'));
+});
 
 gulp.task('jasmine', function () {
     return gulp.src(['src/**/*.js', 'spec/**/*.spec.js'])

@@ -9,19 +9,21 @@
  *
  * =================================================================================================
  */
-module molview.model {
-    export class SelectedAtom extends molview.model.RenderableObject {
-        atom: Atom;
-        radius: number;
+import {RenderableObject} from "./RenderableObject";
+import {Atom} from "./Atom";
+import {IMolRenderer} from "../renderer/IMolRenderer";
 
-        constructor(atom: Atom) {
-            super();
-            this.atom = atom;
-            this.radius = 1.05 * atom.radius;
-        }
+export class SelectedAtom extends RenderableObject {
+    atom: Atom;
+    radius: number;
 
-        public render(renderer: molview.renderer.IMolRenderer): void {
-            renderer.addRenderableObject(this);
-        }
+    constructor(atom: Atom) {
+        super();
+        this.atom = atom;
+        this.radius = 1.05 * atom.radius;
+    }
+
+    public render(renderer: IMolRenderer): void {
+        renderer.addRenderableObject(this);
     }
 }
