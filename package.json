@@ -1,14 +1,30 @@
 {
   "name": "wglmolview",
   "author": "eric.mulvihill@gmail.com",
-  "repository": "https://bitbucket.org/ericmulvihill/wglmolview",
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/ericmulvihill/wglmolview.git"
+  },
   "license": "Apache-2.0",
   "version": "2.0.0",
   "description": "Simple WebGL Molecule Viewer",
   "dependencies": {
+    "gulp-connect": "5.0.0",
     "three": "0.85.2"
   },
   "devDependencies": {
-    "@types/three": "0.84.7"
-  }
+    "@types/three": "0.84.7",
+    "gulp": "3.9.1",
+    "gulp-jasmine-browser": "1.7.1",
+    "jasmine-core": "2.6.1"
+  },
+  "homepage": "https://bitbucket.org/ericmulvihill/wglmolview#readme",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "karma start"
+  },
+  "keywords": [
+    "chemistry",
+    "webgl"
+  ]
 }
