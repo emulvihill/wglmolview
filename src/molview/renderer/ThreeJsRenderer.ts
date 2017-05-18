@@ -11,9 +11,9 @@
  */
 import {
     TrackballControls, Mesh, Scene, WebGLRenderer, PerspectiveCamera, Light, PointLight,
-    SphereGeometry, GeometryUtils, Vector3, CylinderGeometry, Intersection, Object3D
+    SphereGeometry, GeometryUtils, Vector3, CylinderGeometry, Intersection, Object3D,
+    MeshLambertMaterial, MeshBasicMaterial, Matrix4
 } from "three";
-import {MeshLambertMaterial, MeshBasicMaterial, Matrix4} from "@types/three/three-core";
 import {Atom} from "../model/Atom";
 import {Bond} from "../model/Bond";
 import {Constants} from "../Constants";

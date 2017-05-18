@@ -1,61 +1,26 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
+<html lang="en">
+	<head>
+		<title>WGL Molecule Viewer</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
 
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+		<script src="lib/three.js"></script>
 
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
-    -->
+		<script src="lib/TrackballControls.js"></script>
+		<script src="lib/Projector.js"></script>
+		<script src="lib/CanvasRenderer.js"></script>
 
-    <!-- ionic/angularjs src -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
-
-    <script src="lib/three.js/three.min.js"></script>
-    <script src="lib/threejs-examples/examples/js/controls/TrackballControls.js"></script>
-
-    <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
-
-    <!-- your app's src -->
-    <script src="app.js"></script>
-    <script src="controllers.js"></script>
-    <script src="services.js"></script>
-
-    <script src="molview/AminoAcidData.js"></script>
-    <script src="molview/Configuration.js"></script>
-    <script src="molview/Constants.js"></script>
-    <script src="molview/ElementData.js"></script>
-    <script src="molview/Messages.js"></script>
-    <script src="molview/MolView.js"></script>
-    <script src="molview/Utility.js"></script>
-    <script src="molview/model/RenderableObject.js"></script>
-    <script src="molview/model/Atom.js"></script>
-    <script src="molview/model/Bond.js"></script>
-    <script src="molview/model/Molecule.js"></script>
-    <script src="molview/renderer/MockRenderer.js"></script>
-    <script src="molview/renderer/ThreeJsRenderer.js"></script>
-    <script src="molview/renderer/IMolRenderer.js"></script>
-
-
-  </head>
-  <body ng-app="starter">
-    <!--
-      The nav bar that will be updated as we navigate between views.
-    -->
-    <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-    </ion-nav-bar>
-    <!--
-      The views will be rendered in the <ion-nav-view> directive below
-      Templates are in the /templates folder (but you could also
-      have templates inline in this html file if you'd like).
-    -->
-    <ion-nav-view></ion-nav-view>
-  </body>
+		<script src="target/wglmolview.js" />
+	</body>
 </html>

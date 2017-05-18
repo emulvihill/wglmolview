@@ -7,5 +7,5 @@ hooks/
 *.iml
 .idea/
 
-*.js
+src/**/*.js
 *.js.map
