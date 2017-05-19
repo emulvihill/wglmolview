@@ -9,4 +9,5 @@ hooks/
 .idea/
 
 src/**/*.js
+spec/**/*.js
 *.js.map
