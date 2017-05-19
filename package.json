@@ -15,8 +15,13 @@
   "devDependencies": {
     "@types/three": "0.84.7",
     "gulp": "3.9.1",
-    "gulp-jasmine-browser": "1.7.1",
     "jasmine-core": "2.6.1",
+    "karma": "1.7.0",
+    "karma-chrome-launcher": "2.1.1",
+    "karma-cli": "1.0.1",
+    "karma-jasmine": "1.1.0",
+    "karma-phantomjs-launcher": "1.0.4",
+    "karma-typescript": "3.0.2",
     "shelljs": "0.7.7",
     "tslint": "5.2.0",
     "typescript": "2.3.2"
@@ -24,6 +29,9 @@
   "homepage": "https://bitbucket.org/ericmulvihill/wglmolview#readme",
   "main": "gulpfile.js",
   "scripts": {
+    "dev": "gulp dev --cwd . && karma start",
+    "dev:ci": "gulp dev:ci --cwd . && karma start --single-run",
+    "dev:ci:phantomjs": "gulp dev:ci --cwd . && karma start --browsers PhantomJS --single-run",
     "test": "karma start"
   },
   "keywords": [

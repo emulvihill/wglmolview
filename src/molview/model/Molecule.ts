@@ -11,9 +11,10 @@
  */
 
 import {Atom, AtomInitializer} from "./Atom";
-import {RenderableObject, Vector3} from "three";
+import {Vector3} from "three";
 import {Bond, BondInitializer} from "./Bond";
 import {IMolRenderer} from "../renderer/IMolRenderer";
+import {RenderableObject} from "./RenderableObject";
 export class Molecule extends RenderableObject {
 
     private maxMframe: number;
@@ -40,7 +41,7 @@ export class Molecule extends RenderableObject {
 
         for (let i: number = 0; i < pdbArray.length; i++) {
 
-            let currLine: string = String(pdbArray[i]);
+            let currLine: string = pdbArray[i];
             let recordType: string = currLine.substring(0, 6);
 
             switch (recordType) {
@@ -326,17 +327,17 @@ export class Molecule extends RenderableObject {
         let res: RenderableObject[] = [];
 
         if (obj instanceof Atom) {
-            for (let i: number = 0; i < (<Atom>obj).bonds.length; i++) {
-                if ((<Atom>obj).bonds[i].atoms[0] == obj) {
-                    res.push((<Atom>obj).bonds[i].atoms[1]);
+            for (let i: number = 0; i < obj.bonds.length; i++) {
+                if (obj.bonds[i].atoms[0] == obj) {
+                    res.push(obj.bonds[i].atoms[1]);
                 }
                 else {
-                    res.push((<Atom>obj).bonds[i].atoms[0]);
+                    res.push(obj.bonds[i].atoms[0]);
                 }
             }
         }
         else if (obj instanceof Bond) {
-            res.push((<Bond>obj).atoms[0], (<Bond>obj).atoms[1]);
+            res.push(obj.atoms[0], obj.atoms[1]);
         }
 
         return res;
