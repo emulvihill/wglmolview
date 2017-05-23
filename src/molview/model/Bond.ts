@@ -15,6 +15,14 @@ import {Constants} from "../Constants";
 import {RenderableObject} from "./RenderableObject";
 import {Atom} from "./Atom";
 import {IMolRenderer} from "../renderer/IMolRenderer";
+
+export class BondInitializer {
+    id: string;
+    t: number;
+    a1: Atom;
+    a2: Atom;
+}
+
 export class Bond extends RenderableObject {
     type: number;
 
@@ -23,6 +31,7 @@ export class Bond extends RenderableObject {
     color: string;
 
     private _length: number[];
+
     public get length(): number {
         return this._length[this.mframe];
     }
@@ -47,7 +56,6 @@ export class Bond extends RenderableObject {
         this.atoms[1].addBond(this);
     }
 
-
     public addToMframe(mframe: number): void {
         this.loc = this.atoms[0].loc.clone();
         this.loc.add(this.atoms[1].loc);
@@ -55,14 +63,14 @@ export class Bond extends RenderableObject {
         this.length = 100 * this.atoms[0].loc.distanceTo(this.atoms[1].loc);
     }
 
-
     public render(renderer: IMolRenderer): void {
         renderer.addRenderableObject(this);
     }
 
-
     public setColorMode(mode: string): void {
-        if (!this.type) throw new Error("bond type is undefined");
+        if (!this.type) {
+            throw new Error("bond type is undefined");
+        }
 
         switch (mode) {
             case Constants.COLORMODE_CPK:  // i.e. "element color"
@@ -74,11 +82,4 @@ export class Bond extends RenderableObject {
                 break;
         }
     }
-}
-
-export class BondInitializer {
-    id: string;
-    t: number;
-    a1: Atom;
-    a2: Atom;
 }

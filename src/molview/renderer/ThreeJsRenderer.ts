@@ -12,7 +12,7 @@
 import {
     TrackballControls, Mesh, Scene, WebGLRenderer, PerspectiveCamera, Light, PointLight,
     SphereGeometry, GeometryUtils, Vector3, CylinderGeometry, Intersection, Object3D,
-    MeshLambertMaterial, MeshBasicMaterial, Matrix4
+    MeshLambertMaterial, MeshBasicMaterial, Matrix4, Projector, Raycaster, Vector2
 } from "three";
 import {Atom} from "../model/Atom";
 import {Bond} from "../model/Bond";
@@ -32,6 +32,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     private scene: Scene;
     private renderer: WebGLRenderer;
     private camera: PerspectiveCamera;
+    private projector: Projector;
 
     //private projector:Projector;
     /* Projector has been removed. New pattern:
@@ -409,13 +410,18 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         event.preventDefault();
 
-        //console.info("event.clientX " + event.clientX);
-        //console.info("event.clientY " + event.clientY);
-
-        let vector: Vector3 = new Vector3(( (event.clientX - this.renderer.domElement.offsetLeft) / this.renderer.domElement.clientWidth ) * 2 - 1,
+        // console.info("event.clientX " + event.clientX);
+        // console.info("event.clientY " + event.clientY);
+        let point: Vector3 = new Vector3(( (event.clientX - this.renderer.domElement.offsetLeft) / this.renderer.domElement.clientWidth ) * 2 - 1,
             -( (event.clientY - this.renderer.domElement.offsetTop) / this.renderer.domElement.clientHeight) * 2 + 1, 0.5);
-        let ray = this.projector.pickingRay(vector, this.camera);
-        let intersects: Intersection[] = ray.intersectObjects(this.objects);
+        let raycaster = new Raycaster();
+        let mouse = new Vector2();
+        mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
+
+        raycaster.setFromCamera( mouse, this.camera );
+
+        let intersects = raycaster.intersectObjects( this.objects, false );
 
         if (intersects.length > 0) {
             let viewObject: ViewObject = <ViewObject>intersects[0].object;

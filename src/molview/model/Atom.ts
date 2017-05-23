@@ -18,7 +18,7 @@ import {Constants} from "../Constants";
 import {Vector3} from "three";
 import {IMolRenderer} from "../renderer/IMolRenderer";
 import {AminoAcidData} from "../AminoAcidData";
-export interface AtomInitializer {
+export class AtomInitializer {
     serial: number;
     elemName: string;
     element: string;
