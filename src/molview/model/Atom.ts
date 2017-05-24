@@ -56,7 +56,7 @@ export class Atom extends RenderableObject {
             return;
         }
         this.element = init.element;
-        this.id = init.serial.toString();
+        this.id = init.id;
         this.altLoc = init.altLoc;
         this.resName = init.resName;
         this.chainID = init.chainId;

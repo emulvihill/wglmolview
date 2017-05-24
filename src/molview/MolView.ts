@@ -21,6 +21,7 @@ import {Messages} from "./Messages";
 import {Vector3} from "three";
 import {Utility} from "./Utility";
 import {IMolRenderer} from "./renderer/IMolRenderer";
+import {PDBParser} from "./PDBParser";
 export class MolView {
     private selections: Atom[];
     private molecule: Molecule;
@@ -33,25 +34,23 @@ export class MolView {
     private config: Configuration;
     private initialized: Boolean;
 
-    constructor(params?: Object) {
-        Configuration.newConfig(params);
-        this.config = Configuration;
+    constructor(params: {pdbUrl?: "", pdbData?: ""}) {
         this.renderer = new ThreeJsRenderer();
 
         // this is where selections are stored
         this.selections = [];
 
         // load the molecule from the init settings
-        if (this.config.pdbUrl) {
-            this.loadPDB(this.config.pdbUrl);
-        } else if (this.config.pdbData) {
-            this.renderPDBData();
+        if (params.pdbUrl) {
+            this.loadPDB(params.pdbUrl);
+        } else if (params.pdbData) {
+            this.renderPDBData(params.pdbData);
         }
     }
 
     private onMouseWheel(event: MouseWheelEvent): void {
-        let oldZoom: number = this.config.zoom;
-        this.config.zoom = oldZoom + event.wheelDelta / 50.0;
+        let oldZoom: number = Configuration.zoom;
+        Configuration.zoom = oldZoom + event.wheelDelta / 50.0;
         this.renderer.render();
     }
 
@@ -61,33 +60,33 @@ export class MolView {
         }
         fetch(pdbUrl).then(response => {
             response.text().then(data => {
-                this.config.pdbData = data;
-                this.renderPDBData();
+                Configuration.pdbData = data;
+                this.renderPDBData(data);
             })
 
         });
     }
 
     setRenderMode(mode: string): void {
-        this.config.renderMode = mode;
+        Configuration.renderMode = mode;
         this.clearSelections();
         this.renderer.render();
     }
 
     setSelectionMode(mode: string): void {
-        this.config.selectionMode = mode;
+        Configuration.selectionMode = mode;
         this.clearSelections();
         this.renderer.render();
     }
 
-    private renderPDBData(): void {
+    private renderPDBData(pdbData: string): void {
         this.molecule = new Molecule();
 
         // get the DOM element to attach to
         // - assume we've got jQuery to hand
-        this.domElement = document.getElementById(this.config.domElement)!;
+        this.domElement = document.getElementById(Configuration.domElement)!;
         //this.domElement.empty();
-        this.infoElement = document.getElementById(this.config.infoElement)!;
+        this.infoElement = document.getElementById(Configuration.infoElement)!;
         this.infoElement.innerHTML = "";
 
         if (!this.initialized) {
@@ -105,9 +104,9 @@ export class MolView {
 
         }
 
-        this.molecule.parsePDB(this.config.pdbData);
+        this.molecule = PDBParser.parsePDB(pdbData);
 
-        if (this.config.autoCenter === true) {
+        if (Configuration.autoCenter === true) {
             this.molecule.center();
         }
 
@@ -115,7 +114,7 @@ export class MolView {
         this.molecule.render(this.renderer);
 
         // load initial render mode
-        //this.renderer.setRenderMode(this.config.renderMode);
+        //this.renderer.setRenderMode(Configuration.renderMode);
 
         // draw the molecule on screen
         this.renderer.render();
@@ -125,7 +124,7 @@ export class MolView {
 
 
     private handleSelect(event: MouseEvent): void {
-        if (this.config.selectable === false) return;
+        if (Configuration.selectable === false) return;
 
         let obj: RenderableObject = this.renderer.getSelectedObject(event)!;
         if (!(obj instanceof Atom)) return;
@@ -161,18 +160,18 @@ export class MolView {
             return;
         }
 
-        if (this.config.selectionMode === Constants.SELECTIONMODE_IDENTIFY && this.selections.length >= 1) this.clearSelections();
+        if (Configuration.selectionMode === Constants.SELECTIONMODE_IDENTIFY && this.selections.length >= 1) this.clearSelections();
 
-        if ((this.config.selectionMode === Constants.SELECTIONMODE_DISTANCE && this.selections.length >= 2) ||
-            (this.config.selectionMode === Constants.SELECTIONMODE_ROTATION && this.selections.length >= 3) ||
-            (this.config.selectionMode === Constants.SELECTIONMODE_TORSION && this.selections.length >= 4)) {
+        if ((Configuration.selectionMode === Constants.SELECTIONMODE_DISTANCE && this.selections.length >= 2) ||
+            (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION && this.selections.length >= 3) ||
+            (Configuration.selectionMode === Constants.SELECTIONMODE_TORSION && this.selections.length >= 4)) {
             // too many selected
             return;
         }
 
         if (this.selections.length > 0 &&
-            (this.config.selectionMode === Constants.SELECTIONMODE_ROTATION ||
-            this.config.selectionMode === Constants.SELECTIONMODE_TORSION)) {
+            (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION ||
+            Configuration.selectionMode === Constants.SELECTIONMODE_TORSION)) {
             // check for neighborness before selecting
             let neighbors: RenderableObject[] = this.molecule.getNeighbors(selAtom);
 
@@ -204,7 +203,7 @@ export class MolView {
 
 
     private updateInfoDisplay(): void {
-        switch (this.config.selectionMode) {
+        switch (Configuration.selectionMode) {
             case Constants.SELECTIONMODE_IDENTIFY :
                 this.displayIdentify();
                 break;

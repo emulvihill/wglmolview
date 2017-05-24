@@ -10,10 +10,11 @@
  * =================================================================================================
  */
 
-import {Atom} from "./Atom";
 import {Vector3} from "three";
-import {Bond} from "./Bond";
 import {IMolRenderer} from "../renderer/IMolRenderer";
+import {Atom} from "./Atom";
+import {Bond} from "./Bond";
+import {MoleculeInitializer} from "./MoleculeInitializer";
 import {RenderableObject} from "./RenderableObject";
 
 export class Molecule extends RenderableObject {
@@ -24,30 +25,33 @@ export class Molecule extends RenderableObject {
     private header: Object;
     private compound: Object;
     private residueSequence: Object;
-    private objects: { [key: string]: Atom | Bond };
+    private objects: (Atom|Bond)[];
     private selections: RenderableObject[];
 
-    constructor() {
+    constructor(init: MoleculeInitializer) {
         super();
 
+        this.objects = init.objects;
+        this.title = init.title;
+        this.header = init.header;
+        this.compound = init.compound;
         this.selections = [];
-        this.objects = {};
         this.residueSequence = {};
         this.currentMframe = 0;
         this.maxMframe = 0;
     }
 
     render(renderer: IMolRenderer): void {
-        for (let obj in this.objects) {
-            this.objects[obj].render(renderer);
+        for (let obj of this.objects) {
+            obj.render(renderer);
         }
     }
 
     public set mframe(mframe: number) {
         // go to a particular frame in a multi frame model
 
-        for (let obj in this.objects) {
-            this.objects[obj].mframe = mframe;
+        for (let obj of this.objects) {
+            obj.mframe = mframe;
         }
 
         this.currentMframe = mframe;
@@ -77,8 +81,8 @@ export class Molecule extends RenderableObject {
     }
 
     public setColorMode(m: string): void {
-        for (let obj in this.objects) {
-            this.objects[obj].setColorMode(m);
+        for (let obj of this.objects) {
+            obj.setColorMode(m);
         }
     }
 
@@ -120,7 +124,14 @@ export class Molecule extends RenderableObject {
         }
 
         return res;
+    }
 
+    public get numAtoms(): number {
+        return this.objects.filter(o => {return o instanceof Atom;}).length;
+    }
+
+    public get numBonds(): number {
+        return this.objects.filter(o => {return o instanceof Bond;}).length;
     }
 
     /**
@@ -129,15 +140,15 @@ export class Molecule extends RenderableObject {
     public center(): void {
         let center: Vector3 = new Vector3(0, 0, 0);
         let numAtoms: number = 0;
-        for (let obj in this.objects) {
-            if (this.objects[obj] instanceof Atom) {
-                center.add(this.objects[obj].loc);
+        for (let obj of this.objects) {
+            if (obj instanceof Atom) {
+                center.add(obj.loc);
                 numAtoms++;
             }
         }
         center.multiplyScalar(-1.0 / numAtoms);
-        for (let obj in this.objects) {
-            this.objects[obj].loc.add(center);
+        for (let obj of this.objects) {
+            obj.loc.add(center);
         }
     }
 

@@ -6,7 +6,7 @@ describe("PDBParser", () => {
     let pdbData: string;
 
     beforeAll((done) => {
-        fetch("base/spec/data/bsheet.pdb")
+        fetch("base/spec/data/ala.pdb")
             .then(
                 (response: Response) => {
                     response.text()
@@ -25,5 +25,7 @@ describe("PDBParser", () => {
     it("parses bsheet.pdb", () => {
         const mol: Molecule = PDBParser.parsePDB(pdbData);
         expect(mol).toBeTruthy();
+        expect(mol.numAtoms).toEqual(13);
+        expect(mol.numBonds).toEqual(13);
     });
 });

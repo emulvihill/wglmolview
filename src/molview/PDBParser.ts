@@ -1,19 +1,33 @@
+﻿﻿/*
+ * =================================================================================================
+ *
+ * 	WebGL MolView
+ * 	Copyright 2013-2017 Eric Mulvihill. All Rights Reserved.
+ *
+ * 	This program is free software. You can redistribute and/or modify it
+ * 	in accordance with the terms of the accompanying license agreement.
+ *
+ * =================================================================================================
+ */
+
+import {BondInitializer} from "./BondInitializer";
 import {Atom} from "./model/Atom";
+import {AtomInitializer} from "./model/AtomInitializer";
 import {Bond} from "./model/Bond";
 import {Molecule} from "./model/Molecule";
 
 export class PDBParser {
 
     static parsePDB(pdb: string, mframe: number = 0): Molecule {
-        let pdbData: Object = {};
+        let objects: (Atom | Bond)[] = [];
         let pdbArray: string[] = pdb.split("\n");
-        let compound: Object;
-        let header: Object;
-        let title: String;
+        let compound: Object = {};
+        let header: Object = {};
+        let title: string = "";
 
         for (let i: number = 0; i < pdbArray.length; i++) {
 
-            let currLine: string = String(pdbArray[i]);
+            let currLine: string = pdbArray[i];
             let recordType: string = currLine.substring(0, 6);
 
             switch (recordType) {
@@ -97,8 +111,12 @@ export class PDBParser {
                      */
                     let id = currLine.substring(6, 30).trim();
                     let newcolor: string = currLine.substring(30, 36);
-                    let obj: Atom | Bond = pdbData[id];
-                    obj.color = newcolor;
+                    let obj: Atom | Bond = objects.filter((o) => {
+                        return o.id === id;
+                    })[0];
+                    if (obj) {
+                        obj.color = newcolor;
+                    }
                     break;
 
                 case "ATOM  ":
@@ -124,8 +142,10 @@ export class PDBParser {
                      -- 79 - 80        LString(2)      charge         Charge on the atom.
                      */
 
+                    let serial = parseInt(currLine.substring(6, 11));
                     let init: AtomInitializer = {
-                        serial: parseInt(currLine.substring(6, 11)),
+                        id: "atom" + serial,
+                        serial: serial,
                         elemName: currLine.substring(12, 16).trim(),
                         element: currLine.substring(12, 14).trim(),
                         altLoc: parseInt(currLine.substring(16, 17)),
@@ -143,13 +163,15 @@ export class PDBParser {
                         charge: parseInt(currLine.substring(80, 81))
                     };
 
-                    let atom: Atom = <Atom>pdbData["atom" + init.serial];
+                    let atom: Atom = <Atom>objects.filter((o) => {
+                        return o.id === "atom" + serial;
+                    })[0];
 
                     if (!atom) {
                         // make a new atom object
                         atom = new Atom(init);
                         if (atom && atom.name) {
-                            pdbData["atom" + init.serial] = atom;
+                            objects.push(atom);
                             // add the object to current frame
                             atom.addToMframe(init.x, init.y, init.z, init.charge, mframe);
                         }
@@ -198,12 +220,18 @@ export class PDBParser {
                     for (let cb: number = 0; cb < 4; cb++) {
                         if (s[cb] > cAtom) // only add each bond once
                         {
-                            let a1: Atom = <Atom>pdbData["atom" + cAtom];
-                            let a2: Atom = <Atom>pdbData["atom" + s[cb]];
+                            let a1: Atom = <Atom>objects.filter((o) => {
+                                return o.id === "atom" + cAtom;
+                            })[0];
+                            let a2: Atom = <Atom>objects.filter((o) => {
+                                return o.id === "atom" + s[cb]
+                            })[0];
                             // make the bond and add to current frame
                             if (a1 && a2) {
                                 let id_str: string = a1.id + "-" + a2.id;
-                                let bond: Bond = <Bond>pdbData["bond" + id_str];
+                                let bond: Bond = <Bond>objects.filter((o) => {
+                                    return o.id === "bond" + id_str;
+                                })[0];
                                 if (!bond) {
                                     // no bond exists here
                                     let init2: BondInitializer = {
@@ -213,7 +241,7 @@ export class PDBParser {
                                         id: id_str
                                     };
                                     bond = new Bond(init2);
-                                    pdbData["bond" + id_str] = bond;
+                                    objects.push(bond);
                                 }
                                 bond.addToMframe(mframe);
                             }
@@ -229,7 +257,7 @@ export class PDBParser {
             } // end switch
         }
 
-        return new Molecule();
+        return new Molecule({objects: objects, compound: compound, header: header, title: title});
     }
 
 }

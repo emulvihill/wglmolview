@@ -11,6 +11,7 @@
  */
 
 export class AtomInitializer {
+    id: string;
     serial: number;
     elemName: string;
     element: string;
