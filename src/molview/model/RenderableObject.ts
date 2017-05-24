@@ -20,7 +20,7 @@ export class RenderableObject {
     viewObject: ViewObject;
 
     constructor() {
-        this._loc = new Array(Configuration.getConfig().maxFrames);    // per frame
+        this._loc = new Array(Configuration.maxFrames);    // per frame
     }
 
     public get loc(): Vector3 {

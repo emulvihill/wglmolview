@@ -35,7 +35,7 @@ export class MolView {
 
     constructor(params?: Object) {
         Configuration.newConfig(params);
-        this.config = Configuration.getConfig();
+        this.config = Configuration;
         this.renderer = new ThreeJsRenderer();
 
         // this is where selections are stored

@@ -10,12 +10,6 @@ gulp.task("compile", function () {
     return shell.exec("tsc --outFile target/wglmolview.js");
 });
 
-gulp.task("jasmine", function () {
-    return gulp.src(["src/**/*.js", "spec/**/*.spec.js"])
-        .pipe(jasmineBrowser.specRunner())
-        .pipe(jasmineBrowser.server({port: 8888}));
-});
-
 gulp.task("connect", function () {
     connect.server({
         root: "app",

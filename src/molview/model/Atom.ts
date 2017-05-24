@@ -10,32 +10,16 @@
  * =================================================================================================
  */
 
-import {RenderableObject} from "./RenderableObject";
-import {DataObject, ElementData} from "../ElementData";
-import {Bond} from "./Bond";
+import {Vector3} from "three";
+import {AminoAcidData} from "../AminoAcidData";
 import {Configuration} from "../Configuration";
 import {Constants} from "../Constants";
-import {Vector3} from "three";
+import {DataObject} from "../DataObject";
+import {ElementData} from "../ElementData";
 import {IMolRenderer} from "../renderer/IMolRenderer";
-import {AminoAcidData} from "../AminoAcidData";
-export class AtomInitializer {
-    serial: number;
-    elemName: string;
-    element: string;
-    altLoc: number;
-    resName: string;
-    chainId: number;
-    resSeq: string;
-    iCode: string;
-    x: number;
-    y: number;
-    z: number;
-    occupancy: string;
-    tempFactor: number;
-    segId: number;
-    element2: string;
-    charge: number;
-}
+import {AtomInitializer} from "./AtomInitializer";
+import {Bond} from "./Bond";
+import {RenderableObject} from "./RenderableObject";
 
 export class Atom extends RenderableObject {
     radius: number;
@@ -56,16 +40,16 @@ export class Atom extends RenderableObject {
     private iCode: string;
     private occupancy: string;
 
-    private _bonds: Bond[][];
+    private bondFrames: Bond[][];
+
     public get bonds(): Bond[] {
-        return this._bonds[this.mframe];
+        return this.bondFrames[this.mframe];
     }
 
     constructor(init: AtomInitializer) {
         super();
 
-
-        let edata: DataObject = ElementData.getData(init.element);
+        const edata: DataObject = ElementData.getData(init.element);
         if (!edata) {
             // unsupported ATOM record
             console.warn("bad ATOM symbol: " + init.element);
@@ -87,23 +71,27 @@ export class Atom extends RenderableObject {
         this.name = edata.name;
         this.color = edata.color;
 
-        let radiusScale: number = Configuration.getConfig().atomRadiusScale;
-        switch (Configuration.getConfig().atomRadiusMode) {
+        const radiusScale: number = Configuration.atomRadiusScale;
+
+        switch (Configuration.atomRadiusMode) {
             case Constants.ATOM_RADIUS_ACCURATE:
                 this.radius = radiusScale * edata.radius;
                 break;
             case Constants.ATOM_RADIUS_REDUCED:
-                this.radius = radiusScale * (Constants.ATOM_RADIUS_REDUCED_SCALE * edata.radius + (1 - Constants.ATOM_RADIUS_REDUCED_SCALE) * ElementData.getData("H").radius);
+                this.radius =
+                    radiusScale * (Constants.ATOM_RADIUS_REDUCED_SCALE *
+                                   edata.radius + (1 - Constants.ATOM_RADIUS_REDUCED_SCALE) * ElementData.getData(
+                        "H").radius);
                 break;
             case Constants.ATOM_RADIUS_UNIFORM:
             default:
                 this.radius = radiusScale * ElementData.getData("H").radius;
         }
 
-        this.charge = new Array(Configuration.getConfig().maxFrames);  // per frame
-        this._bonds = new Array(Configuration.getConfig().maxFrames);   // per frame
-        for (let i: number = 0; i <= Configuration.getConfig().maxFrames; i++) {
-            this._bonds[i] = [];
+        this.charge = new Array(Configuration.maxFrames);  // per frame
+        this.bondFrames = new Array(Configuration.maxFrames);   // per frame
+        for (let i: number = 0; i <= Configuration.maxFrames; i++) {
+            this.bondFrames[i] = [];
         }
 
     }
@@ -114,27 +102,24 @@ export class Atom extends RenderableObject {
         this.charge[mframe] = c;
     }
 
-
     public addBond(bond: Bond): void {
-        this._bonds[this.mframe].push(bond);
+        this.bondFrames[this.mframe].push(bond);
     }
-
 
     public render(renderer: IMolRenderer): void {
         renderer.addRenderableObject(this);
     }
 
-
     public setColorMode(colorMode: string): void {
 
         switch (colorMode) {
             case Constants.COLORMODE_CPK:  // i.e. "element color"
-                let edata: DataObject = ElementData.getData(this.element);
+                const edata: DataObject = ElementData.getData(this.element);
                 this.color = edata ? edata.color : ElementData.getData("C").color;
                 break;
 
             case Constants.COLORMODE_AMINO_ACID:
-                let aaData = AminoAcidData.getData(this.resName).color;
+                const aaData = AminoAcidData.getData(this.resName).color;
                 this.color = aaData ? aaData : 0xCCCCCC;
                 break;
         }

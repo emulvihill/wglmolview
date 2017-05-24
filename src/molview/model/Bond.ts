@@ -10,34 +10,26 @@
  * =================================================================================================
  */
 
+import {BondInitializer} from "../BondInitializer";
 import {Configuration} from "../Configuration";
 import {Constants} from "../Constants";
-import {RenderableObject} from "./RenderableObject";
-import {Atom} from "./Atom";
 import {IMolRenderer} from "../renderer/IMolRenderer";
-
-export class BondInitializer {
-    id: string;
-    t: number;
-    a1: Atom;
-    a2: Atom;
-}
+import {Atom} from "./Atom";
+import {RenderableObject} from "./RenderableObject";
 
 export class Bond extends RenderableObject {
+    atoms: Atom[];
+    color: string;
     type: number;
 
-    atoms: Atom[];
-
-    color: string;
-
-    private _length: number[];
+    private lengthFrames: number[];
 
     public get length(): number {
-        return this._length[this.mframe];
+        return this.lengthFrames[this.mframe];
     }
 
     public set length(len: number) {
-        this._length[this.mframe] = len;
+        this.lengthFrames[this.mframe] = len;
     }
 
     constructor(init: BondInitializer) {
@@ -46,12 +38,11 @@ export class Bond extends RenderableObject {
         this.atoms = [init.a1, init.a2];
         this.id = init.id;
         this.mframe = 0;
-        this._length = new Array(Configuration.getConfig().maxFrames);
+        this.lengthFrames = new Array(Configuration.maxFrames);
 
         // color for the type of bond
         this.setColorMode(Constants.COLORMODE_CPK);
 
-        //add this bond to each atom's list of bonds
         this.atoms[0].addBond(this);
         this.atoms[1].addBond(this);
     }

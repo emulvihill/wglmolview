@@ -9,9 +9,22 @@
  *
  * =================================================================================================
  */
-export class Messages {
-    public static readonly INSTRUCT_IDENTIFY: string = "Select an atom to show properties.";
-    public static readonly INSTRUCT_DISTANCE: string = "Select any two atoms to measure distance.";
-    public static readonly INSTRUCT_ROTATION: string = "Select three adjacent atoms to measure rotation angle.";
-    public static readonly INSTRUCT_TORSION: string = "Select four adjacent atoms to measure torsion angle.";
+
+export class AtomInitializer {
+    serial: number;
+    elemName: string;
+    element: string;
+    altLoc: number;
+    resName: string;
+    chainId: number;
+    resSeq: string;
+    iCode: string;
+    x: number;
+    y: number;
+    z: number;
+    occupancy: string;
+    tempFactor: number;
+    segId: number;
+    element2: string;
+    charge: number;
 }

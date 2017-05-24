@@ -5,7 +5,8 @@ module.exports = function(config) {
 
         files: [
             { pattern: "src/**/*.ts" },
-            { pattern: "spec/**/*.ts" }
+            { pattern: "spec/**/*.ts" },
+            { pattern: 'spec/data/*', included: false},
         ],
 
         preprocessors: {

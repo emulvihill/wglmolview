@@ -1,15 +1,8 @@
+import {Atom} from "./model/Atom";
+import {Bond} from "./model/Bond";
 import {Molecule} from "./model/Molecule";
-import {Atom, AtomInitializer} from "./model/Atom";
-import {Bond, BondInitializer} from "./model/Bond";
 
 export class PDBParser {
-
-    PDBParser() {
-    }
-
-    parse(): Molecule {
-        return new Molecule();
-    }
 
     static parsePDB(pdb: string, mframe: number = 0): Molecule {
         let pdbData: Object = {};
@@ -17,7 +10,7 @@ export class PDBParser {
         let compound: Object;
         let header: Object;
         let title: String;
-        
+
         for (let i: number = 0; i < pdbArray.length; i++) {
 
             let currLine: string = String(pdbArray[i]);

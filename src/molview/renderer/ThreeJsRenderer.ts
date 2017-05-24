@@ -238,7 +238,7 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     private renderAtom(atom: Atom): ViewObject {
 
-        let quality: string = Configuration.getConfig().renderQuality;
+        let quality: string = Configuration.renderQuality;
 
         // set up the sphere vars
         let radius = this.radiusConversion(atom.radius),
@@ -262,8 +262,8 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     private renderBond(bond: Bond): ViewObject {
 
-        let quality: string = Configuration.getConfig().renderQuality;
-        let mode: string = Configuration.getConfig().renderMode;
+        let quality: string = Configuration.renderQuality;
+        let mode: string = Configuration.renderMode;
 
         let tubes: ViewObject[] = [];
 
@@ -315,7 +315,7 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     private renderAtomSelection(atom: Atom): ViewObject {
 
-        let quality: string = Configuration.getConfig().renderQuality;
+        let quality: string = Configuration.renderQuality;
 
         // set up the sphere vars
         let radius = 1.1 * this.radiusConversion(atom.radius),
@@ -345,8 +345,8 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     private renderBondSelection(bond: Bond): ViewObject {
 
-        let quality: string = Configuration.getConfig().renderQuality;
-        let mode: string = Configuration.getConfig().renderMode;
+        let quality: string = Configuration.renderQuality;
+        let mode: string = Configuration.renderMode;
 
         let m: number[] = this.getBondMetrics(bond, mode);
         let selMaterial: MeshBasicMaterial = new MeshBasicMaterial({
