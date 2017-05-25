@@ -71,11 +71,6 @@ export class MolView {
         this.renderer.render();
     }
 
-    private onMouseWheel(event: MouseWheelEvent): void {
-        Configuration.zoom += event.wheelDelta / 50.0;
-        this.renderer.render();
-    }
-
     private renderPDBData(pdbData: string): void {
 
         this.molecule = PDBParser.parsePDB(pdbData);

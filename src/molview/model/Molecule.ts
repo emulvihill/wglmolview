@@ -22,10 +22,10 @@ export class Molecule extends RenderableObject {
     private maxMframe: number;
     private currentMframe: number;
     private title: string;
-    private header: Object;
-    private compound: Object;
-    private residueSequence: Object;
-    private objects: (Atom|Bond)[];
+    private header: object;
+    private compound: object;
+    private residueSequence: object;
+    private objects: Array<Atom|Bond>;
     private selections: RenderableObject[];
 
     constructor(init: MoleculeInitializer) {
@@ -42,7 +42,7 @@ export class Molecule extends RenderableObject {
     }
 
     render(renderer: IMolRenderer): void {
-        for (let obj of this.objects) {
+        for (const obj of this.objects) {
             obj.render(renderer);
         }
     }
@@ -50,7 +50,7 @@ export class Molecule extends RenderableObject {
     public set mframe(mframe: number) {
         // go to a particular frame in a multi frame model
 
-        for (let obj of this.objects) {
+        for (const obj of this.objects) {
             obj.mframe = mframe;
         }
 
@@ -64,14 +64,12 @@ export class Molecule extends RenderableObject {
         if (!atom1) {
             // bad call
             throw new Error("error in call to getBonds");
-        }
-        else if (!atom2) {
+        } else if (!atom2) {
             res = atom1.bonds;
-        }
-        else {
+        } else {
             for (let i: number = 0; i < atom1.bonds.length; i++) {
-                let b1: Bond = atom1.bonds[i];
-                if (b1.atoms[0] == atom2 || b1.atoms[1] == atom2) {
+                const b1: Bond = atom1.bonds[i];
+                if (b1.atoms[0] === atom2 || b1.atoms[1] === atom2) {
                     res = [b1];
                 }
             }
@@ -81,7 +79,7 @@ export class Molecule extends RenderableObject {
     }
 
     public setColorMode(m: string): void {
-        for (let obj of this.objects) {
+        for (const obj of this.objects) {
             obj.setColorMode(m);
         }
     }
@@ -107,19 +105,17 @@ export class Molecule extends RenderableObject {
             throw new Error("invalid object in getNeighbors()");
         }
         // return the atoms that are directly connected to this atom / bond
-        let res: RenderableObject[] = [];
+        const res: RenderableObject[] = [];
 
         if (obj instanceof Atom) {
             for (let i: number = 0; i < obj.bonds.length; i++) {
-                if (obj.bonds[i].atoms[0] == obj) {
+                if (obj.bonds[i].atoms[0] === obj) {
                     res.push(obj.bonds[i].atoms[1]);
-                }
-                else {
+                } else {
                     res.push(obj.bonds[i].atoms[0]);
                 }
             }
-        }
-        else if (obj instanceof Bond) {
+        } else if (obj instanceof Bond) {
             res.push(obj.atoms[0], obj.atoms[1]);
         }
 
@@ -127,29 +123,28 @@ export class Molecule extends RenderableObject {
     }
 
     public get numAtoms(): number {
-        return this.objects.filter(o => {return o instanceof Atom;}).length;
+        return this.objects.filter(o => o instanceof Atom).length;
     }
 
     public get numBonds(): number {
-        return this.objects.filter(o => {return o instanceof Bond;}).length;
+        return this.objects.filter(o => o instanceof Bond).length;
     }
 
     /**
      * Adjust the loc of each object by the average offset of all objects
-     **/
+     */
     public center(): void {
-        let center: Vector3 = new Vector3(0, 0, 0);
+        const center: Vector3 = new Vector3(0, 0, 0);
         let numAtoms: number = 0;
-        for (let obj of this.objects) {
+        for (const obj of this.objects) {
             if (obj instanceof Atom) {
                 center.add(obj.loc);
                 numAtoms++;
             }
         }
         center.multiplyScalar(-1.0 / numAtoms);
-        for (let obj of this.objects) {
+        for (const obj of this.objects) {
             obj.loc.add(center);
         }
     }
-
 }

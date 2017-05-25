@@ -10,6 +10,11 @@
  * =================================================================================================
  */
 export class AminoAcidData {
+
+    public static getData(aa: string): { color: number } {
+        return AminoAcidData.aminoAcidColors[aa];
+    }
+
     private static aminoAcidColors: { [key: string]: { color: number } } =
         {
             ALA: {color: 0x9D9D9D},
@@ -17,8 +22,8 @@ export class AminoAcidData {
             ASN: {color: 0x00ADAD},
             ASP: {color: 0xB40707},
             CYS: {color: 0xB4B400},
-            GLU: {color: 0xB40707},
             GLN: {color: 0x00ADAD},
+            GLU: {color: 0xB40707},
             GLY: {color: 0xB8B8B8},
             HIS: {color: 0x6666A5},
             ILE: {color: 0x0B660B},
@@ -33,9 +38,5 @@ export class AminoAcidData {
             TYR: {color: 0x272785},
             VAL: {color: 0x0B660B}
         };
-
-    public static getData(aa: string): { color: number } {
-        return AminoAcidData.aminoAcidColors[aa];
-    }
 
 }

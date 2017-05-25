@@ -17,7 +17,6 @@ export class AtomInitializer {
     color?: number;
     element2: string;
     element: string;
-    elemName: string;
     iCode: string;
     id: string;
     occupancy: string;

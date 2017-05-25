@@ -11,6 +11,7 @@
  */
 
 import {RenderableObject} from "../model/RenderableObject";
+
 export interface IMolRenderer {
     init(domElement: HTMLElement): void;
     reset(): void;

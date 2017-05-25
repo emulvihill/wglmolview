@@ -19,16 +19,15 @@ import {Molecule} from "./model/Molecule";
 export class PDBParser {
 
     static parsePDB(pdb: string, mframe: number = 0): Molecule {
-        let objects: (Atom | Bond)[] = [];
-        let pdbArray: string[] = pdb.split("\n");
-        let compound: Object = {};
-        let header: Object = {};
+        const objects: Array<Atom | Bond> = [];
+        const pdbArray: string[] = pdb.split("\n");
+        let compound: object = {};
+        let header: object = {};
         let title: string = "";
 
-        for (let i: number = 0; i < pdbArray.length; i++) {
+        for (const currLine of pdbArray) {
 
-            let currLine: string = pdbArray[i];
-            let recordType: string = currLine.substring(0, 6);
+            const recordType: string = currLine.substring(0, 6);
 
             switch (recordType) {
                 case "SEQRES":
@@ -36,10 +35,13 @@ export class PDBParser {
                      --        COLUMNS        DATA TYPE       FIELD         DEFINITION
                      --        ---------------------------------------------------------------------------------
                      --        1 -  6        Record name     "SEQRES"
-                     --        9 - 10        Integer         serNum        Serial number of the SEQRES record for the current chain.  Starts at 1 and increments by one each line.
+                     --        9 - 10        Integer         serNum        Serial number of the SEQRES record for the
+                     current chain.  Starts at 1 and increments by one each line.
                      --        Reset to 1 for each chain.
-                     --        12             Character       chainID       Chain identifier.  This may be any single legal character, including a blank which is used if there is only one chain.
-                     --        14 - 17        Integer         numRes        Number of residues in the chain. This value is repeated on every record.
+                     --        12             Character       chainID       Chain identifier.  This may be any single
+                     legal character, including a blank which is used if there is only one chain.
+                     --        14 - 17        Integer         numRes        Number of residues in the chain. This value
+                     is repeated on every record.
                      --        20 - 22        Residue name    resName       Residue name.
                      --        24 - 26        Residue name    resName       Residue name.
                      --        28 - 30        Residue name    resName       Residue name.
@@ -59,11 +61,15 @@ export class PDBParser {
 
                 case "HEADER" :
                     /*
-                     -- The HEADER record uniquely identifies a PDB entry through the idCode field. This record also provides a classification for the entry. Finally, it contains the date the coordinates were deposited at the PDB.
+                     -- The HEADER record uniquely identifies a PDB entry through the idCode field. This record also
+                     provides a classification for the entry. Finally, it contains the date the coordinates were
+
+                     deposited at the PDB.
                      --        COLUMNS        DATA TYPE       FIELD           DEFINITION
                      --        1 -  6        Record name     "HEADER"
                      --        11 - 50        String(40)      classification  Classifies the molecule(s)
-                     --        51 - 59        Date            depDate         Deposition date.  This is the date the coordinates were received by the PDB
+                     --        51 - 59        Date            depDate         Deposition date.  This is the date the
+                     coordinates were received by the PDB
                      --        63 - 66        IDcode          idCode          This identifier is unique within PDB
                      */
                     header = {
@@ -76,7 +82,9 @@ export class PDBParser {
 
                 case "TITLE ":
                     /*
-                     -- The TITLE record contains a title for the experiment or analysis that is represented in the entry. It should identify an entry in the PDB in the same way that a title identifies a paper.
+                     -- The TITLE record contains a title for the experiment or analysis that is represented
+                     in the entry. It should identify an entry in the PDB in the same way that a title identifies
+                     a paper.
                      --COLUMNS        DATA TYPE       FIELD          DEFINITION
                      ----------------------------------------------------------------------------------
                      -- 1 -  6        Record name     "TITLE "
@@ -109,11 +117,9 @@ export class PDBParser {
                      --   7 - 30        String            id             identifier for the object to be recolored
                      --   31 - 36       RRGGBB            newcolor       new color in RRGGBB hex string format
                      */
-                    let id = currLine.substring(6, 30).trim();
-                    let newcolor: string = currLine.substring(30, 36);
-                    let obj: Atom | Bond = objects.filter((o) => {
-                        return o.id === id;
-                    })[0];
+                    const id = currLine.substring(6, 30).trim();
+                    const newcolor: string = currLine.substring(30, 36);
+                    const obj: Atom | Bond = objects.filter(o => o.id === id)[0];
                     if (obj) {
                         obj.color = newcolor;
                     }
@@ -142,15 +148,14 @@ export class PDBParser {
                      -- 79 - 80        LString(2)      charge         Charge on the atom.
                      */
 
-                    let serial = parseInt(currLine.substring(6, 11));
-                    let init: AtomInitializer = {
+                    const serial = parseInt(currLine.substring(6, 11), 10);
+                    const init: AtomInitializer = {
                         id: "atom" + serial,
-                        serial: serial,
-                        elemName: currLine.substring(12, 16).trim(),
+                        serial,
                         element: currLine.substring(12, 14).trim(),
-                        altLoc: parseInt(currLine.substring(16, 17)),
+                        altLoc: parseInt(currLine.substring(16, 17), 10),
                         resName: currLine.substring(17, 20),
-                        chainId: parseInt(currLine.substring(21, 22)),
+                        chainId: parseInt(currLine.substring(21, 22), 10),
                         resSeq: currLine.substring(22, 26),
                         iCode: currLine.substring(26, 27),
                         x: parseFloat(currLine.substring(30, 38)),
@@ -158,23 +163,18 @@ export class PDBParser {
                         z: parseFloat(currLine.substring(46, 54)),
                         occupancy: currLine.substring(60, 66),
                         tempFactor: parseFloat(currLine.substring(72, 76)),
-                        segId: parseInt(currLine.substring(76, 78)),
+                        segId: parseInt(currLine.substring(76, 78), 10),
                         element2: currLine.substring(78, 80).trim(),
-                        charge: parseInt(currLine.substring(80, 81))
+                        charge: parseInt(currLine.substring(80, 81), 10)
                     };
 
-                    let atom: Atom = <Atom>objects.filter((o) => {
-                        return o.id === "atom" + serial;
-                    })[0];
+                    const atom: Atom =
+                        objects.find(o => o.id === "atom" + serial) as Atom || new Atom(init);
 
-                    if (!atom) {
-                        // make a new atom object
-                        atom = new Atom(init);
-                        if (atom && atom.name) {
-                            objects.push(atom);
-                            // add the object to current frame
-                            atom.addToMframe(init.x, init.y, init.z, init.charge, mframe);
-                        }
+                    if (atom && atom.name) {
+                        objects.push(atom);
+                        // add the object to current frame
+                        atom.addToMframe(init.x, init.y, init.z, init.charge, mframe);
                     }
 
                     break;
@@ -198,49 +198,36 @@ export class PDBParser {
                      -- 52 - 56         Integer          serial          Serial number of hydrogen bonded atom
                      -- 57 - 61         Integer          serial          Serial number of salt bridged atom
                      */
-                    let cAtom: number = parseInt(currLine.substring(6, 11));
-                    let s: number[] = [parseInt(currLine.substring(11, 16)), parseInt(currLine.substring(16, 21)),
-                                       parseInt(currLine.substring(21, 26)), parseInt(currLine.substring(26, 31))];
-                    let h: number[] = [parseInt(currLine.substring(31, 36)), parseInt(currLine.substring(36, 41)),
-                                       parseInt(currLine.substring(41, 46)), parseInt(currLine.substring(46, 51))];
-                    let sb: number[] = [parseInt(currLine.substring(51, 56)), parseInt(currLine.substring(56, 61))];
-                    let t: number = 1;
+                    const cAtom: number = parseInt(currLine.substring(6, 11), 10);
+                    const s: number[] = [parseInt(currLine.substring(11, 16), 10),
+                        parseInt(currLine.substring(16, 21), 10),
+                        parseInt(currLine.substring(21, 26), 10),
+                        parseInt(currLine.substring(26, 31), 10)];
+                    const h: number[] = [parseInt(currLine.substring(31, 36), 10),
+                        parseInt(currLine.substring(36, 41), 10),
+                        parseInt(currLine.substring(41, 46), 10),
+                        parseInt(currLine.substring(46, 51), 10)];
+                    const sb: number[] = [parseInt(currLine.substring(51, 56), 10),
+                        parseInt(currLine.substring(56, 61), 10)];
 
-                    if (cAtom == 0) {
+                    if (cAtom === 0) {
                         throw new Error("error in line: " + currLine);
                     }
-
-                    if (currLine.substring(5, 6) == "2") {
-                        t = 2;
-                    }
-                    else if (currLine.substring(5, 6) == "3") {
-                        t = 3;
-                    }
+                    // Unofficial PDB extension, CONECT -> single bond, CONECT2 -> double bond, CONEC3 -> triple bond
+                    const tStr = currLine.substring(5, 6);
+                    const t: number = (tStr === "2") ? 2 : (tStr === "3") ? 3 : 1;
 
                     for (let cb: number = 0; cb < 4; cb++) {
-                        if (s[cb] > cAtom) // only add each bond once
-                        {
-                            let a1: Atom = <Atom>objects.filter((o) => {
-                                return o.id === "atom" + cAtom;
-                            })[0];
-                            let a2: Atom = <Atom>objects.filter((o) => {
-                                return o.id === "atom" + s[cb]
-                            })[0];
+                        if (s[cb] > cAtom) {
+                            const a1: Atom = objects.find(o => o.id === "atom" + cAtom) as Atom;
+                            const a2: Atom = objects.find(o => o.id === "atom" + s[cb]) as Atom;
                             // make the bond and add to current frame
                             if (a1 && a2) {
-                                let id_str: string = a1.id + "-" + a2.id;
-                                let bond: Bond = <Bond>objects.filter((o) => {
-                                    return o.id === "bond" + id_str;
-                                })[0];
+                                const bondId: string = a1.id + "-" + a2.id;
+                                let bond: Bond = objects.find(o => o.id === "bond" + bondId) as Bond;
                                 if (!bond) {
                                     // no bond exists here
-                                    let init2: BondInitializer = {
-                                        t: t,
-                                        a1: a1,
-                                        a2: a2,
-                                        id: id_str
-                                    };
-                                    bond = new Bond(init2);
+                                    bond = new Bond({t, a1, a2, id: bondId});
                                     objects.push(bond);
                                 }
                                 bond.addToMframe(mframe);
@@ -257,6 +244,6 @@ export class PDBParser {
             } // end switch
         }
 
-        return new Molecule({objects: objects, compound: compound, header: header, title: title});
+        return new Molecule({objects, compound, header, title});
     }
 }

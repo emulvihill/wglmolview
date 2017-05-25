@@ -18,7 +18,6 @@ import {
     MeshBasicMaterial,
     MeshLambertMaterial,
     PerspectiveCamera,
-    PointLight,
     Raycaster,
     Scene,
     SphereGeometry,
@@ -90,7 +89,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.camera.add(light);*/
 
         // create directional light
-        let light = new DirectionalLight(0xffffff, 1.0);
+        const light = new DirectionalLight(0xffffff, 1.0);
         this.lights.push(light);
         this.camera.add(light);
 
@@ -337,7 +336,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         const geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
         const viewObject = new ViewObject(geometry, sphereMaterial);
 
-        let p: Vector3 = modelObject.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        const p: Vector3 = modelObject.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
         viewObject.position.set(p.x, p.y, p.z);
 
         // add the sphere to the scene

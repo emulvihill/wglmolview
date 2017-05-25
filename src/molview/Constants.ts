@@ -42,5 +42,4 @@ export class Constants {
     public static readonly RENDERQUALITY_LOW: string = "low";
     public static readonly RENDERQUALITY_NORMAL: string = "normal";
     public static readonly RENDERQUALITY_HIGH: string = "high";
-
 }
