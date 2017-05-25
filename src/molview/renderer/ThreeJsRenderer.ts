@@ -9,6 +9,7 @@
  *
  * =================================================================================================
  */
+
 import {
     CylinderGeometry,
     GeometryUtils,
@@ -22,11 +23,14 @@ import {
     Raycaster,
     Scene,
     SphereGeometry,
-    TrackballControls,
     Vector2,
     Vector3,
     WebGLRenderer
 } from "three";
+
+import * as THREE from 'three';
+import { OrbitControls } from 'three-orbitcontrols-ts';
+
 import {Atom} from "../model/Atom";
 import {Bond} from "../model/Bond";
 import {RenderableObject} from "../model/RenderableObject";
@@ -54,7 +58,7 @@ export class ThreeJsRenderer implements IMolRenderer {
      let intersects = raycaster.intersectObjects( objects, recursiveFlag );*/
 
     private light: Light;
-    private controls: TrackballControls;
+    private controls: OrbitControls;
     private domElement: HTMLDivElement;
     private objects: ViewObject[] = [];
     private selections: ViewObject[] = [];
@@ -97,9 +101,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.light = new PointLight(0xFFFFFF);
 
         // set its position
-        this.light.position.x = 100;
-        this.light.position.y = 400;
-        this.light.position.z = 1000;
+        this.light.position.set(100, 400, 1000);
 
         // add to the scene
         this.camera.add(this.light);
@@ -107,7 +109,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         // attach the render-supplied DOM element
         this.domElement.appendChild(this.renderer.domElement);
 
-        this.controls = new TrackballControls(this.camera, this.renderer.domElement);
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.rotateSpeed = 0.5;
         this.controls.addEventListener("change", () => this.render);
         window.addEventListener("resize", () => {
@@ -254,38 +256,40 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.render();
     }
 
-    private renderAtom(atom: Atom): ViewObject {
+    private renderAtom(modelObject: Atom): ViewObject {
 
         const quality: string = Configuration.renderQuality;
 
         // set up the sphere vars
-        const radius = this.radiusConversion(atom.radius);
+        const radius = this.radiusConversion(modelObject.radius);
         const segments = 16;
         const rings = 16;
 
         // create the sphere's material
-        const sphereMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: atom.color});
+        const sphereMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: modelObject.color});
         // create a new mesh with sphere geometry
         const geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
-        const sphere: ViewObject = new ViewObject(geometry, sphereMaterial);
+        const viewObject: ViewObject = new ViewObject(geometry, sphereMaterial);
+        const p: Vector3 = modelObject.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
-        sphere.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        viewObject.position.set(p.x, p.y, p.z);
 
-        // add the sphere to the scene
-        this.scene.add(sphere);
+        viewObject.modelObject = modelObject;
+        modelObject.viewObject = viewObject;
 
-        return sphere;
+        this.scene.add(viewObject);
+        return viewObject;
     }
 
-    private renderBond(bond: Bond): ViewObject {
+    private renderBond(modelObject: Bond): ViewObject {
 
         const tubes: ViewObject[] = [];
 
-        const m: number[] = this.getBondMetrics(bond, Configuration.renderMode);
+        const m: number[] = this.getBondMetrics(modelObject, Configuration.renderMode);
         const bondMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: 0x0000FF});
-        const bondLength = bond.length; // 10 * m[2];
+        const bondLength = modelObject.length; // 10 * m[2];
 
-        switch (bond.type) {
+        switch (modelObject.type) {
             case 1:
                 tubes.push(this.makeCylinder(6, bondLength, bondMaterial));
                 break;
@@ -309,26 +313,29 @@ export class ThreeJsRenderer implements IMolRenderer {
                 break;
         }
 
-        const bondObj: ViewObject = tubes[0];
+        const viewObject: ViewObject = tubes[0];
         for (let i: number = 1; i < tubes.length; i++) {
             GeometryUtils.merge(tubes[0].geometry, tubes[i].geometry, 0);
         }
 
-        const v0: Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
-        const v1: Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        const v0: Vector3 = modelObject.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        const v1: Vector3 = modelObject.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        const p: Vector3 = v0.add(v1).divideScalar(2);
 
-        bondObj.position = v0.add(v1).divideScalar(2);
-        bondObj.lookAt(v1);
+        viewObject.position.set(p.x, p.y, p.z);
+        viewObject.lookAt(v1);
 
-        this.scene.add(bondObj);
+        viewObject.modelObject = modelObject;
+        modelObject.viewObject = viewObject;
 
-        return bondObj;
+        this.scene.add(viewObject);
+        return viewObject;
     }
 
-    private renderAtomSelection(atom: Atom): ViewObject {
+    private renderAtomSelection(modelObject: Atom): ViewObject {
 
         // set up the sphere vars
-        const radius = 1.1 * this.radiusConversion(atom.radius);
+        const radius = 1.1 * this.radiusConversion(modelObject.radius);
         const segments = 16;
         const rings = 16;
 
@@ -340,16 +347,17 @@ export class ThreeJsRenderer implements IMolRenderer {
         });
         // create a new mesh with sphere geometry
         const geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
-        const selObj = new ViewObject(geometry, sphereMaterial);
+        const viewObject = new ViewObject(geometry, sphereMaterial);
 
-        selObj.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        let p:Vector3 = modelObject.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        viewObject.position.set(p.x, p.y, p.z);
 
         // add the sphere to the scene
-        this.scene.add(selObj);
+        this.scene.add(viewObject);
 
-        selObj.modelObject = atom;
+        viewObject.modelObject = modelObject;
 
-        return selObj;
+        return viewObject;
     }
 
     private renderBondSelection(bond: Bond): ViewObject {
@@ -403,7 +411,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.controls.handleResize();
+        this.controls.reset();
 
         this.render();
     }
