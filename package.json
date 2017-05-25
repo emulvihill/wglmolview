@@ -10,8 +10,7 @@
   "description": "Simple WebGL Molecule Viewer",
   "dependencies": {
     "gulp-connect": "5.0.0",
-    "three": "0.85.2",
-    "three-orbitcontrols-ts": "0.1.2"
+    "three": "0.85.2"
   },
   "devDependencies": {
     "@types/jasmine": "2.5.47",

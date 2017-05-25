@@ -48,13 +48,13 @@ export class Atom extends RenderableObject {
 
     constructor(init: AtomInitializer) {
         super();
-
         const edata: DataObject = ElementData.getData(init.element);
         if (!edata) {
             // unsupported ATOM record
             console.warn("bad ATOM symbol: " + init.element);
             return;
         }
+
         this.element = init.element;
         this.id = init.id;
         this.altLoc = init.altLoc;
@@ -69,7 +69,7 @@ export class Atom extends RenderableObject {
         this.charge = [init.charge];
 
         this.name = edata.name;
-        this.color = edata.color;
+        this.color = init.color || edata.color;
 
         const radiusScale: number = Configuration.atomRadiusScale;
 

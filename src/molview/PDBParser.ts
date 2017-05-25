@@ -1,4 +1,4 @@
-﻿﻿/*
+﻿/*
  * =================================================================================================
  *
  * 	WebGL MolView
@@ -259,5 +259,4 @@ export class PDBParser {
 
         return new Molecule({objects: objects, compound: compound, header: header, title: title});
     }
-
 }

@@ -11,21 +11,22 @@
  */
 
 export class AtomInitializer {
-    id: string;
-    serial: number;
-    elemName: string;
-    element: string;
     altLoc: number;
-    resName: string;
     chainId: number;
-    resSeq: string;
+    charge: number;
+    color?: number;
+    element2: string;
+    element: string;
+    elemName: string;
     iCode: string;
+    id: string;
+    occupancy: string;
+    resName: string;
+    resSeq: string;
+    segId: number;
+    serial: number;
+    tempFactor: number;
     x: number;
     y: number;
     z: number;
-    occupancy: string;
-    tempFactor: number;
-    segId: number;
-    element2: string;
-    charge: number;
 }

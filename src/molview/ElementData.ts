@@ -10,7 +10,6 @@
  * =================================================================================================
  */
 
-import {Configuration} from "./Configuration";
 import {DataObject} from "./DataObject";
 
 export class ElementData {

@@ -9,8 +9,8 @@ export class DataObject {
     constructor(json: any) {
         this.name = json.name;
         this.symbol = json.symbol;
-        this.number = json.number;
-        this.radius = json.radius;
-        this.color = parseInt(json.color, 16);     // http://jmol.sourceforge.net/jscolors/#Jmol colors
+        this.number = json.atomicNumber;
+        this.radius = json.vanDelWaalsRadius;
+        this.color = parseInt(json.cpkHexColor, 16);     // http://jmol.sourceforge.net/jscolors/#Jmol colors
     }
 }

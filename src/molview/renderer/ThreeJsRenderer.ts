@@ -11,7 +11,7 @@
  */
 
 import {
-    CylinderGeometry,
+    CylinderGeometry, DirectionalLight,
     GeometryUtils,
     Light,
     Matrix4,
@@ -19,7 +19,6 @@ import {
     MeshLambertMaterial,
     PerspectiveCamera,
     PointLight,
-    Projector,
     Raycaster,
     Scene,
     SphereGeometry,
@@ -27,15 +26,13 @@ import {
     Vector3,
     WebGLRenderer
 } from "three";
-
-import * as THREE from 'three';
-import { OrbitControls } from 'three-orbitcontrols-ts';
+import {OrbitControls} from "../../three/OrbitControls";
+import {Configuration} from "../Configuration";
+import {Constants} from "../Constants";
 
 import {Atom} from "../model/Atom";
 import {Bond} from "../model/Bond";
 import {RenderableObject} from "../model/RenderableObject";
-import {Configuration} from "../Configuration";
-import {Constants} from "../Constants";
 import {IMolRenderer} from "./IMolRenderer";
 import {ViewObject} from "./ViewObject";
 
@@ -46,20 +43,9 @@ export class ThreeJsRenderer implements IMolRenderer {
     private scene: Scene;
     private renderer: WebGLRenderer;
     private camera: PerspectiveCamera;
-    private projector: Projector;
-
-    /* Projector has been removed. New pattern:
-     let raycaster = new Raycaster(); // create once
-     let mouse = new Vector2(); // create once
-     ...
-     mouse.x = ( event.clientX / renderer.domElement.width ) * 2 - 1;
-     mouse.y = - ( event.clientY / renderer.domElement.height ) * 2 + 1;
-     raycaster.setFromCamera( mouse, camera );
-     let intersects = raycaster.intersectObjects( objects, recursiveFlag );*/
-
-    private light: Light;
     private controls: OrbitControls;
     private domElement: HTMLDivElement;
+    private lights: Light[] = [];
     private objects: ViewObject[] = [];
     private selections: ViewObject[] = [];
 
@@ -98,13 +84,15 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.renderer.setSize(WIDTH, HEIGHT);
 
         // create a point light
-        this.light = new PointLight(0xFFFFFF);
+/*        let light: Light = new PointLight(0xFFFFFF);
+        light.position.set(100, 400, 1000);
+        this.lights.push(light);
+        this.camera.add(light);*/
 
-        // set its position
-        this.light.position.set(100, 400, 1000);
-
-        // add to the scene
-        this.camera.add(this.light);
+        // create directional light
+        let light = new DirectionalLight(0xffffff, 1.0);
+        this.lights.push(light);
+        this.camera.add(light);
 
         // attach the render-supplied DOM element
         this.domElement.appendChild(this.renderer.domElement);
@@ -180,9 +168,9 @@ export class ThreeJsRenderer implements IMolRenderer {
         // console.info("event.clientX " + event.clientX);
         // console.info("event.clientY " + event.clientY);
         const point: Vector3 = new Vector3(( (event.clientX - this.renderer.domElement.offsetLeft) /
-            this.renderer.domElement.clientWidth ) * 2 - 1,
-            -( (event.clientY - this.renderer.domElement.offsetTop) /
-            this.renderer.domElement.clientHeight) * 2 + 1, 0.5);
+                                             this.renderer.domElement.clientWidth ) * 2 - 1,
+                                           -( (event.clientY - this.renderer.domElement.offsetTop) /
+                                              this.renderer.domElement.clientHeight) * 2 + 1, 0.5);
         const raycaster = new Raycaster();
         const mouse = new Vector2();
         mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
@@ -250,8 +238,8 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         this.controls.update();
 
-        this.light.rotation.x = this.scene.rotation.x = rot;
-        this.light.rotation.y = this.scene.rotation.y = rot * 0.7;
+        // this.lights[0].rotation.x = this.scene.rotation.x = rot;
+        // this.lights[0].rotation.y = this.scene.rotation.y = rot * 0.7;
 
         this.render();
     }
@@ -341,15 +329,15 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         // create the sphere's material
         const sphereMaterial: MeshBasicMaterial = new MeshBasicMaterial({
-            color: 0xFF0000,
-            opacity: 0.5,
-            transparent: true
-        });
+                                                                            color: 0xFF0000,
+                                                                            opacity: 0.5,
+                                                                            transparent: true
+                                                                        });
         // create a new mesh with sphere geometry
         const geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
         const viewObject = new ViewObject(geometry, sphereMaterial);
 
-        let p:Vector3 = modelObject.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        let p: Vector3 = modelObject.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
         viewObject.position.set(p.x, p.y, p.z);
 
         // add the sphere to the scene
@@ -366,10 +354,10 @@ export class ThreeJsRenderer implements IMolRenderer {
         const mode: string = Configuration.renderMode;
         const m: number[] = this.getBondMetrics(bond, mode);
         const selMaterial: MeshBasicMaterial = new MeshBasicMaterial({
-            color: 0xFF0000,
-            opacity: 0.5,
-            transparent: true
-        });
+                                                                         color: 0xFF0000,
+                                                                         opacity: 0.5,
+                                                                         transparent: true
+                                                                     });
         const bondLength = bond.length;
         const selObj: ViewObject = this.makeCylinder(10, bondLength, selMaterial);
         const v0: Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
@@ -401,8 +389,8 @@ export class ThreeJsRenderer implements IMolRenderer {
             return [0, bond.length, bond.length];
         } else {
             return [bond.atoms[0].radius,
-                bond.length - bond.atoms[1].radius,
-                bond.length - (bond.atoms[1].radius + bond.atoms[0].radius)];
+                    bond.length - bond.atoms[1].radius,
+                    bond.length - (bond.atoms[1].radius + bond.atoms[0].radius)];
         }
     }
 

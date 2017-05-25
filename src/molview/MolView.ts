@@ -92,7 +92,7 @@ export class MolView {
         }
         if (!this.initialized) {
             this.domElement.onclick = event => this.handleSelect(event);
-            this.domElement.onmousewheel = event => this.onMouseWheel(event);
+            // this.domElement.onmousewheel = event => this.onMouseWheel(event);
             this.infoElement.onclick = event => this.updateInfoDisplay();
         }
 
