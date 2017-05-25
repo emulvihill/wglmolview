@@ -12,33 +12,35 @@
 import {Vector3} from "three";
 import {Configuration} from "../Configuration";
 import {IMolRenderer} from "../renderer/IMolRenderer";
-import {ViewObject} from "../renderer/ThreeJsRenderer";
+import {ViewObject} from "../renderer/ViewObject";
+
 export class RenderableObject {
     id: string;
-    private _loc: Vector3[];
-    private _mframe: number;
     viewObject: ViewObject;
+    private locFrames: Vector3[];
+    private currFrame: number;
 
     constructor() {
-        this._loc = new Array(Configuration.maxFrames);    // per frame
+        this.locFrames = new Array(Configuration.maxFrames);    // per frame
     }
 
     public get loc(): Vector3 {
-        return this._loc[this._mframe];
+        return this.locFrames[this.currFrame];
     }
 
     public set loc(num: Vector3) {
-        this._loc[this._mframe] = num;
+        this.locFrames[this.currFrame] = num;
     }
 
     public get mframe(): number {
-        return this._mframe;
+        return this.currFrame;
     }
 
     public set mframe(mframe: number) {
-        this._mframe = mframe;
+        this.currFrame = mframe;
     }
 
     render(renderer: IMolRenderer): void {
+        console.info("rendering " + this.id);
     }
 }

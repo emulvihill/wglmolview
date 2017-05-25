@@ -10,20 +10,30 @@
  * =================================================================================================
  */
 import {
-    TrackballControls, Mesh, Scene, WebGLRenderer, PerspectiveCamera, Light, PointLight,
-    SphereGeometry, GeometryUtils, Vector3, CylinderGeometry, Intersection, Object3D,
-    MeshLambertMaterial, MeshBasicMaterial, Matrix4, Projector, Raycaster, Vector2
+    CylinderGeometry,
+    GeometryUtils,
+    Light,
+    Matrix4,
+    MeshBasicMaterial,
+    MeshLambertMaterial,
+    PerspectiveCamera,
+    PointLight,
+    Projector,
+    Raycaster,
+    Scene,
+    SphereGeometry,
+    TrackballControls,
+    Vector2,
+    Vector3,
+    WebGLRenderer
 } from "three";
 import {Atom} from "../model/Atom";
 import {Bond} from "../model/Bond";
-import {Constants} from "../Constants";
-import {Configuration} from "../Configuration";
-import {IMolRenderer} from "./IMolRenderer";
 import {RenderableObject} from "../model/RenderableObject";
-
-export class ViewObject extends Mesh {
-    modelObject: RenderableObject;
-}
+import {Configuration} from "../Configuration";
+import {Constants} from "../Constants";
+import {IMolRenderer} from "./IMolRenderer";
+import {ViewObject} from "./ViewObject";
 
 export class ThreeJsRenderer implements IMolRenderer {
 
@@ -34,7 +44,6 @@ export class ThreeJsRenderer implements IMolRenderer {
     private camera: PerspectiveCamera;
     private projector: Projector;
 
-    //private projector:Projector;
     /* Projector has been removed. New pattern:
      let raycaster = new Raycaster(); // create once
      let mouse = new Vector2(); // create once
@@ -51,17 +60,17 @@ export class ThreeJsRenderer implements IMolRenderer {
     private selections: ViewObject[] = [];
 
     init(domElement: HTMLElement): void {
-        this.domElement = <HTMLDivElement>domElement;
+        this.domElement = domElement as HTMLDivElement;
 
-        // set the scene size
-        let WIDTH = 800,
-            HEIGHT = 600;
+        // scene size
+        const WIDTH = 800;
+        const HEIGHT = 600;
 
-        // set some camera attributes
-        let VIEW_ANGLE = 45,
-            ASPECT = WIDTH / HEIGHT,
-            NEAR = 0.1,
-            FAR = 1000000;
+        // camera attributes
+        const VIEW_ANGLE = 45;
+        const ASPECT = WIDTH / HEIGHT;
+        const NEAR = 0.1;
+        const FAR = 1000000;
 
         // create a WebGL renderer, camera
         // and a scene
@@ -71,14 +80,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         }
 
         this.renderer = new WebGLRenderer();
-
-        this.camera =
-            new PerspectiveCamera(
-                VIEW_ANGLE,
-                ASPECT,
-                NEAR,
-                FAR);
-
+        this.camera = new PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
         this.scene = new Scene();
 
         // add the camera to the scene
@@ -107,9 +109,9 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         this.controls = new TrackballControls(this.camera, this.renderer.domElement);
         this.controls.rotateSpeed = 0.5;
-        this.controls.addEventListener('change', () => this.render);
-        window.addEventListener('resize', () => {
-            this.onWindowResize()
+        this.controls.addEventListener("change", () => this.render);
+        window.addEventListener("resize", () => {
+            this.onWindowResize();
         }, false);
 
         this.objects = [];
@@ -117,50 +119,45 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.animate();
     }
 
-
     reset(): void {
-        //this.camera.position = new Vector3(0,0,1000);
-        //this.camera.lookAt(new Vector3(0,0,0));
-        let value: Object3D | undefined;
-        while (value = this.objects.pop()) {
+        // this.camera.position = new Vector3(0,0,1000);
+        // this.camera.lookAt(new Vector3(0,0,0));
+        for (const value of this.objects) {
             this.scene.remove(value);
         }
-        while (value = this.selections.pop()) {
+        for (const value of this.selections) {
             this.scene.remove(value);
         }
-        //this.renderer.clear(true, true, true);
+        // this.renderer.clear(true, true, true);
         this.objects = [];
         this.selections = [];
     }
 
-
     addRenderableObject(modelObject: RenderableObject): void {
-
 
         let vo: ViewObject | null;
 
         if (modelObject instanceof Atom) {
-            vo = this.renderAtom(<Atom>modelObject);
+            vo = this.renderAtom(modelObject);
+            vo.modelObject = modelObject;
+            this.objects.push(vo);
+        } else if (modelObject instanceof Bond) {
+            vo = this.renderBond(modelObject);
             vo.modelObject = modelObject;
             this.objects.push(vo);
         }
-        else if (modelObject instanceof Bond) {
-            vo = this.renderBond(<Bond>modelObject);
-            vo.modelObject = modelObject;
-            this.objects.push(vo);
-        }
-
     }
-
 
     select(modelObject: RenderableObject): void {
 
-        let viewObject: ViewObject = <ViewObject>modelObject.viewObject;
+        const vo: ViewObject = modelObject.viewObject;
 
-        if (!viewObject) throw new Error("cannot find view object for " + modelObject);
+        if (!vo) {
+            throw new Error("cannot find view object for " + modelObject);
+        }
 
-        for (let i: number = 0; i < this.selections.length; i++) {
-            if (this.selections[i].modelObject === modelObject) {
+        for (const sel of this.selections) {
+            if (sel.modelObject === modelObject) {
                 // we've already selected.. unselect
                 this.deselect(modelObject);
                 return;
@@ -168,33 +165,56 @@ export class ThreeJsRenderer implements IMolRenderer {
         }
 
         if (modelObject instanceof Atom) {
-            this.selections.push(this.renderAtomSelection(<Atom>modelObject));
-        }
-        else if (modelObject instanceof Bond) {
-            this.selections.push(this.renderBondSelection(<Bond>modelObject));
+            this.selections.push(this.renderAtomSelection(modelObject));
+        } else if (modelObject instanceof Bond) {
+            this.selections.push(this.renderBondSelection(modelObject));
         }
     }
 
+    getSelectedObject(event: MouseEvent): RenderableObject | undefined {
+
+        event.preventDefault();
+
+        // console.info("event.clientX " + event.clientX);
+        // console.info("event.clientY " + event.clientY);
+        const point: Vector3 = new Vector3(( (event.clientX - this.renderer.domElement.offsetLeft) /
+            this.renderer.domElement.clientWidth ) * 2 - 1,
+            -( (event.clientY - this.renderer.domElement.offsetTop) /
+            this.renderer.domElement.clientHeight) * 2 + 1, 0.5);
+        const raycaster = new Raycaster();
+        const mouse = new Vector2();
+        mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
+        mouse.y = -( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, this.camera);
+
+        const intersects = raycaster.intersectObjects(this.objects, false);
+
+        if (intersects.length > 0) {
+            const vo: ViewObject = intersects[0].object as ViewObject;
+            return vo.modelObject;
+        }
+
+        return undefined;
+    }
 
     deselect(modelObject: RenderableObject): void {
 
         for (let i: number = 0; i < this.selections.length; i++) {
             if (this.selections[i].modelObject === modelObject) {
-                let sels: ViewObject[] = this.selections.splice(i, 1);
+                const sels: ViewObject[] = this.selections.splice(i, 1);
                 this.scene.remove(sels[0]);
             }
         }
     }
 
-
     deselectAll(): void {
 
-        for (let i: number = 0; i < this.selections.length; i++) {
-            this.scene.remove(this.selections[i]);
+        for (const sel of this.selections) {
+            this.scene.remove(sel);
         }
         this.selections = [];
     }
-
 
     setRenderMode(mode: string): void {
 
@@ -213,15 +233,20 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.render();
     }
 
+    render(): void {
+        // draw!
+        this.renderer.render(this.scene, this.camera);
+    }
 
     private animate(): void {
+
+        const rot = Date.now() * 0.0004;
 
         requestAnimationFrame(() => {
             this.animate();
         });
-        this.controls.update();
 
-        let rot = Date.now() * 0.0004;
+        this.controls.update();
 
         this.light.rotation.x = this.scene.rotation.x = rot;
         this.light.rotation.y = this.scene.rotation.y = rot * 0.7;
@@ -229,47 +254,37 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.render();
     }
 
-
-    render(): void {
-        // draw!
-        this.renderer.render(this.scene, this.camera);
-    }
-
-
     private renderAtom(atom: Atom): ViewObject {
 
-        let quality: string = Configuration.renderQuality;
+        const quality: string = Configuration.renderQuality;
 
         // set up the sphere vars
-        let radius = this.radiusConversion(atom.radius),
-            segments = 16,
-            rings = 16;
+        const radius = this.radiusConversion(atom.radius);
+        const segments = 16;
+        const rings = 16;
 
         // create the sphere's material
-        let sphereMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: atom.color});
+        const sphereMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: atom.color});
         // create a new mesh with sphere geometry
-        let geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
-        let sphere: ViewObject = new ViewObject(geometry, sphereMaterial);
+        const geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
+        const sphere: ViewObject = new ViewObject(geometry, sphereMaterial);
 
         sphere.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
         // add the sphere to the scene
         this.scene.add(sphere);
 
-        return <ViewObject>sphere;
+        return sphere;
     }
-
 
     private renderBond(bond: Bond): ViewObject {
 
-        let quality: string = Configuration.renderQuality;
-        let mode: string = Configuration.renderMode;
+        const tubes: ViewObject[] = [];
 
-        let tubes: ViewObject[] = [];
+        const m: number[] = this.getBondMetrics(bond, Configuration.renderMode);
+        const bondMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: 0x0000FF});
+        const bondLength = bond.length; // 10 * m[2];
 
-        let m: number[] = this.getBondMetrics(bond, mode);
-        let bondMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: 0x0000FF});
-        let bondLength = bond.length; // 10 * m[2];
         switch (bond.type) {
             case 1:
                 tubes.push(this.makeCylinder(6, bondLength, bondMaterial));
@@ -294,16 +309,14 @@ export class ThreeJsRenderer implements IMolRenderer {
                 break;
         }
 
-        let bondObj: ViewObject = tubes[0];
+        const bondObj: ViewObject = tubes[0];
         for (let i: number = 1; i < tubes.length; i++) {
-
             GeometryUtils.merge(tubes[0].geometry, tubes[i].geometry, 0);
-            //bondObj.add(tubes[i]);
-            m
         }
 
-        let v0: Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
-        let v1: Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        const v0: Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        const v1: Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+
         bondObj.position = v0.add(v1).divideScalar(2);
         bondObj.lookAt(v1);
 
@@ -312,25 +325,22 @@ export class ThreeJsRenderer implements IMolRenderer {
         return bondObj;
     }
 
-
     private renderAtomSelection(atom: Atom): ViewObject {
 
-        let quality: string = Configuration.renderQuality;
-
         // set up the sphere vars
-        let radius = 1.1 * this.radiusConversion(atom.radius),
-            segments = 16,
-            rings = 16
+        const radius = 1.1 * this.radiusConversion(atom.radius);
+        const segments = 16;
+        const rings = 16;
 
         // create the sphere's material
-        let sphereMaterial: MeshBasicMaterial = new MeshBasicMaterial({
+        const sphereMaterial: MeshBasicMaterial = new MeshBasicMaterial({
             color: 0xFF0000,
             opacity: 0.5,
             transparent: true
         });
         // create a new mesh with sphere geometry
-        let geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
-        let selObj = new ViewObject(geometry, sphereMaterial);
+        const geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
+        const selObj = new ViewObject(geometry, sphereMaterial);
 
         selObj.position = atom.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
@@ -342,24 +352,21 @@ export class ThreeJsRenderer implements IMolRenderer {
         return selObj;
     }
 
-
     private renderBondSelection(bond: Bond): ViewObject {
 
-        let quality: string = Configuration.renderQuality;
-        let mode: string = Configuration.renderMode;
-
-        let m: number[] = this.getBondMetrics(bond, mode);
-        let selMaterial: MeshBasicMaterial = new MeshBasicMaterial({
+        const quality: string = Configuration.renderQuality;
+        const mode: string = Configuration.renderMode;
+        const m: number[] = this.getBondMetrics(bond, mode);
+        const selMaterial: MeshBasicMaterial = new MeshBasicMaterial({
             color: 0xFF0000,
             opacity: 0.5,
             transparent: true
         });
-        let bondLength = bond.length;
+        const bondLength = bond.length;
+        const selObj: ViewObject = this.makeCylinder(10, bondLength, selMaterial);
+        const v0: Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
+        const v1: Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
-        let selObj: ViewObject = this.makeCylinder(10, bondLength, selMaterial);
-
-        let v0: Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
-        let v1: Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
         selObj.position = v0.add(v1).divideScalar(2);
         selObj.lookAt(v1);
 
@@ -369,13 +376,11 @@ export class ThreeJsRenderer implements IMolRenderer {
         return selObj;
     }
 
-
     private makeCylinder(width: number, height: number, material: any) {
 
-        let g: CylinderGeometry = new CylinderGeometry(width, width, height, 24, 1, true);
+        const g: CylinderGeometry = new CylinderGeometry(width, width, height, 24, 1, true);
         g.applyMatrix(new Matrix4().makeRotationX(Math.PI / 2));
-        let m: ViewObject = new ViewObject(g, material);
-        return m;
+        return new ViewObject(g, material);
     }
 
     /*
@@ -386,14 +391,12 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         if (mode === Constants.RENDERMODE_STICKS) {
             return [0, bond.length, bond.length];
-        }
-        else {
+        } else {
             return [bond.atoms[0].radius,
                 bond.length - bond.atoms[1].radius,
                 bond.length - (bond.atoms[1].radius + bond.atoms[0].radius)];
         }
     }
-
 
     private onWindowResize(): void {
 
@@ -405,43 +408,17 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.render();
     }
 
-
-    public getSelectedObject(event: MouseEvent): RenderableObject | undefined {
-
-        event.preventDefault();
-
-        // console.info("event.clientX " + event.clientX);
-        // console.info("event.clientY " + event.clientY);
-        let point: Vector3 = new Vector3(( (event.clientX - this.renderer.domElement.offsetLeft) / this.renderer.domElement.clientWidth ) * 2 - 1,
-            -( (event.clientY - this.renderer.domElement.offsetTop) / this.renderer.domElement.clientHeight) * 2 + 1, 0.5);
-        let raycaster = new Raycaster();
-        let mouse = new Vector2();
-        mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
-
-        raycaster.setFromCamera( mouse, this.camera );
-
-        let intersects = raycaster.intersectObjects( this.objects, false );
-
-        if (intersects.length > 0) {
-            let viewObject: ViewObject = <ViewObject>intersects[0].object;
-            let modelObject: RenderableObject = viewObject.modelObject;
-            return modelObject;
-        }
-
-        return undefined;
-    }
-
-
     private radiusConversion(radius: number): number {
 
         return 5 * Math.log(8 * radius);
     }
 
-
-    private testWebGL(): Boolean {
-        //  try { return !! window. && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; }
+    private testWebGL(): boolean {
+        /*        try {
+         return !!window. && !!document.createElement('canvas').getContext('experimental-webgl');
+         } catch (e) {
+         return false;
+         }*/
         return true;
     }
-
 }

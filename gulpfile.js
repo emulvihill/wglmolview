@@ -2,17 +2,17 @@
 
 var gulp = require("gulp");
 var connect = require("gulp-connect");
-var jasmineBrowser = require("gulp-jasmine-browser");
-var gulp = require("gulp");
 var shell = require("shelljs");
 
 gulp.task("clean", function () {
-    return shell.rm("-rf", "./src/**/*.js", "./src/**/*.js.map",  "./spec/**/*.js", "./spec/**/*.js.map", "./coverage", "./target");
+    return shell.rm("-rf", "./src/**/*.js", "./src/**/*.js.map", "./spec/**/*.js", "./spec/**/*.js.map",
+        "./coverage", "./target");
 });
 
 gulp.task("compile", function () {
     return shell.exec("tsc --outFile target/wglmolview.js");
 });
+
 gulp.task("connect", function () {
     connect.server({
         root: "app",

@@ -1,13 +1,11 @@
-import {MolView} from "./molview/MolView";
 import {Constants} from "./molview/Constants";
+import {MolView} from "./molview/MolView";
+
 function init() {
 
     // Modify baseUrl & pdbUrl as appropriate to your deployment environment
-    let mv: MolView = new MolView({
-        baseUrl: "/target",
-        pdbUrl: "pdb/helix2.pdb",
-        domElement: "container",
-        infoElement: "infoText"
+    const mv: MolView = new MolView({
+        pdbUrl: "pdb/aa/ala.pdb"
     });
 
     function getElement(s: string): HTMLElement {
@@ -15,31 +13,33 @@ function init() {
     }
 
     getElement("#renderStick").click = () => {
-        mv.setRenderMode(Constants.RENDERMODE_STICKS)
+        mv.setRenderMode(Constants.RENDERMODE_STICKS);
     };
     getElement("#renderBall").click = () => {
-        mv.setRenderMode(Constants.RENDERMODE_BALL_AND_STICK)
+        mv.setRenderMode(Constants.RENDERMODE_BALL_AND_STICK);
     };
     getElement("#renderBlob").click = () => {
-        mv.setRenderMode(Constants.RENDERMODE_SPACE_FILL)
+        mv.setRenderMode(Constants.RENDERMODE_SPACE_FILL);
     };
 
     getElement("#selectionInfo").click = () => {
-        mv.setSelectionMode(Constants.SELECTIONMODE_IDENTIFY)
+        mv.setSelectionMode(Constants.SELECTIONMODE_IDENTIFY);
     };
     getElement("#selectionDistance").click = () => {
-        mv.setSelectionMode(Constants.SELECTIONMODE_DISTANCE)
+        mv.setSelectionMode(Constants.SELECTIONMODE_DISTANCE);
     };
     getElement("#selectionRotation").click = () => {
-        mv.setSelectionMode(Constants.SELECTIONMODE_ROTATION)
+        mv.setSelectionMode(Constants.SELECTIONMODE_ROTATION);
     };
     getElement("#selectionTorsion").click = () => {
-        mv.setSelectionMode(Constants.SELECTIONMODE_TORSION)
+        mv.setSelectionMode(Constants.SELECTIONMODE_TORSION);
     };
 
     // molecule selection dropdown
     getElement("#pdbSelect").onchange = () => {
-        let value = (<HTMLSelectElement> getElement("#pdbSelect")).value;
+        const value = (getElement("#pdbSelect") as HTMLSelectElement).value;
         mv.loadPDB(value);
     };
 }
+
+init();
