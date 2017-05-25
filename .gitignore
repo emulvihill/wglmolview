@@ -1,5 +1,6 @@
 coverage/
 target/
+dist/
 node_modules/
 platforms/
 plugins/
@@ -11,3 +12,4 @@ hooks/
 src/**/*.js
 spec/**/*.js
 *.js.map
+/npm-debug.log

@@ -81,8 +81,8 @@ export class MolView {
         this.molecule = PDBParser.parsePDB(pdbData);
 
         // get the DOM element to which we should attach
-        this.domElement = document.getElementById(Configuration.domElement)!;
-        this.infoElement = document.getElementById(Configuration.infoElement)!;
+        this.domElement = Utility.getElement(Configuration.domElement)!;
+        this.infoElement = Utility.getElement(Configuration.infoElement)!;
         this.infoElement.innerHTML = "";
 
         if (!this.initialized) {
