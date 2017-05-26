@@ -1,4 +1,4 @@
-﻿﻿/*
+﻿/*
  * =================================================================================================
  *
  * 	WebGL MolView
@@ -25,7 +25,7 @@ export class Molecule extends RenderableObject {
     private header: object;
     private compound: object;
     private residueSequence: object;
-    private objects: Array<Atom|Bond>;
+    private objects: Array<Atom | Bond>;
     private selections: RenderableObject[];
 
     constructor(init: MoleculeInitializer) {
@@ -67,10 +67,9 @@ export class Molecule extends RenderableObject {
         } else if (!atom2) {
             res = atom1.bonds;
         } else {
-            for (let i: number = 0; i < atom1.bonds.length; i++) {
-                const b1: Bond = atom1.bonds[i];
-                if (b1.atoms[0] === atom2 || b1.atoms[1] === atom2) {
-                    res = [b1];
+            for (const b of atom1.bonds) {
+                if (b.atoms[0] === atom2 || b.atoms[1] === atom2) {
+                    res = [b];
                 }
             }
         }
@@ -108,11 +107,12 @@ export class Molecule extends RenderableObject {
         const res: RenderableObject[] = [];
 
         if (obj instanceof Atom) {
-            for (let i: number = 0; i < obj.bonds.length; i++) {
-                if (obj.bonds[i].atoms[0] === obj) {
-                    res.push(obj.bonds[i].atoms[1]);
+            const bonds = obj.bonds;
+            for (const b of bonds) {
+                if (b.atoms[0] === obj) {
+                    res.push(b.atoms[1]);
                 } else {
-                    res.push(obj.bonds[i].atoms[0]);
+                    res.push(b.atoms[0]);
                 }
             }
         } else if (obj instanceof Bond) {
