@@ -10,13 +10,16 @@
  * =================================================================================================
  */
 
-import {BondInitializer} from "../BondInitializer";
+import {BondInitializer} from "./BondInitializer";
 import {Configuration} from "../Configuration";
 import {Constants} from "../Constants";
 import {IMolRenderer} from "../renderer/IMolRenderer";
 import {Atom} from "./Atom";
 import {RenderableObject} from "./RenderableObject";
 
+/**
+ * Renderable Bond
+ */
 export class Bond extends RenderableObject {
     atoms: Atom[];
     color: string;

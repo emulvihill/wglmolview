@@ -9,8 +9,12 @@
  *
  * =================================================================================================
  */
+
 import {Constants} from "./Constants";
 
+/**
+ * Global configuration for MolView
+ */
 export class Configuration {
 
     public static renderQuality: string = Constants.RENDERQUALITY_HIGH;

@@ -24,6 +24,10 @@ import {Utility} from "./Utility";
 
 import {Vector3} from "three";
 
+/**
+ * MolView - a simple 3D molecule viewer.
+ * For instructions, please read README.md
+ */
 export class MolView {
     private selections: Atom[];
     private molecule: Molecule;

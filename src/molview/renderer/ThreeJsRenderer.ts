@@ -35,6 +35,10 @@ import {RenderableObject} from "../model/RenderableObject";
 import {IMolRenderer} from "./IMolRenderer";
 import {ViewObject} from "./ViewObject";
 
+/**
+ * Renderer for ThreeJS framework by Mr. Doob
+ * (http://threejs.org)
+ */
 export class ThreeJsRenderer implements IMolRenderer {
 
     private static SCALE: number = 100;

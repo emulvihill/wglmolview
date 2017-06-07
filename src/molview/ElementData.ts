@@ -12,9 +12,29 @@
 
 import {DataObject} from "./DataObject";
 
+/**
+ * Physical & display constants for all elements
+ */
 export class ElementData {
 
+    public static getData(e: string): DataObject {
+        if (!ElementData.atomData) {
+            this.initData();
+        }
+        return ElementData.atomData[e.toUpperCase()];
+    }
+
+    private static initData() {
+        ElementData.atomData = {};
+        const json = JSON.parse(this.periodic);
+        for (const item in json) {
+            const obj = new DataObject(json[item]);
+            ElementData.atomData[obj.symbol.toUpperCase()] = obj;
+        }
+    }
+
     private static atomData: { [key: string]: DataObject };
+
     private static periodic: string = `[
 {"atomicNumber":1,"symbol":"H","name":"Hydrogen","atomicMass":"1.00794(4)","cpkHexColor":"FFFFFF","electronicConfiguration":"1s1","electronegativity":2.2,"atomicRadius":37,"ionRadius":"","vanDelWaalsRadius":120,"ionizationEnergy":1312,"electronAffinity":-73,"oxidationStates":"-1, 1","standardState":"gas","bondingType":"diatomic","meltingPoint":14,"boilingPoint":20,"density":0.0000899,"groupBlock":"nonmetal","yearDiscovered":1766},
 {"atomicNumber":2,"symbol":"He","name":"Helium","atomicMass":"4.002602(2)","cpkHexColor":"D9FFFF","electronicConfiguration":"1s2","electronegativity":"","atomicRadius":32,"ionRadius":"","vanDelWaalsRadius":140,"ionizationEnergy":2372,"electronAffinity":0,"oxidationStates":"","standardState":"gas","bondingType":"atomic","meltingPoint":"","boilingPoint":4,"density":0.0001785,"groupBlock":"noble gas","yearDiscovered":1868},
@@ -135,20 +155,4 @@ export class ElementData {
 {"atomicNumber":117,"symbol":"Ts","name":"Tennessine","atomicMass":[294],"cpkHexColor":"","electronicConfiguration":"[Rn] 5f14 6d10 7s2 7p5","electronegativity":"","atomicRadius":"","ionRadius":"","vanDelWaalsRadius":"","ionizationEnergy":"","electronAffinity":"","oxidationStates":"","standardState":"","bondingType":"","meltingPoint":"","boilingPoint":"","density":"","groupBlock":"post-transition metal","yearDiscovered":2010},
 {"atomicNumber":118,"symbol":"Og","name":"Oganesson","atomicMass":[294],"cpkHexColor":"","electronicConfiguration":"[Rn] 5f14 6d10 7s2 7p6","electronegativity":"","atomicRadius":"","ionRadius":"","vanDelWaalsRadius":"","ionizationEnergy":"","electronAffinity":"","oxidationStates":"","standardState":"","bondingType":"","meltingPoint":"","boilingPoint":"","density":"","groupBlock":"noble gas","yearDiscovered":2002}
 ]`;
-
-    public static getData(e: string): DataObject {
-        if (!ElementData.atomData) {
-            this.initData();
-        }
-        return ElementData.atomData[e.toUpperCase()];
-    }
-
-    private static initData() {
-        ElementData.atomData = {};
-        const json = JSON.parse(this.periodic);
-        for (const item in json) {
-            const obj = new DataObject(json[item]);
-            ElementData.atomData[obj.symbol.toUpperCase()] = obj;
-        }
-    }
 }

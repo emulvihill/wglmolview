@@ -17,6 +17,9 @@ import {Bond} from "./Bond";
 import {MoleculeInitializer} from "./MoleculeInitializer";
 import {RenderableObject} from "./RenderableObject";
 
+/**
+ * Renderable Molecule
+ */
 export class Molecule extends RenderableObject {
 
     private maxMframe: number;

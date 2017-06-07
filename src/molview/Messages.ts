@@ -9,6 +9,10 @@
  *
  * =================================================================================================
  */
+
+/**
+ * UI Display strings
+ */
 export class Messages {
     public static readonly INSTRUCT_IDENTIFY: string = "Select an atom to show properties.";
     public static readonly INSTRUCT_DISTANCE: string = "Select any two atoms to measure distance.";

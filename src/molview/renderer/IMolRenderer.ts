@@ -12,6 +12,10 @@
 
 import {RenderableObject} from "../model/RenderableObject";
 
+/**
+ * Interface for graphics rendering API
+ * Extend this class to display molecules using a specific API (WebGL, etc)
+ */
 export interface IMolRenderer {
     init(domElement: HTMLElement): void;
     reset(): void;

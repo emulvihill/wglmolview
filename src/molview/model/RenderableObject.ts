@@ -14,6 +14,11 @@ import {Configuration} from "../Configuration";
 import {IMolRenderer} from "../renderer/IMolRenderer";
 import {ViewObject} from "../renderer/ViewObject";
 
+/**
+ * Base 3D Renderable, any WebGL objects should extend this and add specific properties
+ * View is handled by associated ViewObject.
+ * Each Renderable will have a related ViewObject subclass to implement graphics API
+ */
 export class RenderableObject {
     id: string;
     viewObject: ViewObject;

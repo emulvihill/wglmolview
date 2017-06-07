@@ -10,12 +10,15 @@
  * =================================================================================================
  */
 
-import {BondInitializer} from "./BondInitializer";
+import {BondInitializer} from "./model/BondInitializer";
 import {Atom} from "./model/Atom";
 import {AtomInitializer} from "./model/AtomInitializer";
 import {Bond} from "./model/Bond";
 import {Molecule} from "./model/Molecule";
 
+/**
+ * Parses .PDB molecule definition format.
+ */
 export class PDBParser {
 
     static parsePDB(pdb: string, mframe: number = 0): Molecule {

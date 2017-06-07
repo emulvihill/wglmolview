@@ -13,6 +13,9 @@ import {RenderableObject} from "./RenderableObject";
 import {Atom} from "./Atom";
 import {IMolRenderer} from "../renderer/IMolRenderer";
 
+/**
+ * Renderable selection visualization for an Atom
+ */
 export class SelectedAtom extends RenderableObject {
     atom: Atom;
     radius: number;

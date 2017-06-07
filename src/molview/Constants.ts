@@ -9,6 +9,11 @@
  *
  * =================================================================================================
  */
+
+
+/**
+ * String constants for MolView
+ */
 export class Constants {
     public static readonly CONTAINER_ATOM: string = "atomContainer";
     public static readonly CONTAINER_BOND: string = "bondContainer";

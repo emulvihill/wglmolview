@@ -1,4 +1,4 @@
-﻿/*
+/*
  * =================================================================================================
  *
  * 	WebGL MolView
@@ -11,14 +11,13 @@
  */
 
 import {Atom} from "./Atom";
-import {Bond} from "./Bond";
 
 /**
- * Initializer for Molecule
+ * Initializer for Bond
  */
-export class MoleculeInitializer {
-    objects: Array<Atom | Bond>;
-    title: string;
-    header: object;
-    compound: object;
+export class BondInitializer {
+    id: string;
+    t: number;
+    a1: Atom;
+    a2: Atom;
 }

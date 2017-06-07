@@ -9,6 +9,10 @@
  *
  * =================================================================================================
  */
+
+/**
+ * Amino Acid constants
+ */
 export class AminoAcidData {
 
     public static getData(aa: string): { color: number } {

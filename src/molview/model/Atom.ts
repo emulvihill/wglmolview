@@ -21,6 +21,9 @@ import {AtomInitializer} from "./AtomInitializer";
 import {Bond} from "./Bond";
 import {RenderableObject} from "./RenderableObject";
 
+/**
+ * Renderable Atom
+ */
 export class Atom extends RenderableObject {
     radius: number;
     color: number;

@@ -1,6 +1,3 @@
-/*
- * Adapted from three.js OrbitControls example, and three-orbitcontrols
- */
 import * as THREE from "three";
 import {Matrix4, OrthographicCamera, PerspectiveCamera, Vector3} from "three";
 

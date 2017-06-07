@@ -10,6 +10,9 @@
  * =================================================================================================
  */
 
+/**
+ * Initializer for Atom
+ */
 export class AtomInitializer {
     altLoc: number;
     chainId: number;
