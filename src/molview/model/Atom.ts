@@ -37,16 +37,20 @@ export class Atom extends RenderableObject {
     private serial: number;
     private chainID: number;
     private segID: number;
-    private charge: number[];
+    private charge: number;
     private resName: string;
     private resSeq: string;
     private iCode: string;
     private occupancy: string;
 
-    private bondFrames: Bond[][];
+    private _bonds: Bond[];
 
+    /**
+     * All bonds connected to this Atom (read-only)
+     * @returns {Bond[]}
+     */
     public get bonds(): Bond[] {
-        return this.bondFrames[this.mframe];
+        return this._bonds.slice();
     }
 
     constructor(init: AtomInitializer) {
@@ -69,7 +73,7 @@ export class Atom extends RenderableObject {
         this.tempFactor = init.tempFactor;
         this.segID = init.segId;
         this.element2 = init.element2;
-        this.charge = [init.charge];
+        this.charge = init.charge;
 
         this.name = edata.name;
         this.color = init.color || edata.color;
@@ -91,22 +95,22 @@ export class Atom extends RenderableObject {
                 this.radius = radiusScale * ElementData.getData("H").radius;
         }
 
-        this.charge = new Array(Configuration.maxFrames);  // per frame
-        this.bondFrames = new Array(Configuration.maxFrames);   // per frame
-        for (let i: number = 0; i <= Configuration.maxFrames; i++) {
-            this.bondFrames[i] = [];
-        }
-
+        this.charge = 0;
+        this._bonds = [];
     }
 
-    public addToMframe(x: number, y: number, z: number, c: number, mframe: number): void {
-        this.mframe = mframe;
+    /**
+     * Set the location in 3D space for this Atom
+     * @param x
+     * @param y
+     * @param z
+     */
+    public setLocation(x: number, y: number, z: number): void {
         this.loc = new Vector3(x, y, z);
-        this.charge[mframe] = c;
     }
 
     public addBond(bond: Bond): void {
-        this.bondFrames[this.mframe].push(bond);
+        this._bonds.push(bond);
     }
 
     public render(renderer: IMolRenderer): void {

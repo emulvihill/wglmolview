@@ -22,8 +22,6 @@ import {RenderableObject} from "./RenderableObject";
  */
 export class Molecule extends RenderableObject {
 
-    private maxMframe: number;
-    private currentMframe: number;
     private title: string;
     private header: object;
     private compound: object;
@@ -40,24 +38,12 @@ export class Molecule extends RenderableObject {
         this.compound = init.compound;
         this.selections = [];
         this.residueSequence = {};
-        this.currentMframe = 0;
-        this.maxMframe = 0;
     }
 
     render(renderer: IMolRenderer): void {
         for (const obj of this.objects) {
             obj.render(renderer);
         }
-    }
-
-    public set mframe(mframe: number) {
-        // go to a particular frame in a multi frame model
-
-        for (const obj of this.objects) {
-            obj.mframe = mframe;
-        }
-
-        this.currentMframe = mframe;
     }
 
     public getBonds(atom1: Atom, atom2: Atom): Bond[] {

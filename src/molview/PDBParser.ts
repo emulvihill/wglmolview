@@ -10,7 +10,6 @@
  * =================================================================================================
  */
 
-import {BondInitializer} from "./model/BondInitializer";
 import {Atom} from "./model/Atom";
 import {AtomInitializer} from "./model/AtomInitializer";
 import {Bond} from "./model/Bond";
@@ -21,7 +20,7 @@ import {Molecule} from "./model/Molecule";
  */
 export class PDBParser {
 
-    static parsePDB(pdb: string, mframe: number = 0): Molecule {
+    static parsePDB(pdb: string): Molecule {
         const objects: Array<Atom | Bond> = [];
         const pdbArray: string[] = pdb.split("\n");
         let compound: object = {};
@@ -176,8 +175,7 @@ export class PDBParser {
 
                     if (atom && atom.name) {
                         objects.push(atom);
-                        // add the object to current frame
-                        atom.addToMframe(init.x, init.y, init.z, init.charge, mframe);
+                        atom.setLocation(init.x, init.y, init.z);
                     }
 
                     break;
@@ -233,7 +231,7 @@ export class PDBParser {
                                     bond = new Bond({t, a1, a2, id: bondId});
                                     objects.push(bond);
                                 }
-                                bond.addToMframe(mframe);
+                                bond.calculateLength();
                             }
                         }
                     }
