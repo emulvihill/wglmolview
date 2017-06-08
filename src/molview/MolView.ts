@@ -10,19 +10,17 @@
  * =================================================================================================
  */
 
+import {Vector3} from "three";
 import {Configuration} from "./Configuration";
 import {Constants} from "./Constants";
 import {Messages} from "./Messages";
 import {Atom} from "./model/Atom";
-import {Bond} from "./model/Bond";
 import {Molecule} from "./model/Molecule";
 import {RenderableObject} from "./model/RenderableObject";
 import {PDBParser} from "./PDBParser";
 import {IMolRenderer} from "./renderer/IMolRenderer";
 import {ThreeJsRenderer} from "./renderer/ThreeJsRenderer";
 import {Utility} from "./Utility";
-
-import {Vector3} from "three";
 
 /**
  * MolView - a simple 3D molecule viewer.
@@ -41,7 +39,6 @@ export class MolView {
     }) {
         this.renderer = new ThreeJsRenderer();
 
-        // this is where selections are stored
         this.selections = [];
 
         // load the molecule from the init settings
@@ -79,7 +76,7 @@ export class MolView {
 
         this.molecule = PDBParser.parsePDB(pdbData);
 
-        // get the DOM element to which we should attach
+        // get the DOM element to which we should attach the renderer
         this.domElement = Utility.getElement(Configuration.domElement)!;
         this.infoElement = Utility.getElement(Configuration.infoElement)!;
         this.infoElement.innerHTML = "";
@@ -91,7 +88,6 @@ export class MolView {
         }
         if (!this.initialized) {
             this.domElement.onclick = event => this.handleSelect(event);
-            // this.domElement.onmousewheel = event => this.onMouseWheel(event);
             this.infoElement.onclick = event => this.updateInfoDisplay();
         }
 
@@ -124,22 +120,22 @@ export class MolView {
 
         if (index > -1) {
             // already selected so deselect	if possible
-            let connectingBonds: Bond[];
             if (index === 0) {
                 this.renderer.deselect(selObj);
                 if (this.selections.length >= 2) {
-                    connectingBonds = this.molecule.getBonds(selObj, this.selections[1]);
-                    if (connectingBonds && connectingBonds.length > 0) {
-                        this.renderer.deselect(connectingBonds[0]);
+                    const bondBetween = this.molecule.getBondBetween(selObj, this.selections[1]);
+                    if (bondBetween) {
+                        this.renderer.deselect(bondBetween);
                     }
                 }
                 this.selections.shift();
             } else if (index === this.selections.length - 1) {
                 this.renderer.deselect(selObj);
                 if (this.selections.length >= 2) {
-                    connectingBonds = this.molecule.getBonds(selObj, this.selections[this.selections.length - 2]);
-                    if (connectingBonds && connectingBonds.length > 0) {
-                        this.renderer.deselect(connectingBonds[0]);
+                    const bondBetween = this.molecule.getBondBetween(selObj,
+                                                                     this.selections[this.selections.length - 2]);
+                    if (bondBetween) {
+                        this.renderer.deselect(bondBetween);
                     }
                 }
                 this.selections.pop();
@@ -161,18 +157,26 @@ export class MolView {
 
         if (this.selections.length > 0 &&
             (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION ||
-            Configuration.selectionMode === Constants.SELECTIONMODE_TORSION)) {
-            // check for neighborness before selecting
+             Configuration.selectionMode === Constants.SELECTIONMODE_TORSION)) {
+
+            // check that requested selected atom is neighbor of existing selection before growing selection
             const neighbors: RenderableObject[] = this.molecule.getNeighbors(selObj);
 
             if (neighbors.indexOf(this.selections[0]) > -1) {
                 this.renderer.select(selObj);
-                this.renderer.select(this.molecule.getBonds(selObj, this.selections[0])[0]);
-                this.selections.unshift(selObj);
+                const bondBetween = this.molecule.getBondBetween(selObj, this.selections[0]);
+                if (bondBetween) {
+                    this.renderer.select(bondBetween);
+                    this.selections.unshift(selObj);
+                }
+
             } else if (neighbors.indexOf(this.selections[this.selections.length - 1]) > -1) {
                 this.renderer.select(selObj);
-                this.renderer.select(this.molecule.getBonds(selObj, this.selections[this.selections.length - 1])[0]);
-                this.selections.push(selObj);
+                const bondBetween = this.molecule.getBondBetween(selObj, this.selections[this.selections.length - 1]);
+                if (bondBetween) {
+                    this.renderer.select(bondBetween);
+                    this.selections.push(selObj);
+                }
             }
         } else {
             // no restrictions in other modes
@@ -242,7 +246,8 @@ export class MolView {
         }
 
         const text: string = Utility.r2d(ang).toFixed(4) + " degrees\n" +
-            this.selections[0].element + " - " + this.selections[1].element + " - " + this.selections[2].element;
+                             this.selections[0].element + " - " + this.selections[1].element + " - "
+                             + this.selections[2].element;
         this.updateDisplay(text);
     }
 
@@ -263,8 +268,8 @@ export class MolView {
         }
 
         const text: string = Utility.r2d(ang).toFixed(4) + " degrees\n" +
-            this.selections[0].element + " - " + this.selections[1].element + " - " +
-            this.selections[2].element + " - " + this.selections[3].element;
+                             this.selections[0].element + " - " + this.selections[1].element + " - " +
+                             this.selections[2].element + " - " + this.selections[3].element;
         this.updateDisplay(text);
     }
 

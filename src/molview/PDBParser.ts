@@ -231,7 +231,6 @@ export class PDBParser {
                                     bond = new Bond({t, a1, a2, id: bondId});
                                     objects.push(bond);
                                 }
-                                bond.calculateLength();
                             }
                         }
                     }

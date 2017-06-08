@@ -41,35 +41,36 @@ export class Molecule extends RenderableObject {
     }
 
     render(renderer: IMolRenderer): void {
-        for (const obj of this.objects) {
-            obj.render(renderer);
-        }
+        this.objects.forEach(o => o.render(renderer));
     }
 
-    public getBonds(atom1: Atom, atom2: Atom): Bond[] {
-        // returns either a list of names of bonds attached to single atom (one parameter)
-        // or a single bond between two atoms (two parameters)
-        let res: Bond[] = [];
+    /**
+     *      * Returns either a list of names of bonds attached to single atom (one parameter)
+     * or a single bond between two atoms (two parameters)
+     * @param atom1
+     * @param atom2
+     * @returns {Bond[]} List of bonds attached to one
+     */
+    public getBonds(atom1: Atom): Bond[] {
         if (!atom1) {
             // bad call
             throw new Error("error in call to getBonds");
-        } else if (!atom2) {
-            res = atom1.bonds;
-        } else {
-            for (const b of atom1.bonds) {
-                if (b.atoms[0] === atom2 || b.atoms[1] === atom2) {
-                    res = [b];
-                }
-            }
         }
 
-        return res;
+        return atom1.bonds;
+    }
+
+    public getBondBetween(atom1: Atom, atom2: Atom): Bond|undefined {
+        if (!atom1 || !atom2) {
+            // bad call
+            throw new Error("error in call to getBonds");
+        }
+
+        return atom1.bonds.find(b => b.atoms[0] === atom2 || b.atoms[1] === atom2);
     }
 
     public setColorMode(m: string): void {
-        for (const obj of this.objects) {
-            obj.setColorMode(m);
-        }
+        this.objects.forEach(o => o.setColorMode(m));
     }
 
     public addSelection(obj: RenderableObject): void {
@@ -80,6 +81,10 @@ export class Molecule extends RenderableObject {
         this.selections.push(obj);
     }
 
+    /**
+     * Remove the selection state from a component object
+     * @param obj
+     */
     public removeSelection(obj: RenderableObject): void {
         if (!obj) {
             throw new Error("invalid selection");
@@ -88,22 +93,23 @@ export class Molecule extends RenderableObject {
         this.selections.splice(this.selections.indexOf(obj), 1);
     }
 
-    public getNeighbors(obj: RenderableObject): RenderableObject[] {
+    /**
+     * Return the atoms that are directly connected to this atom / bond
+     * @param obj
+     * @returns {RenderableObject[]}
+     */
+    public getNeighbors(obj: RenderableObject): Atom[] {
         if (!obj) {
             throw new Error("invalid object in getNeighbors()");
         }
-        // return the atoms that are directly connected to this atom / bond
-        const res: RenderableObject[] = [];
+
+        const res: Atom[] = [];
 
         if (obj instanceof Atom) {
-            const bonds = obj.bonds;
-            for (const b of bonds) {
-                if (b.atoms[0] === obj) {
-                    res.push(b.atoms[1]);
-                } else {
-                    res.push(b.atoms[0]);
-                }
-            }
+            obj.bonds.forEach(b => {
+                res.push(obj === b.atoms[0] ? b.atoms[1] : b.atoms[0]);
+            });
+
         } else if (obj instanceof Bond) {
             res.push(obj.atoms[0], obj.atoms[1]);
         }

@@ -23,7 +23,6 @@ export class Configuration {
     public static atomRadiusMode: string = Constants.ATOM_RADIUS_REDUCED;
     public static atomRadiusScale: number = 1.0;
     public static selectable: boolean = true;
-    public static maxFrames: number = 99;
     public static zoom: number = 1.0;
     public static autoCenter: boolean = true;
     public static baseUrl: string = "";

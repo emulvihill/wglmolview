@@ -44,13 +44,8 @@ export class Bond extends RenderableObject {
 
         this._atoms[0].addBond(this);
         this._atoms[1].addBond(this);
-    }
 
-    public calculateLength(): void {
-        this.loc = this._atoms[0].loc.clone();
-        this.loc.add(this._atoms[1].loc);
-        this.loc.multiplyScalar(0.5);
-        this._length = 100 * this._atoms[0].loc.distanceTo(this._atoms[1].loc);
+        this.calculateLength();
     }
 
     public render(renderer: IMolRenderer): void {
@@ -68,8 +63,18 @@ export class Bond extends RenderableObject {
                 break;
 
             case Constants.COLORMODE_AMINO_ACID:
-                // TO DO
+                // TODO
                 break;
         }
+    }
+
+    /**
+     * Calculates distance between
+     */
+    private calculateLength(): void {
+        this.loc = this._atoms[0].loc.clone();
+        this.loc.add(this._atoms[1].loc);
+        this.loc.multiplyScalar(0.5);
+        this._length = 100 * this._atoms[0].loc.distanceTo(this._atoms[1].loc);
     }
 }

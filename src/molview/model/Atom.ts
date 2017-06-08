@@ -74,25 +74,23 @@ export class Atom extends RenderableObject {
         this.segID = init.segId;
         this.element2 = init.element2;
         this.charge = init.charge;
-
         this.name = edata.name;
         this.color = init.color || edata.color;
 
         const radiusScale: number = Configuration.atomRadiusScale;
+        const hRadius = ElementData.getData("H").radius;
 
         switch (Configuration.atomRadiusMode) {
             case Constants.ATOM_RADIUS_ACCURATE:
                 this.radius = radiusScale * edata.radius;
                 break;
             case Constants.ATOM_RADIUS_REDUCED:
-                this.radius =
-                    radiusScale * (Constants.ATOM_RADIUS_REDUCED_SCALE *
-                                   edata.radius + (1 - Constants.ATOM_RADIUS_REDUCED_SCALE) * ElementData.getData(
-                        "H").radius);
+                this.radius = radiusScale * (Constants.ATOM_RADIUS_REDUCED_SCALE * edata.radius +
+                                             (1 - Constants.ATOM_RADIUS_REDUCED_SCALE) * hRadius);
                 break;
             case Constants.ATOM_RADIUS_UNIFORM:
             default:
-                this.radius = radiusScale * ElementData.getData("H").radius;
+                this.radius = radiusScale * hRadius;
         }
 
         this.charge = 0;
