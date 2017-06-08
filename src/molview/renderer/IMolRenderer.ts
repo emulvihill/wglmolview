@@ -25,4 +25,5 @@ export interface IMolRenderer {
     select(obj: RenderableObject): void;
     deselect(obj: RenderableObject): void;
     deselectAll(): void;
+    animate(step: number):void
 }

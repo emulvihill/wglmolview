@@ -11,7 +11,8 @@
  */
 
 import {
-    CylinderGeometry, DirectionalLight,
+    CylinderGeometry,
+    DirectionalLight,
     GeometryUtils,
     Light,
     Matrix4,
@@ -41,7 +42,20 @@ import {ViewObject} from "./ViewObject";
  */
 export class ThreeJsRenderer implements IMolRenderer {
 
-    private static SCALE: number = 100;
+    private static readonly SCALE: number = 100;
+    // scene size
+    private static readonly WIDTH = 800;
+    private static readonly HEIGHT = 600;
+    private static readonly ANTI_ALIAS = 4;
+
+    // camera attributes
+    private static readonly VIEW_ANGLE = 45;
+    private static readonly ASPECT = ThreeJsRenderer.WIDTH / ThreeJsRenderer.HEIGHT;
+    private static readonly NEAR = 0.1;
+    private static readonly FAR = 1000000;
+
+    private static readonly SELECTION_COLOR = 0xFF0000;
+    private static readonly SELECTION_OPACITY = 0.5;
 
     private scene: Scene;
     private renderer: WebGLRenderer;
@@ -55,16 +69,6 @@ export class ThreeJsRenderer implements IMolRenderer {
     init(domElement: HTMLElement): void {
         this.domElement = domElement as HTMLDivElement;
 
-        // scene size
-        const WIDTH = 800;
-        const HEIGHT = 600;
-
-        // camera attributes
-        const VIEW_ANGLE = 45;
-        const ASPECT = WIDTH / HEIGHT;
-        const NEAR = 0.1;
-        const FAR = 1000000;
-
         // create a WebGL renderer, camera
         // and a scene
         if (this.testWebGL() === false) {
@@ -73,7 +77,9 @@ export class ThreeJsRenderer implements IMolRenderer {
         }
 
         this.renderer = new WebGLRenderer();
-        this.camera = new PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+        this.renderer.setPixelRatio(ThreeJsRenderer.ANTI_ALIAS);
+        this.camera = new PerspectiveCamera(ThreeJsRenderer.VIEW_ANGLE, ThreeJsRenderer.ASPECT,
+                                            ThreeJsRenderer.NEAR, ThreeJsRenderer.FAR);
         this.scene = new Scene();
 
         // add the camera to the scene
@@ -84,13 +90,13 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.camera.position.z = 1000;
 
         // start the renderer
-        this.renderer.setSize(WIDTH, HEIGHT);
+        this.renderer.setSize(ThreeJsRenderer.WIDTH, ThreeJsRenderer.HEIGHT);
 
         // create a point light
-/*        let light: Light = new PointLight(0xFFFFFF);
-        light.position.set(100, 400, 1000);
-        this.lights.push(light);
-        this.camera.add(light);*/
+        /*        let light: Light = new PointLight(0xFFFFFF);
+         light.position.set(100, 400, 1000);
+         this.lights.push(light);
+         this.camera.add(light);*/
 
         // create directional light
         const light = new DirectionalLight(0xffffff, 1.0);
@@ -109,7 +115,7 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         this.objects = [];
 
-        this.animate();
+        this.animate(0);
     }
 
     reset(): void {
@@ -168,12 +174,6 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         event.preventDefault();
 
-        // console.info("event.clientX " + event.clientX);
-        // console.info("event.clientY " + event.clientY);
-        const point: Vector3 = new Vector3(( (event.clientX - this.renderer.domElement.offsetLeft) /
-                                             this.renderer.domElement.clientWidth ) * 2 - 1,
-                                           -( (event.clientY - this.renderer.domElement.offsetTop) /
-                                              this.renderer.domElement.clientHeight) * 2 + 1, 0.5);
         const raycaster = new Raycaster();
         const mouse = new Vector2();
         mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
@@ -231,35 +231,31 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.renderer.render(this.scene, this.camera);
     }
 
-    private animate(): void {
+    public animate(step: number): void {
 
-        const rot = Date.now() * 0.0004;
-
-        requestAnimationFrame(() => {
-            this.animate();
-        });
+        const rot = step * 0.0004;
 
         this.controls.update();
 
-        // this.lights[0].rotation.x = this.scene.rotation.x = rot;
-        // this.lights[0].rotation.y = this.scene.rotation.y = rot * 0.7;
+        //this.lights[0].rotation.x = rot;
+        //this.lights[0].rotation.y = rot * 0.7;
 
         this.render();
+        requestAnimationFrame(step => {
+            this.animate(step);
+        });
     }
 
     private renderAtom(modelObject: Atom): ViewObject {
 
-        const quality: string = Configuration.renderQuality;
-
-        // set up the sphere vars
+        // determine the sphere geometry
         const radius = this.radiusConversion(modelObject.radius);
-        const segments = 16;
-        const rings = 16;
+        const segments = Configuration.renderQuality === Constants.RENDERQUALITY_HIGH ? 24 : 12;
 
         // create the sphere's material
         const sphereMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: modelObject.color});
         // create a new mesh with sphere geometry
-        const geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
+        const geometry: SphereGeometry = new SphereGeometry(radius, segments, segments);
         const viewObject: ViewObject = new ViewObject(geometry, sphereMaterial);
         const p: Vector3 = modelObject.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
@@ -276,9 +272,9 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         const tubes: ViewObject[] = [];
 
-        const m: number[] = this.getBondMetrics(modelObject, Configuration.renderMode);
+        // const m: number[] = this.getBondMetrics(modelObject, Configuration.renderMode);
         const bondMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: 0x0000FF});
-        const bondLength = modelObject.length; // 10 * m[2];
+        const bondLength = modelObject.length;
 
         switch (modelObject.type) {
             case 1:
@@ -286,6 +282,7 @@ export class ThreeJsRenderer implements IMolRenderer {
                 break;
 
             case 2:
+                // double cylinders side-by-side
                 tubes.push(this.makeCylinder(5, bondLength, bondMaterial));
                 tubes.push(this.makeCylinder(5, bondLength, bondMaterial));
                 tubes[0].translateX(6);
@@ -293,6 +290,7 @@ export class ThreeJsRenderer implements IMolRenderer {
                 break;
 
             case 3:
+                // triple cylinders in triangle formation
                 tubes.push(this.makeCylinder(4, bondLength, bondMaterial));
                 tubes.push(this.makeCylinder(4, bondLength, bondMaterial));
                 tubes.push(this.makeCylinder(4, bondLength, bondMaterial));
@@ -304,11 +302,11 @@ export class ThreeJsRenderer implements IMolRenderer {
                 break;
         }
 
-        const viewObject: ViewObject = tubes[0];
-        for (let i: number = 1; i < tubes.length; i++) {
-            GeometryUtils.merge(tubes[0].geometry, tubes[i].geometry, 0);
-        }
+        /*        for (let i: number = 1; i < tubes.length; i++) {
+         GeometryUtils.merge(tubes[0].geometry, tubes[i].geometry, 0);
+         }*/
 
+        const viewObject: ViewObject = tubes[0];
         const v0: Vector3 = modelObject.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
         const v1: Vector3 = modelObject.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
         const p: Vector3 = v0.add(v1).divideScalar(2);
@@ -327,17 +325,16 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         // set up the sphere vars
         const radius = 1.1 * this.radiusConversion(modelObject.radius);
-        const segments = 16;
-        const rings = 16;
+        const segments = Configuration.renderQuality === Constants.RENDERQUALITY_HIGH ? 20 : 10;
 
         // create the sphere's material
         const sphereMaterial: MeshBasicMaterial = new MeshBasicMaterial({
-                                                                            color: 0xFF0000,
-                                                                            opacity: 0.5,
+                                                                            color: ThreeJsRenderer.SELECTION_COLOR,
+                                                                            opacity: ThreeJsRenderer.SELECTION_OPACITY,
                                                                             transparent: true
                                                                         });
         // create a new mesh with sphere geometry
-        const geometry: SphereGeometry = new SphereGeometry(radius, segments, rings);
+        const geometry: SphereGeometry = new SphereGeometry(radius, segments, segments);
         const viewObject = new ViewObject(geometry, sphereMaterial);
 
         const p: Vector3 = modelObject.loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
@@ -353,12 +350,10 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     private renderBondSelection(bond: Bond): ViewObject {
 
-        const quality: string = Configuration.renderQuality;
-        const mode: string = Configuration.renderMode;
-        const m: number[] = this.getBondMetrics(bond, mode);
+        // const m: number[] = this.getBondMetrics(bond, mode);
         const selMaterial: MeshBasicMaterial = new MeshBasicMaterial({
-                                                                         color: 0xFF0000,
-                                                                         opacity: 0.5,
+                                                                         color: ThreeJsRenderer.SELECTION_COLOR,
+                                                                         opacity: ThreeJsRenderer.SELECTION_OPACITY,
                                                                          transparent: true
                                                                      });
         const bondLength = bond.length;
@@ -369,7 +364,6 @@ export class ThreeJsRenderer implements IMolRenderer {
         let p = v0.add(v1).divideScalar(2);
         selObj.position.set(p.x, p.y, p.z);
         selObj.lookAt(v1);
-
         selObj.modelObject = bond;
         this.scene.add(selObj);
 
@@ -378,24 +372,10 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     private makeCylinder(width: number, height: number, material: any) {
 
-        const g: CylinderGeometry = new CylinderGeometry(width, width, height, 24, 1, true);
+        const segments = Configuration.renderQuality === Constants.RENDERQUALITY_HIGH ? 24 : 12;
+        const g: CylinderGeometry = new CylinderGeometry(width, width, height, segments, 1, true);
         g.applyMatrix(new Matrix4().makeRotationX(Math.PI / 2));
         return new ViewObject(g, material);
-    }
-
-    /*
-     * Measure the "empty space" at the ends of bonds, to make it look right with drawing between atoms
-     * [length between atom0 & start of bond, length between end of bond & atom1, bond length as drawn]
-     */
-    private getBondMetrics(bond: Bond, mode: string): number[] {
-
-        if (mode === Constants.RENDERMODE_STICKS) {
-            return [0, bond.length, bond.length];
-        } else {
-            return [bond.atoms[0].radius,
-                    bond.length - bond.atoms[1].radius,
-                    bond.length - (bond.atoms[1].radius + bond.atoms[0].radius)];
-        }
     }
 
     private onWindowResize(): void {
