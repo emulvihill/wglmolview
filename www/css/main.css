@@ -1,0 +1,80 @@
+body {
+    color: #cccccc;
+    font-family:Monospace;
+    font-size:13px;
+    text-align:center;
+
+    background-color: #000000;
+    margin: 0px;
+    overflow: hidden;
+}
+
+#wglContent {
+    width: 800px;
+    height: 600px;
+}
+
+#wglInfo {
+    color: #ffffff;
+    font-family:Monospace;
+    font-size:15px;
+    text-align:center;
+    position: fixed;
+    width: 100%;
+    height: 40px;
+    bottom: 80px;
+}
+
+#wglControls {
+    width: 400px;
+    position: fixed;
+    bottom: 37px;
+    left: 50%;
+}
+
+#renderControls {
+    display: inline-block;
+    position: absolute;
+    left: -150px;
+}
+
+#selectionControls {
+    display: inline-block;
+    position: absolute;
+    left: 30px;
+}
+
+.controlButton {
+    position: absolute;
+    display: inline-block;
+}
+
+#renderStick {
+    left: 0px;
+}
+#renderBall {
+    left: 42px;
+}
+#renderBlob {
+    left: 82px;
+}
+#selectionInfo {
+    left: 0px;
+}
+#selectionDistance {
+    left: 42px;
+}
+#selectionRotation {
+    left: 82px;
+}
+#selectionTorsion {
+    left: 122px;
+}
+
+.nonselectable {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}

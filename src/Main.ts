@@ -24,33 +24,34 @@ window.onload = function onLoad(event: Event) {
         pdbUrl: "pdb/aa/ala.pdb"
     });
 
-/*    Utility.getElement("#renderStick").onclick = () => {
+    let element = Utility.getElement("renderStick");
+    element.onclick = (e) => {
         mv.setRenderMode(Constants.RENDERMODE_STICKS);
     };
 
-    Utility.getElement("#renderBall").onclick = () => {
+    Utility.getElement("renderBall").onclick = (e) => {
         mv.setRenderMode(Constants.RENDERMODE_BALL_AND_STICK);
     };
 
-    Utility.getElement("#renderBlob").onclick = () => {
+    Utility.getElement("renderBlob").onclick = (e) => {
         mv.setRenderMode(Constants.RENDERMODE_SPACE_FILL);
     };
 
-    Utility.getElement("#selectionInfo").onclick = () => {
+    Utility.getElement("selectionInfo").onclick = (e) => {
         mv.setSelectionMode(Constants.SELECTIONMODE_IDENTIFY);
     };
 
-    Utility.getElement("#selectionDistance").onclick = () => {
+    Utility.getElement("selectionDistance").onclick = (e) => {
         mv.setSelectionMode(Constants.SELECTIONMODE_DISTANCE);
     };
 
-    Utility.getElement("#selectionRotation").onclick = () => {
+    Utility.getElement("selectionRotation").onclick = (e) => {
         mv.setSelectionMode(Constants.SELECTIONMODE_ROTATION);
     };
 
-    Utility.getElement("#selectionTorsion").onclick = () => {
+    Utility.getElement("selectionTorsion").onclick = (e) => {
         mv.setSelectionMode(Constants.SELECTIONMODE_TORSION);
-    };*/
+    };
 
     // molecule selection dropdown
 /*    const selectElem = Utility.getElement("#pdbSelect") as HTMLSelectElement;

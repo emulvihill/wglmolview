@@ -113,7 +113,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     }
 
     reset(): void {
-        // this.camera.position = new Vector3(0,0,1000);
+        // this.camera.position.set(0,0,1000);
         // this.camera.lookAt(new Vector3(0,0,0));
         for (const value of this.objects) {
             this.scene.remove(value);
@@ -366,7 +366,8 @@ export class ThreeJsRenderer implements IMolRenderer {
         const v0: Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
         const v1: Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
-        selObj.position = v0.add(v1).divideScalar(2);
+        let p = v0.add(v1).divideScalar(2);
+        selObj.position.set(p.x, p.y, p.z);
         selObj.lookAt(v1);
 
         selObj.modelObject = bond;

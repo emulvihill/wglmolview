@@ -67,8 +67,9 @@ export class MolView {
     }
 
     setSelectionMode(mode: string): void {
-        Configuration.selectionMode = mode;
         this.clearSelections();
+        Configuration.selectionMode = mode;
+        this.updateInfoDisplay();
         this.renderer.render();
     }
 
@@ -79,16 +80,13 @@ export class MolView {
         // get the DOM element to which we should attach the renderer
         this.domElement = Utility.getElement(Configuration.domElement)!;
         this.infoElement = Utility.getElement(Configuration.infoElement)!;
-        this.infoElement.innerHTML = "";
+        this.updateDisplay("");
 
         if (!this.initialized) {
             this.renderer.init(this.domElement);
+            this.domElement.onclick = event => this.handleSelect(event);
         } else {
             this.renderer.reset();
-        }
-        if (!this.initialized) {
-            this.domElement.onclick = event => this.handleSelect(event);
-            this.infoElement.onclick = event => this.updateInfoDisplay();
         }
 
         this.molecule = PDBParser.parsePDB(pdbData);
@@ -140,18 +138,20 @@ export class MolView {
                 }
                 this.selections.pop();
             }
+            this.updateInfoDisplay();
             this.renderer.render();
             return;
         }
 
         if (Configuration.selectionMode === Constants.SELECTIONMODE_IDENTIFY && this.selections.length >= 1) {
+            // clear current but allow a different selection
             this.clearSelections();
         }
 
         if ((Configuration.selectionMode === Constants.SELECTIONMODE_DISTANCE && this.selections.length >= 2) ||
             (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION && this.selections.length >= 3) ||
             (Configuration.selectionMode === Constants.SELECTIONMODE_TORSION && this.selections.length >= 4)) {
-            // too many selected
+            // too many selected for current mode
             return;
         }
 
@@ -163,27 +163,33 @@ export class MolView {
             const neighbors: RenderableObject[] = this.molecule.getNeighbors(selObj);
 
             if (neighbors.indexOf(this.selections[0]) > -1) {
+                // neighbor of first selection
                 this.renderer.select(selObj);
                 const bondBetween = this.molecule.getBondBetween(selObj, this.selections[0]);
                 if (bondBetween) {
+                    // put a visual selection on the bond
                     this.renderer.select(bondBetween);
+                    // add to beginning selected atoms
                     this.selections.unshift(selObj);
                 }
 
             } else if (neighbors.indexOf(this.selections[this.selections.length - 1]) > -1) {
+                // neighbor of last selection
                 this.renderer.select(selObj);
                 const bondBetween = this.molecule.getBondBetween(selObj, this.selections[this.selections.length - 1]);
                 if (bondBetween) {
+                    // put a visual selection on the bond
                     this.renderer.select(bondBetween);
+                    // add to end of selected atoms
                     this.selections.push(selObj);
                 }
             }
         } else {
-            // no restrictions in other modes
+            // no restrictions in other modes so just add the selection
             this.renderer.select(selObj);
             this.selections.push(selObj);
         }
-
+        this.updateInfoDisplay();
         this.renderer.render();
     }
 
@@ -274,6 +280,6 @@ export class MolView {
     }
 
     private updateDisplay(str: string): void {
-        this.infoElement.innerText = str;
+        this.infoElement.textContent = str;
     }
 }

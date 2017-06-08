@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>WGL Molecule Viewer</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style>
-			body {
-				font-family: Monospace;
-				background-color: #f0f0f0;
-				margin: 0px;
-				overflow: hidden;
-			}
-		</style>
-	</head>
-	<body>
+<head>
+    <title>WGL Molecule Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-    <div id="wgl-content"></div>
-    <div id="wgl-info"></div>
-		<script src="lib/three.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
 
-		<script src="lib/TrackballControls.js"></script>
-		<script src="lib/Projector.js"></script>
-		<script src="lib/CanvasRenderer.js"></script>
+<script src="lib/three.js"></script>
+<script src="lib/TrackballControls.js"></script>
+<script src="lib/Projector.js"></script>
+<script src="lib/CanvasRenderer.js"></script>
 
-        <script src="dist/wglmolview.bundle.js"></script>
 
-	</body>
+<div id="wglContent"></div>
+
+<div id="wglInfo">FOO</div>
+
+<div id="wglControls">
+    <div id="renderControls">
+        <div id="renderStick" class="controlButton"><img src="img/renderStick.png"/></div>
+        <div id="renderBall" class="controlButton"><img src="img/renderBall.png"/></div>
+        <div id="renderBlob" class="controlButton"><img src="img/renderBlob.png"/></div>
+    </div>
+
+    <div id="selectionControls">
+        <div id="selectionInfo" class="controlButton"><img src="img/selectionInfo.png"/></div>
+        <div id="selectionDistance" class="controlButton"><img src="img/selectionDistance.png"/></div>
+        <div id="selectionRotation" class="controlButton"><img src="img/selectionRotation.png"/></div>
+        <div id="selectionTorsion" class="controlButton"><img src="img/selectionTorsion.png"/></div>
+    </div>
+</div>
+
+<script src="dist/wglmolview.bundle.js"></script>
+</body>
 </html>
