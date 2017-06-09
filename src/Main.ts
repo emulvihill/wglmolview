@@ -54,8 +54,7 @@ window.onload = function onLoad(event: Event) {
     };
 
     // molecule selection dropdown
-/*    const selectElem = Utility.getElement("#pdbSelect") as HTMLSelectElement;
-    selectElem.onchange = () => {
-        mv.loadPDB(selectElem.value);
-    };*/
+    Utility.getElement("pdbSelect").onchange = (e) => {
+        mv.loadPDB((e.target as HTMLSelectElement).value);
+    };
 };

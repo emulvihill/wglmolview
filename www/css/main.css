@@ -32,16 +32,25 @@ body {
     left: 50%;
 }
 
+#chooserControls {
+    display: inline-block;
+    position: absolute;
+    top: -30px;
+    left: -50px;
+}
+
 #renderControls {
     display: inline-block;
     position: absolute;
     left: -150px;
+    color: transparent;
 }
 
 #selectionControls {
     display: inline-block;
     position: absolute;
     left: 30px;
+    background-color: transparent;
 }
 
 .controlButton {
