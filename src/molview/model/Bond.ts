@@ -38,14 +38,15 @@ export class Bond extends RenderableObject {
         super();
         this._atoms = [init.a1, init.a2];
         this.id = init.id;
-        // color for the type of bond
-        this.setColorMode(Constants.COLORMODE_CPK);
 
         this._atoms[0].addBond(this);
 
         this._atoms[1].addBond(this);
         this.calculateLength();
+        // Optionally use a heuristic to determine which type of bond to display (info not in official PDB spec)
         this.type = Configuration.estimateBondTypes ? this.estimatedBondType() : init.t;
+        // color for the type of bond
+        this.setColorMode(Constants.COLORMODE_CPK);
     }
 
     public estimatedBondType(): number {
@@ -58,7 +59,7 @@ export class Bond extends RenderableObject {
 
         const compares = [single, double, triple].map(v => Math.abs(v - this.length));
         // find index of minimum comparison difference
-        const minIndex = compares.reduce((iMin, x, i, arr) => x > arr[iMin] ? i : iMin, 0);
+        const minIndex = compares.reduce((iMin, x, i, arr) => x < arr[iMin] ? i : iMin, 0);
         return 1 + minIndex;
     }
 

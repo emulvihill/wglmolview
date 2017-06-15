@@ -12,9 +12,9 @@
 
 import {
     CylinderGeometry,
-    DirectionalLight,
+    DirectionalLight, Geometry,
     GeometryUtils,
-    Light,
+    Light, Matrix,
     Matrix4,
     MeshBasicMaterial,
     MeshLambertMaterial,
@@ -79,7 +79,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.renderer = new WebGLRenderer();
         this.renderer.setPixelRatio(ThreeJsRenderer.ANTI_ALIAS);
         this.camera = new PerspectiveCamera(ThreeJsRenderer.VIEW_ANGLE, ThreeJsRenderer.ASPECT,
-                                            ThreeJsRenderer.NEAR, ThreeJsRenderer.FAR);
+            ThreeJsRenderer.NEAR, ThreeJsRenderer.FAR);
         this.scene = new Scene();
 
         // add the camera to the scene
@@ -273,40 +273,50 @@ export class ThreeJsRenderer implements IMolRenderer {
         const tubes: ViewObject[] = [];
 
         // const m: number[] = this.getBondMetrics(modelObject, Configuration.renderMode);
-        const bondMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: 0x0000FF});
         const bondLength = modelObject.length;
 
+        const bondWidth = 6;
+        const bondSeparation = 10;
         switch (modelObject.type) {
+
             case 1:
-                tubes.push(this.makeCylinder(6, bondLength, bondMaterial));
+                const m1: MeshLambertMaterial = new MeshLambertMaterial({color: 0x0000FF});
+                tubes.push(this.makeCylinder(bondWidth, bondLength, m1));
                 break;
 
             case 2:
                 // double cylinders side-by-side
-                tubes.push(this.makeCylinder(5, bondLength, bondMaterial));
-                tubes.push(this.makeCylinder(5, bondLength, bondMaterial));
-                tubes[0].translateX(6);
-                tubes[1].translateX(-6);
+                const m2: MeshLambertMaterial = new MeshLambertMaterial({color: 0x5500DD});
+                tubes.push(this.makeCylinder(bondWidth - 1, bondLength, m2));
+                tubes.push(this.makeCylinder(bondWidth - 1, bondLength, m2));
+                // tubes[0].translateX(bondSeparation);
+                tubes[1].translateX(-bondSeparation);
                 break;
 
             case 3:
                 // triple cylinders in triangle formation
-                tubes.push(this.makeCylinder(4, bondLength, bondMaterial));
-                tubes.push(this.makeCylinder(4, bondLength, bondMaterial));
-                tubes.push(this.makeCylinder(4, bondLength, bondMaterial));
-                tubes[0].translateX(6);
-                tubes[0].translateY(-3.5);
-                tubes[1].translateX(-6);
-                tubes[1].translateY(-3.5);
-                tubes[2].translateY(3.5);
+                const m3: MeshLambertMaterial = new MeshLambertMaterial({color: 0x990099});
+                tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
+                tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
+                tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
+                // tubes[0].translateY(bondSeparation * 0.5 * Math.sqrt(3));
+                tubes[1].translateX(-bondSeparation / 2);
+                tubes[1].translateY(-bondSeparation * Math.sqrt(3) / 2);
+                tubes[2].translateX(bondSeparation / 2);
+                tubes[2].translateY(-bondSeparation * Math.sqrt(3) / 2);
                 break;
         }
 
-        /*        for (let i: number = 1; i < tubes.length; i++) {
-         GeometryUtils.merge(tubes[0].geometry, tubes[i].geometry, 0);
-         }*/
-
         const viewObject: ViewObject = tubes[0];
+        const viewGeometry: Geometry = viewObject.geometry as Geometry;
+        viewObject.updateMatrix();
+        for (let i: number = 1; i < tubes.length; i++) {
+            // Merge additional bond tube geometries into a single geometry object
+            tubes[i].updateMatrix();
+            viewGeometry.merge(tubes[i].geometry as Geometry, tubes[i].matrix, 0);
+        }
+        viewObject.updateMatrix();
+
         const v0: Vector3 = modelObject.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
         const v1: Vector3 = modelObject.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
         const p: Vector3 = v0.add(v1).divideScalar(2);
@@ -329,10 +339,10 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         // create the sphere's material
         const sphereMaterial: MeshBasicMaterial = new MeshBasicMaterial({
-                                                                            color: ThreeJsRenderer.SELECTION_COLOR,
-                                                                            opacity: ThreeJsRenderer.SELECTION_OPACITY,
-                                                                            transparent: true
-                                                                        });
+            color: ThreeJsRenderer.SELECTION_COLOR,
+            opacity: ThreeJsRenderer.SELECTION_OPACITY,
+            transparent: true
+        });
         // create a new mesh with sphere geometry
         const geometry: SphereGeometry = new SphereGeometry(radius, segments, segments);
         const viewObject = new ViewObject(geometry, sphereMaterial);
@@ -352,10 +362,10 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         // const m: number[] = this.getBondMetrics(bond, mode);
         const selMaterial: MeshBasicMaterial = new MeshBasicMaterial({
-                                                                         color: ThreeJsRenderer.SELECTION_COLOR,
-                                                                         opacity: ThreeJsRenderer.SELECTION_OPACITY,
-                                                                         transparent: true
-                                                                     });
+            color: ThreeJsRenderer.SELECTION_COLOR,
+            opacity: ThreeJsRenderer.SELECTION_OPACITY,
+            transparent: true
+        });
         const bondLength = bond.length;
         const selObj: ViewObject = this.makeCylinder(10, bondLength, selMaterial);
         const v0: Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
