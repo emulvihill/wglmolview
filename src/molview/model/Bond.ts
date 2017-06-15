@@ -29,23 +29,37 @@ export class Bond extends RenderableObject {
     public get atoms(): Atom[] {
         return this._atoms.slice();
     }
+
     public get length(): number {
         return this._length;
     }
 
     constructor(init: BondInitializer) {
         super();
-        this.type = init.t;
         this._atoms = [init.a1, init.a2];
         this.id = init.id;
-
         // color for the type of bond
         this.setColorMode(Constants.COLORMODE_CPK);
 
         this._atoms[0].addBond(this);
-        this._atoms[1].addBond(this);
 
+        this._atoms[1].addBond(this);
         this.calculateLength();
+        this.type = Configuration.estimateBondTypes ? this.estimatedBondType() : init.t;
+    }
+
+    public estimatedBondType(): number {
+        const single: number =
+            this._atoms[0].elementData.singleBondRadius + this._atoms[1].elementData.singleBondRadius;
+        const double: number =
+            this._atoms[0].elementData.doubleBondRadius + this._atoms[1].elementData.doubleBondRadius;
+        const triple: number =
+            this._atoms[0].elementData.tripleBondRadius + this._atoms[1].elementData.tripleBondRadius;
+
+        const compares = [single, double, triple].map(v => Math.abs(v - this.length));
+        // find index of minimum comparison difference
+        const minIndex = compares.reduce((iMin, x, i, arr) => x > arr[iMin] ? i : iMin, 0);
+        return 1 + minIndex;
     }
 
     public render(renderer: IMolRenderer): void {

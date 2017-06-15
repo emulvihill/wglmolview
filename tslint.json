@@ -11,7 +11,8 @@
         ],
         "member-access": false,
         "no-console": false,
-        "trailing-comma": false
+        "trailing-comma": false,
+        "max-line-length": [999]
     },
     "rulesDirectory": []
 }

@@ -5491,7 +5491,7 @@
 				groundColor: {}
 			} },
 
-			// TODO (abelnation): RectAreaLight BRDF data needs to be moved from example to main src
+			// TODO (abelnation): RectAreaLight BRDF elementData needs to be moved from example to main src
 			rectAreaLights: { value: [], properties: {
 				color: {},
 				position: {},
@@ -7484,7 +7484,7 @@
 		};
 
 		// When rendered geometry doesn't include these attributes but the material does,
-		// use these default values in WebGL. This avoids errors when buffer data is missing.
+		// use these default values in WebGL. This avoids errors when buffer elementData is missing.
 		this.defaultAttributeValues = {
 			'color': [ 1, 1, 1 ],
 			'uv': [ 0, 0 ],
@@ -11077,7 +11077,7 @@
 
 			return output;
 
-			// extract data from the cache hash
+			// extract elementData from the cache hash
 			// remove metadata on each item
 			// and return as array
 			function extractFromCache( cache ) {
@@ -15984,7 +15984,7 @@
 
 			} else if ( array instanceof Float64Array ) {
 
-				console.warn( "Unsupported data buffer format: Float64Array" );
+				console.warn( "Unsupported elementData buffer format: Float64Array" );
 
 			} else if ( array instanceof Uint16Array ) {
 
@@ -18193,7 +18193,7 @@
 
 			if ( texture.isDepthTexture ) {
 
-				// populate depth texture with dummy data
+				// populate depth texture with dummy elementData
 
 				var internalFormat = _gl.DEPTH_COMPONENT;
 
@@ -23426,7 +23426,7 @@
 
 			if ( this.geometry && this.geometry.bones !== undefined ) {
 
-				// first, create array of 'Bone' objects from geometry data
+				// first, create array of 'Bone' objects from geometry elementData
 
 				for ( i = 0, il = this.geometry.bones.length; i < il; i ++ ) {
 
@@ -24207,7 +24207,7 @@
 
 		if ( geometry && geometry.isGeometry ) {
 
-			// create a data structure that contains all edges without duplicates
+			// create a elementData structure that contains all edges without duplicates
 
 			var faces = geometry.faces;
 
@@ -24270,7 +24270,7 @@
 
 				}
 
-				// create a data structure that contains all eges without duplicates
+				// create a elementData structure that contains all eges without duplicates
 
 				for ( o = 0, ol = groups.length; o < ol; ++ o ) {
 
@@ -24552,12 +24552,12 @@
 		radius = radius || 1;
 		detail = detail || 0;
 
-		// default buffer data
+		// default buffer elementData
 
 		var vertexBuffer = [];
 		var uvBuffer = [];
 
-		// the subdivision creates the vertex buffer data
+		// the subdivision creates the vertex buffer elementData
 
 		subdivide( detail );
 
@@ -24565,7 +24565,7 @@
 
 		appplyRadius( radius );
 
-		// finally, create the uv data
+		// finally, create the uv elementData
 
 		generateUVs();
 
@@ -24606,7 +24606,7 @@
 
 			var cols = Math.pow( 2, detail );
 
-			// we use this multidimensional array as a data structure for creating the subdivision
+			// we use this multidimensional array as a elementData structure for creating the subdivision
 
 			var v = [];
 
@@ -24717,7 +24717,7 @@
 
 			for ( var i = 0; i < uvBuffer.length; i += 6 ) {
 
-				// uv data of a single face
+				// uv elementData of a single face
 
 				var x0 = uvBuffer[ i + 0 ];
 				var x1 = uvBuffer[ i + 2 ];
@@ -25164,7 +25164,7 @@
 		var uvs = [];
 		var indices = [];
 
-		// create buffer data
+		// create buffer elementData
 
 		generateBufferData();
 
@@ -27871,7 +27871,7 @@
 		var sourceVertices = geometry2.vertices;
 		var faces = geometry2.faces;
 
-		// now create a data structure where each entry represents an edge with its adjoining faces
+		// now create a elementData structure where each entry represents an edge with its adjoining faces
 
 		for ( var i = 0, l = faces.length; i < l; i ++ ) {
 
@@ -28136,7 +28136,7 @@
 			// save the index of the first center vertex
 			centerIndexStart = index;
 
-			// first we generate the center vertex data of the cap.
+			// first we generate the center vertex elementData of the cap.
 			// because the geometry needs one set of uvs per face,
 			// we must generate a center vertex per face/segment
 
@@ -29363,7 +29363,7 @@
 
 			}
 
-			// Check for data: URI
+			// Check for elementData: URI
 			var dataUriRegex = /^data:(.*?)(;base64)?,(.*)$/;
 			var dataUriRegexResult = url.match( dataUriRegex );
 
@@ -29470,7 +29470,7 @@
 					} else if ( this.status === 0 ) {
 
 						// Some browsers return HTTP Status 0 when using non-http protocol
-						// e.g. 'file://' or 'data://'. Handle as success.
+						// e.g. 'file://' or 'elementData://'. Handle as success.
 
 						console.warn( 'THREE.FileLoader: HTTP Status 0 received.' );
 
@@ -29855,7 +29855,7 @@
 
 			}, false );
 
-			if ( url.substr( 0, 5 ) !== 'data:' ) {
+			if ( url.substr( 0, 5 ) !== 'elementData:' ) {
 
 				if ( this.crossOrigin !== undefined ) image.crossOrigin = this.crossOrigin;
 
@@ -30508,7 +30508,7 @@
 
 		},
 
-		// uses the array previously returned by 'getKeyframeOrder' to sort data
+		// uses the array previously returned by 'getKeyframeOrder' to sort elementData
 		sortedArray: function ( values, stride, order ) {
 
 			var nValues = values.length;
@@ -30541,10 +30541,10 @@
 
 			}
 
-			if ( key === undefined ) return; // no data
+			if ( key === undefined ) return; // no elementData
 
 			var value = key[ valuePropertyName ];
-			if ( value === undefined ) return; // no data
+			if ( value === undefined ) return; // no elementData
 
 			if ( Array.isArray( value ) ) {
 
@@ -30611,10 +30611,10 @@
 	 * Abstract base class of interpolants over parametric samples.
 	 *
 	 * The parameter domain is one dimensional, typically the time or a path
-	 * along a curve defined by the data.
+	 * along a curve defined by the elementData.
 	 *
 	 * The sample values can have any dimensionality and derived classes may
-	 * apply special interpretations to the data.
+	 * apply special interpretations to the elementData.
 	 *
 	 * This class provides the interval seek in a Template Method, deferring
 	 * the actual interpolation to derived classes.
@@ -30996,7 +30996,7 @@
 			var s1 = (-1 - wN ) * ppp   + ( 1.5 +   wN   )  * pp    +    0.5        * p;
 			var sN =       wN   * ppp   -           wN      * pp;
 
-			// combine data linearly
+			// combine elementData linearly
 
 			for ( var i = 0; i !== stride; ++ i ) {
 
@@ -31766,7 +31766,7 @@
 
 			} else {
 
-				// by default, we assume the data can be serialized as-is
+				// by default, we assume the elementData can be serialized as-is
 				json = {
 
 					'name': track.name,
@@ -32019,7 +32019,7 @@
 
 			if ( ! animation ) {
 
-				console.error( "  no animation in JSONLoader data" );
+				console.error( "  no animation in JSONLoader elementData" );
 				return null;
 
 			}
@@ -36551,7 +36551,7 @@
 		// layout: [ incoming | accu0 | accu1 | orig ]
 		//
 		// interpolators can use .buffer as their .result
-		// the data then goes to 'incoming'
+		// the elementData then goes to 'incoming'
 		//
 		// 'accu0' and 'accu1' are used frame-interleaved for
 		// the cumulative result and are compared to detect
@@ -36570,7 +36570,7 @@
 
 	Object.assign( PropertyMixer.prototype, {
 
-		// accumulate data in the 'incoming' region into 'accu<i>'
+		// accumulate elementData in the 'incoming' region into 'accu<i>'
 		accumulate: function ( accuIndex, weight ) {
 
 			// note: happily accumulating nothing when weight = 0, the caller knows

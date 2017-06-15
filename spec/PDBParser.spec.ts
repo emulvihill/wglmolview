@@ -6,7 +6,7 @@ describe("PDBParser", () => {
     let pdbData: string;
 
     beforeAll((done) => {
-        fetch("base/spec/data/ala.pdb")
+        fetch("base/spec/elementData/ala.pdb")
             .then(
                 (response: Response) => {
                     response.text()
