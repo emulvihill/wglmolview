@@ -7,7 +7,7 @@ module.exports = function (config) {
                        {pattern: "spec/**/*.js.map", included: false},
                        {pattern: "src/**/*.ts"},
                        {pattern: "spec/**/*.ts"},
-                       {pattern: "spec/data/*", included: false},
+                       {pattern: "spec/elementData/*", included: false},
                    ],
 
                    mime: {

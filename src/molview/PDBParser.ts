@@ -14,6 +14,7 @@ import {Atom} from "./model/Atom";
 import {AtomInitializer} from "./model/AtomInitializer";
 import {Bond} from "./model/Bond";
 import {Molecule} from "./model/Molecule";
+import {Configuration} from "./Configuration";
 
 /**
  * Parses .PDB molecule definition format.
@@ -232,6 +233,9 @@ export class PDBParser {
                                     objects.push(bond);
                                 }
                                 bond.calculateLength();
+                                if (Configuration.estimateBondTypes) {
+                                    bond.estimateBondType();
+                                }
                             }
                         }
                     }

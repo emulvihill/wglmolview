@@ -29,6 +29,7 @@ export class Bond extends RenderableObject {
     public get atoms(): Atom[] {
         return this._atoms.slice();
     }
+
     public get length(): number {
         return this._length;
     }
@@ -51,6 +52,20 @@ export class Bond extends RenderableObject {
         this.loc.add(this._atoms[1].loc);
         this.loc.multiplyScalar(0.5);
         this._length = 100 * this._atoms[0].loc.distanceTo(this._atoms[1].loc);
+    }
+
+    public estimateBondType(): void {
+        const single: number =
+            this._atoms[0].elementData.singleBondRadius + this._atoms[1].elementData.singleBondRadius;
+        const double: number =
+            this._atoms[0].elementData.doubleBondRadius + this._atoms[1].elementData.doubleBondRadius;
+        const triple: number =
+            this._atoms[0].elementData.tripleBondRadius + this._atoms[1].elementData.tripleBondRadius;
+
+        const compares = [single, double, triple].map(v => Math.abs(v - this.length));
+        // find index of minimum comparison difference
+        const minIndex = compares.reduce((iMin, x, i, arr) => x > arr[iMin] ? i : iMin, 0);
+        this.type = 1 + minIndex;
     }
 
     public render(renderer: IMolRenderer): void {
