@@ -45,6 +45,7 @@ export class MolView {
         if (params.pdbUrl) {
             this.loadPDB(params.pdbUrl);
         } else if (params.pdbData) {
+            Configuration.pdbData = params.pdbData;
             this.renderPDBData(params.pdbData);
         }
     }
@@ -62,8 +63,8 @@ export class MolView {
 
     setRenderMode(mode: string): void {
         Configuration.renderMode = mode;
-        this.clearSelections();
-        this.renderer.render();
+        this.renderer.setRenderMode(mode);
+        this.molecule.render(this.renderer);
     }
 
     setSelectionMode(mode: string): void {

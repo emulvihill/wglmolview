@@ -11,6 +11,8 @@
  */
 
 import {Vector3} from "three";
+import {Configuration} from "../Configuration";
+import {Constants} from "../Constants";
 import {IMolRenderer} from "../renderer/IMolRenderer";
 import {Atom} from "./Atom";
 import {Bond} from "./Bond";
@@ -41,7 +43,10 @@ export class Molecule extends RenderableObject {
     }
 
     render(renderer: IMolRenderer): void {
-        this.objects.forEach(o => o.render(renderer));
+        this.objects.filter(o => {
+            return !(Configuration.renderMode === Constants.RENDERMODE_STICKS && o instanceof Atom ||
+                     Configuration.renderMode === Constants.RENDERMODE_SPACE_FILL && o instanceof Bond)
+        }).forEach(o => o.render(renderer));
     }
 
     /**
@@ -60,7 +65,7 @@ export class Molecule extends RenderableObject {
         return atom1.bonds;
     }
 
-    public getBondBetween(atom1: Atom, atom2: Atom): Bond|undefined {
+    public getBondBetween(atom1: Atom, atom2: Atom): Bond | undefined {
         if (!atom1 || !atom2) {
             // bad call
             throw new Error("error in call to getBonds");

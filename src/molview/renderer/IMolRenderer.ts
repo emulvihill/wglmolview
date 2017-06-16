@@ -20,6 +20,7 @@ export interface IMolRenderer {
     init(domElement: HTMLElement): void;
     reset(): void;
     addRenderableObject(obj: RenderableObject): void;
+    setRenderMode(mode: string): void
     render(): void;
     getSelectedObject(event: MouseEvent): RenderableObject | undefined;
     select(obj: RenderableObject): void;

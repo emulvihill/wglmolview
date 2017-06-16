@@ -58,7 +58,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     private static readonly SELECTION_OPACITY = 0.5;
 
     private scene: Scene;
-    private renderer: WebGLRenderer;
+    private webGLRenderer: WebGLRenderer;
     private camera: PerspectiveCamera;
     private controls: OrbitControls;
     private domElement: HTMLDivElement;
@@ -76,8 +76,8 @@ export class ThreeJsRenderer implements IMolRenderer {
             return;
         }
 
-        this.renderer = new WebGLRenderer();
-        this.renderer.setPixelRatio(ThreeJsRenderer.ANTI_ALIAS);
+        this.webGLRenderer = new WebGLRenderer();
+        this.webGLRenderer.setPixelRatio(ThreeJsRenderer.ANTI_ALIAS);
         this.camera = new PerspectiveCamera(ThreeJsRenderer.VIEW_ANGLE, ThreeJsRenderer.ASPECT,
             ThreeJsRenderer.NEAR, ThreeJsRenderer.FAR);
         this.scene = new Scene();
@@ -90,7 +90,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.camera.position.z = 1000;
 
         // start the renderer
-        this.renderer.setSize(ThreeJsRenderer.WIDTH, ThreeJsRenderer.HEIGHT);
+        this.webGLRenderer.setSize(ThreeJsRenderer.WIDTH, ThreeJsRenderer.HEIGHT);
 
         // create a point light
         /*        let light: Light = new PointLight(0xFFFFFF);
@@ -104,9 +104,9 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.camera.add(light);
 
         // attach the render-supplied DOM element
-        this.domElement.appendChild(this.renderer.domElement);
+        this.domElement.appendChild(this.webGLRenderer.domElement);
 
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls = new OrbitControls(this.camera, this.webGLRenderer.domElement);
         this.controls.rotateSpeed = 0.5;
         this.controls.addEventListener("change", () => this.render);
         window.addEventListener("resize", () => {
@@ -119,15 +119,14 @@ export class ThreeJsRenderer implements IMolRenderer {
     }
 
     reset(): void {
-        // this.camera.position.set(0,0,1000);
-        // this.camera.lookAt(new Vector3(0,0,0));
+
         for (const value of this.objects) {
             this.scene.remove(value);
         }
         for (const value of this.selections) {
             this.scene.remove(value);
         }
-        // this.renderer.clear(true, true, true);
+        this.webGLRenderer.clear();
         this.objects = [];
         this.selections = [];
     }
@@ -176,8 +175,8 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         const raycaster = new Raycaster();
         const mouse = new Vector2();
-        mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
-        mouse.y = -( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
+        mouse.x = ( event.clientX / this.webGLRenderer.domElement.clientWidth ) * 2 - 1;
+        mouse.y = -( event.clientY / this.webGLRenderer.domElement.clientHeight ) * 2 + 1;
 
         raycaster.setFromCamera(mouse, this.camera);
 
@@ -210,6 +209,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     }
 
     setRenderMode(mode: string): void {
+        this.reset();
 
         switch (mode) {
             case Constants.RENDERMODE_BALL_AND_STICK :
@@ -223,12 +223,11 @@ export class ThreeJsRenderer implements IMolRenderer {
                 break;
         }
 
-        this.render();
     }
 
     render(): void {
         // draw!
-        this.renderer.render(this.scene, this.camera);
+        this.webGLRenderer.render(this.scene, this.camera);
     }
 
     public animate(step: number): void {
@@ -392,7 +391,7 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.webGLRenderer.setSize(window.innerWidth, window.innerHeight);
         this.controls.reset();
 
         this.render();
@@ -400,15 +399,22 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     private radiusConversion(radius: number): number {
 
-        return 5 * Math.log(8 * radius);
+        switch (Configuration.renderMode) {
+            case Constants.RENDERMODE_SPACE_FILL:
+                return 20 * Math.log(8 * radius);
+
+            case Constants.RENDERMODE_BALL_AND_STICK:
+                return 5 * Math.log(8 * radius);
+            case Constants.RENDERMODE_STICKS:
+            default:
+                return 0;
+        }
     }
 
     private testWebGL(): boolean {
-        /*        try {
-         return !!window. && !!document.createElement('canvas').getContext('experimental-webgl');
-         } catch (e) {
-         return false;
-         }*/
-        return true;
+        const canvas = document.createElement("canvas");
+        const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+        // Report the result.
+        return (gl != undefined && gl instanceof WebGLRenderingContext);
     }
 }

@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 // const HtmlWebpackPlugin = require("html-webpack-plugin");
-const DashboardPlugin = require("webpack-dashboard/plugin");
+// const DashboardPlugin = require("webpack-dashboard/plugin");
 const nodeEnv = process.env.NODE_ENV || "development";
 const isProd = nodeEnv === "production";
 
@@ -61,7 +61,6 @@ var config = {
             output: { comments: false },
             sourceMap: false
         }),*/
-        new DashboardPlugin(),
         new webpack.LoaderOptionsPlugin({
             options: {
                 tslint: {
