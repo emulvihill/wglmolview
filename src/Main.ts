@@ -20,41 +20,41 @@ import {Utility} from "./molview/Utility";
 window.onload = function onLoad(event: Event) {
 
     // Modify baseUrl & pdbUrl as appropriate to your deployment environment
-    let mv: MolView = new MolView({
+    const mv: MolView = new MolView({
         pdbUrl: "pdb/aa/ala.pdb"
     });
 
-    let element = Utility.getElement("renderStick");
-    element.onclick = (e) => {
+    const element = Utility.getElement("renderStick");
+    element.onclick = () => {
         mv.setRenderMode(Constants.RENDERMODE_STICKS);
     };
 
-    Utility.getElement("renderBall").onclick = (e) => {
+    Utility.getElement("renderBall").onclick = () => {
         mv.setRenderMode(Constants.RENDERMODE_BALL_AND_STICK);
     };
 
-    Utility.getElement("renderBlob").onclick = (e) => {
+    Utility.getElement("renderBlob").onclick = () => {
         mv.setRenderMode(Constants.RENDERMODE_SPACE_FILL);
     };
 
-    Utility.getElement("selectionInfo").onclick = (e) => {
+    Utility.getElement("selectionInfo").onclick = () => {
         mv.setSelectionMode(Constants.SELECTIONMODE_IDENTIFY);
     };
 
-    Utility.getElement("selectionDistance").onclick = (e) => {
+    Utility.getElement("selectionDistance").onclick = () => {
         mv.setSelectionMode(Constants.SELECTIONMODE_DISTANCE);
     };
 
-    Utility.getElement("selectionRotation").onclick = (e) => {
+    Utility.getElement("selectionRotation").onclick = () => {
         mv.setSelectionMode(Constants.SELECTIONMODE_ROTATION);
     };
 
-    Utility.getElement("selectionTorsion").onclick = (e) => {
+    Utility.getElement("selectionTorsion").onclick = () => {
         mv.setSelectionMode(Constants.SELECTIONMODE_TORSION);
     };
 
     // molecule selection dropdown
-    Utility.getElement("pdbSelect").onchange = (e) => {
+    Utility.getElement("pdbSelect").onchange = e => {
         mv.loadPDB((e.target as HTMLSelectElement).value);
     };
 };

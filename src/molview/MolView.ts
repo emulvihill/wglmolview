@@ -63,14 +63,17 @@ export class MolView {
 
     setRenderMode(mode: string): void {
         Configuration.renderMode = mode;
-        this.renderer.setRenderMode(mode);
+        this.clearSelections();
+        // rebuild and redraw the molecule
+        this.renderer.reset();
         this.molecule.render(this.renderer);
     }
 
     setSelectionMode(mode: string): void {
-        this.clearSelections();
         Configuration.selectionMode = mode;
+        this.clearSelections();
         this.updateInfoDisplay();
+        // redraw the molecule (without rebuilding)
         this.renderer.render();
     }
 

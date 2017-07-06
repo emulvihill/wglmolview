@@ -13,8 +13,7 @@
 import {
     CylinderGeometry,
     DirectionalLight, Geometry,
-    GeometryUtils,
-    Light, Matrix,
+    Light,
     Matrix4,
     MeshBasicMaterial,
     MeshLambertMaterial,
@@ -208,22 +207,6 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.selections = [];
     }
 
-    setRenderMode(mode: string): void {
-        this.reset();
-
-        switch (mode) {
-            case Constants.RENDERMODE_BALL_AND_STICK :
-                // stuff
-                break;
-            case Constants.RENDERMODE_SPACE_FILL :
-                // stuff
-                break;
-            case Constants.RENDERMODE_STICKS :
-                // stuff
-                break;
-        }
-
-    }
 
     render(): void {
         // draw!
@@ -236,12 +219,12 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         this.controls.update();
 
-        //this.lights[0].rotation.x = rot;
-        //this.lights[0].rotation.y = rot * 0.7;
+        this.lights[0].rotation.x = rot;
+        this.lights[0].rotation.y = rot * 0.7;
 
         this.render();
-        requestAnimationFrame(step => {
-            this.animate(step);
+        requestAnimationFrame(value => {
+            this.animate(value);
         });
     }
 
@@ -370,7 +353,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         const v0: Vector3 = bond.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
         const v1: Vector3 = bond.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
 
-        let p = v0.add(v1).divideScalar(2);
+        const p = v0.add(v1).divideScalar(2);
         selObj.position.set(p.x, p.y, p.z);
         selObj.lookAt(v1);
         selObj.modelObject = bond;
@@ -399,13 +382,15 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     private radiusConversion(radius: number): number {
 
+        // visualization of atomic boundary based mostly on aesthetics
         switch (Configuration.renderMode) {
-            case Constants.RENDERMODE_SPACE_FILL:
-                return 20 * Math.log(8 * radius);
 
             case Constants.RENDERMODE_BALL_AND_STICK:
                 return 5 * Math.log(8 * radius);
-            case Constants.RENDERMODE_STICKS:
+
+            case Constants.RENDERMODE_SPACE_FILL:
+                return 16 * Math.log(8 * radius);
+
             default:
                 return 0;
         }
@@ -415,6 +400,6 @@ export class ThreeJsRenderer implements IMolRenderer {
         const canvas = document.createElement("canvas");
         const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
         // Report the result.
-        return (gl != undefined && gl instanceof WebGLRenderingContext);
+        return (gl !== undefined && gl instanceof WebGLRenderingContext);
     }
 }

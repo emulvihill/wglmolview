@@ -28,8 +28,7 @@ export class Configuration {
     public static baseUrl: string = "";
     public static pdbUrl: string = "";
     public static pdbData: string;
-    public static domElement: string = "wglContent"; // dom element to attach molecule renderer
-    public static infoElement: string = "wglInfo";
+    public static domElement: string = "wglContent"; // DOM element id to attach molecule renderer
+    public static infoElement: string = "wglInfo";    // DOM element id to write info text output
     public static estimateBondTypes: boolean = true;
-    // dom element to set info text output
 }

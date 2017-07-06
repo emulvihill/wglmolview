@@ -44,16 +44,16 @@ export class Molecule extends RenderableObject {
 
     render(renderer: IMolRenderer): void {
         this.objects.filter(o => {
+            // We filter bonds in space-fill mode and atoms in sticks mode
             return !(Configuration.renderMode === Constants.RENDERMODE_STICKS && o instanceof Atom ||
-                     Configuration.renderMode === Constants.RENDERMODE_SPACE_FILL && o instanceof Bond)
+                     Configuration.renderMode === Constants.RENDERMODE_SPACE_FILL && o instanceof Bond);
         }).forEach(o => o.render(renderer));
     }
 
     /**
-     *      * Returns either a list of names of bonds attached to single atom (one parameter)
+     * Returns either a list of names of bonds attached to single atom (one parameter)
      * or a single bond between two atoms (two parameters)
      * @param atom1
-     * @param atom2
      * @returns {Bond[]} List of bonds attached to one
      */
     public getBonds(atom1: Atom): Bond[] {
@@ -65,6 +65,12 @@ export class Molecule extends RenderableObject {
         return atom1.bonds;
     }
 
+    /**
+     * Returns the bond between any two atoms. if no bond exists, return undefined
+     * @param atom1
+     * @param atom2
+     * @returns Bond | undefined
+     */
     public getBondBetween(atom1: Atom, atom2: Atom): Bond | undefined {
         if (!atom1 || !atom2) {
             // bad call
@@ -78,6 +84,10 @@ export class Molecule extends RenderableObject {
         this.objects.forEach(o => o.setColorMode(m));
     }
 
+    /**
+     * Adds a selection state to a component object
+     * @param obj
+     */
     public addSelection(obj: RenderableObject): void {
         if (!obj) {
             throw new Error("invalid selection");
