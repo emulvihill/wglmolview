@@ -35,7 +35,7 @@ export class MolView {
     private initialized: boolean;
 
     constructor(params: {
-        pdbUrl?: string, pdbData?: string
+        pdbUrl?: string, pdbData?: string, domElement?: string, infoElement?: string
     }) {
         this.renderer = new ThreeJsRenderer();
 
@@ -48,6 +48,10 @@ export class MolView {
             Configuration.pdbData = params.pdbData;
             this.renderPDBData(params.pdbData);
         }
+
+        // get the DOM element to which we should attach the renderer & info display
+        this.domElement = Utility.getElement(params.domElement || Configuration.domElement)!;
+        this.infoElement = Utility.getElement(params.infoElement || Configuration.infoElement)!;
     }
 
     loadPDB(pdbUrl: string): void {
@@ -81,12 +85,9 @@ export class MolView {
 
         this.molecule = PDBParser.parsePDB(pdbData);
 
-        // get the DOM element to which we should attach the renderer
-        this.domElement = Utility.getElement(Configuration.domElement)!;
-        this.infoElement = Utility.getElement(Configuration.infoElement)!;
         this.updateDisplay("");
 
-        if (!this.initialized) {
+        if (this.domElement && !this.initialized) {
             this.renderer.init(this.domElement);
             this.domElement.onclick = event => this.handleSelect(event);
         } else {
