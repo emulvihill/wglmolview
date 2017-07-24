@@ -9,7 +9,7 @@ describe("PDBParser", () => {
         // need dom elements to exist
         document.createElement("wglContent");
         document.createElement("wglInfo");
-        window["molview_config"] =  {
+        (window as any).molview_config =  {
             pdbUrl: "base/spec/data/ala.pdb",
             domElement: "wglContent",
             infoElement: "wglInfo"
