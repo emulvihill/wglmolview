@@ -4,7 +4,7 @@ Written and maintained by Eric Mulvihill (eric@snazzyrobot.com)
 ## What it is?
 It is an open source _ECMAScript 5 + WebGL compatible PDB viewer_. Just insert into your web page, point it to a PDB file and it will display it in glorious 3 dimensions.
 
-+ written in _Typescript_ (0.83 preview) and utilizes the wonderful _three.js_ 3D support library written by MrDoob.
++ written in _Typescript_ 2.X and utilizes the wonderful _three.js_ 3D support library written by MrDoob.
 
 + supports interactions such as:
    + zooming/rotating
@@ -22,10 +22,15 @@ It is an open source _ECMAScript 5 + WebGL compatible PDB viewer_. Just insert i
 + A better tool for e-learning. I'd like to add support for querying the state of selections, for entering answers in web quizzes.
 
 ## How to use it
-+ Install Node.src, and then install Typescript 0.83 (the version is important.. 0.9 will not currently work due to changes in the evolving language spec)
-+ Run the _install.sh_ Bash script, which can be run from the root folder of the project. For Windows, I'd suggest running this via Cygwin or Git Bash.
-+ The ./target folder will then contain the stuff needed to view some molecules. Drop it into a web server and take a look.
-
++ Prerequisites: NPM 3.10.X or greater
++ Clone the Git project to a local directory
++ Build and run as follows:
+    * `cd` into project root
+    * `npm install`
+    * `npm run build`
+    * `npm run server`
+    * View at: `http://localhost:3000`
++ Run unit tests using: `npm run test`
 
 # What's included
 + /src/src/Main.ts - stub code to get a web page to display a molecule. Your application would replicate this stub code in some way.

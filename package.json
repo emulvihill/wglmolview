@@ -25,7 +25,6 @@
     "karma-chrome-launcher": "2.1.1",
     "karma-cli": "1.0.1",
     "karma-jasmine": "1.1.0",
-    "karma-phantomjs-launcher": "1.0.4",
     "karma-typescript": "3.0.2",
     "rimraf": "2.6.1",
     "source-map-loader": "0.2.1",
@@ -43,10 +42,8 @@
     "start": "npm run server:dev",
     "server": "npm run server:dev",
     "server:dev": "webpack-dev-server --config ./webpack.config.js --port 3000 --host 0.0.0.0 --inline --progress --profile --content-base www/",
-    "server:prod": "cross-env NODE_ENV=production webpack-dev-server --config ./webpack.config.js --port 3000 --host 0.0.0.0 --inline --progress --profile --content-base www/",
     "build": "npm run build:dev",
     "build:dev": "webpack --config ./webpack.config.js --progress --profile --color --display-error-details --display-cached",
-    "build:prod": "cross-env NODE_ENV=production webpack --config ./webpack.config.js  --progress --profile --color --display-error-details --display-cached --bail",
     "test": "karma start",
     "clean": "rimraf ./src/**/*.js ./src/**/*.js.map ./spec/**/*.js ./spec/**/*.js.map ./www/dist"
   },
