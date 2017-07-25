@@ -42,14 +42,10 @@ import {ViewObject} from "./ViewObject";
 export class ThreeJsRenderer implements IMolRenderer {
 
     private static readonly SCALE: number = 100;
-    // scene size
-    private static readonly WIDTH = 800;
-    private static readonly HEIGHT = 600;
     private static readonly ANTI_ALIAS = 4;
 
     // camera attributes
     private static readonly VIEW_ANGLE = 45;
-    private static readonly ASPECT = ThreeJsRenderer.WIDTH / ThreeJsRenderer.HEIGHT;
     private static readonly NEAR = 0.1;
     private static readonly FAR = 1000000;
 
@@ -75,9 +71,12 @@ export class ThreeJsRenderer implements IMolRenderer {
             return;
         }
 
+        let w = this.domElement.clientWidth;
+        let h = this.domElement.clientHeight;
+        const aspect = w / h;
         this.webGLRenderer = new WebGLRenderer();
         this.webGLRenderer.setPixelRatio(ThreeJsRenderer.ANTI_ALIAS);
-        this.camera = new PerspectiveCamera(ThreeJsRenderer.VIEW_ANGLE, ThreeJsRenderer.ASPECT,
+        this.camera = new PerspectiveCamera(ThreeJsRenderer.VIEW_ANGLE, aspect,
             ThreeJsRenderer.NEAR, ThreeJsRenderer.FAR);
         this.scene = new Scene();
 
@@ -89,13 +88,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         this.camera.position.z = 1000;
 
         // start the renderer
-        this.webGLRenderer.setSize(ThreeJsRenderer.WIDTH, ThreeJsRenderer.HEIGHT);
-
-        // create a point light
-        /*        let light: Light = new PointLight(0xFFFFFF);
-         light.position.set(100, 400, 1000);
-         this.lights.push(light);
-         this.camera.add(light);*/
+        this.webGLRenderer.setSize(w, h);
 
         // create directional light
         const light = new DirectionalLight(0xffffff, 1.0);
@@ -174,8 +167,12 @@ export class ThreeJsRenderer implements IMolRenderer {
 
         const raycaster = new Raycaster();
         const mouse = new Vector2();
-        mouse.x = ( event.clientX / this.webGLRenderer.domElement.clientWidth ) * 2 - 1;
-        mouse.y = -( event.clientY / this.webGLRenderer.domElement.clientHeight ) * 2 + 1;
+        // NOTE: This will not work for deeply nested/offset canvas layer
+        const layerX = event.clientX - this.domElement.offsetLeft;
+        const layerY = event.clientY - this.domElement.offsetTop;
+        // Translate dom coords into GL coords
+        mouse.x = ( layerX / this.webGLRenderer.domElement.clientWidth ) * 2 - 1;
+        mouse.y = -( layerY / this.webGLRenderer.domElement.clientHeight ) * 2 + 1;
 
         raycaster.setFromCamera(mouse, this.camera);
 
@@ -372,9 +369,11 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     private onWindowResize(): void {
 
-        this.camera.aspect = window.innerWidth / window.innerHeight;
+        let w = this.domElement.clientWidth;
+        let h = this.domElement.clientHeight;
+        this.camera.aspect = w / h; //window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
-        this.webGLRenderer.setSize(window.innerWidth, window.innerHeight);
+        this.webGLRenderer.setSize(w, h);
         this.controls.reset();
 
         this.render();

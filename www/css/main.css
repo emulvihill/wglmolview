@@ -9,15 +9,27 @@ body {
     overflow: hidden;
 }
 
+#background {
+    position: fixed;
+    top:0px;
+    left:0;
+    right:0;
+    bottom: 0px;
+    background-color: aliceblue;
+}
+
 #wglContent {
-    width: 800px;
-    height: 600px;
+    position: fixed;
+    left:50px;
+    right:50px;
+    top:50px;
+    bottom:120px;
 }
 
 #wglInfo {
-    color: #ffffff;
+    color: #000;
     font-family:Monospace;
-    font-size:15px;
+    font-size:18px;
     text-align:center;
     position: fixed;
     width: 100%;
