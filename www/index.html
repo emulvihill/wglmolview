@@ -66,6 +66,56 @@
     </div>
 </div>
 
-<script src="dist/wglmolview.bundle.js"></script>
+<!--<script src="dist/wglmolview.bundle.js"></script>-->
+<script src="dist/molview.bundle.js"></script>
+
+<script>
+    const config = window.molview_config || {
+        pdbUrl: "pdb/aa/ala.pdb",
+        domElement: "wglContent",
+        infoElement: "wglInfo"
+    };
+    console.log(config);
+
+    try {
+        // Rendering options
+        Utility.getElement("renderStick").onclick = () => {
+            mv.setRenderMode(Constants.RENDERMODE_STICKS);
+        };
+
+        Utility.getElement("renderBall").onclick = () => {
+            mv.setRenderMode(Constants.RENDERMODE_BALL_AND_STICK);
+        };
+
+        Utility.getElement("renderBlob").onclick = () => {
+            mv.setRenderMode(Constants.RENDERMODE_SPACE_FILL);
+        };
+
+        // Selection options
+        Utility.getElement("selectionInfo").onclick = () => {
+            mv.setSelectionMode(Constants.SELECTIONMODE_IDENTIFY);
+        };
+
+        Utility.getElement("selectionDistance").onclick = () => {
+            mv.setSelectionMode(Constants.SELECTIONMODE_DISTANCE);
+        };
+
+        Utility.getElement("selectionRotation").onclick = () => {
+            mv.setSelectionMode(Constants.SELECTIONMODE_ROTATION);
+        };
+
+        Utility.getElement("selectionTorsion").onclick = () => {
+            mv.setSelectionMode(Constants.SELECTIONMODE_TORSION);
+        };
+
+        // Molecule selection dropdown
+        Utility.getElement("pdbSelect").onchange = e => {
+            mv.loadPDB((e.target).value);
+        };
+    } catch (e) {
+        // May not be running from HTML page with controls
+        console.log(e)
+    }
+</script>
 </body>
 </html>

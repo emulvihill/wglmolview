@@ -9,24 +9,24 @@
  *
  * =================================================================================================
  */
-import {RenderableObject} from "./RenderableObject";
-import {Atom} from "./Atom";
-import {IMolRenderer} from "../renderer/IMolRenderer";
+import type { IMolRenderer } from "../renderer/IMolRenderer";
+import type { Atom } from "./Atom";
+import { RenderableObject } from "./RenderableObject";
 
 /**
  * Renderable selection visualization for an Atom
  */
 export class SelectedAtom extends RenderableObject {
-    atom: Atom;
-    radius: number;
+  atom: Atom;
+  radius: number;
 
-    constructor(atom: Atom) {
-        super();
-        this.atom = atom;
-        this.radius = 1.05 * atom.radius;
-    }
+  constructor(atom: Atom) {
+    super();
+    this.atom = atom;
+    this.radius = 1.05 * atom.radius;
+  }
 
-    public render(renderer: IMolRenderer): void {
-        renderer.addRenderableObject(this);
-    }
+  public render(renderer: IMolRenderer): void {
+    renderer.addRenderableObject(this);
+  }
 }

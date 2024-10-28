@@ -14,26 +14,25 @@
  * Physical & display constants for all elements
  */
 export class ElementData {
-
-    public static getData(e: string): ElementData {
-        if (!ElementData.atomData) {
-            this.initData();
-        }
-        return ElementData.atomData[e.toUpperCase()];
+  public static getData(e: string): ElementData {
+    if (!ElementData.atomData) {
+      this.initData();
     }
+    return ElementData.atomData[e.toUpperCase()];
+  }
 
-    private static atomData: { [key: string]: ElementData };
+  private static atomData: { [key: string]: ElementData };
 
-    private static initData() {
-        ElementData.atomData = {};
-        const json = JSON.parse(this.periodic);
-        for (const item in json) {
-            const obj = new ElementData(json[item]);
-            ElementData.atomData[obj.symbol.toUpperCase()] = obj;
-        }
+  private static initData() {
+    ElementData.atomData = {};
+    const json = JSON.parse(this.periodic);
+    for (const item in json) {
+      const obj = new ElementData(json[item]);
+      ElementData.atomData[obj.symbol.toUpperCase()] = obj;
     }
+  }
 
-    private static periodic: string = `[
+  private static periodic = `[
 {"atomicNumber":1,"symbol":"H","name":"Hydrogen","singleBondRadius":32,"doubleBondRadius":0,"tripleBondRadius":0,"atomicMass":"1.00794(4)","cpkHexColor":"FFFFFF","electronicConfiguration":"1s1","electronegativity":2.2,"atomicRadius":37,"ionRadius":"","vanDelWaalsRadius":120,"ionizationEnergy":1312,"electronAffinity":-73,"oxidationStates":"-1, 1","standardState":"gas","bondingType":"diatomic","meltingPoint":14,"boilingPoint":20,"density":0.0000899,"groupBlock":"nonmetal","yearDiscovered":1766},
 {"atomicNumber":2,"symbol":"He","name":"Helium","singleBondRadius":46,"doubleBondRadius":0,"tripleBondRadius":0,"atomicMass":"4.002602(2)","cpkHexColor":"D9FFFF","electronicConfiguration":"1s2","electronegativity":"","atomicRadius":32,"ionRadius":"","vanDelWaalsRadius":140,"ionizationEnergy":2372,"electronAffinity":0,"oxidationStates":"","standardState":"gas","bondingType":"atomic","meltingPoint":"","boilingPoint":4,"density":0.0001785,"groupBlock":"noble gas","yearDiscovered":1868},
 {"atomicNumber":3,"symbol":"Li","name":"Lithium","singleBondRadius":133,"doubleBondRadius":124,"tripleBondRadius":0,"atomicMass":"6.941(2)","cpkHexColor":"CC80FF","electronicConfiguration":"[He] 2s1","electronegativity":0.98,"atomicRadius":134,"ionRadius":"76 (+1)","vanDelWaalsRadius":182,"ionizationEnergy":520,"electronAffinity":-60,"oxidationStates":1,"standardState":"solid","bondingType":"metallic","meltingPoint":454,"boilingPoint":1615,"density":0.535,"groupBlock":"alkali metal","yearDiscovered":1817},
@@ -154,23 +153,23 @@ export class ElementData {
 {"atomicNumber":118,"symbol":"Og","name":"Oganesson","singleBondRadius":157,"doubleBondRadius":0,"tripleBondRadius":0,"atomicMass":[294],"cpkHexColor":"","electronicConfiguration":"[Rn] 5f14 6d10 7s2 7p6","electronegativity":"","atomicRadius":"","ionRadius":"","vanDelWaalsRadius":"","ionizationEnergy":"","electronAffinity":"","oxidationStates":"","standardState":"","bondingType":"","meltingPoint":"","boilingPoint":"","density":"","groupBlock":"noble gas","yearDiscovered":2002}
 ]`;
 
-    public name: string;
-    public symbol: string;
-    public number: number;
-    public radius: number;
-    public color: number;
-    public singleBondRadius: number;
-    public doubleBondRadius: number;
-    public tripleBondRadius: number;
+  public name: string;
+  public symbol: string;
+  public number: number;
+  public radius: number;
+  public color: number;
+  public singleBondRadius: number;
+  public doubleBondRadius: number;
+  public tripleBondRadius: number;
 
-    constructor(json: any) {
-        this.name = json.name;
-        this.symbol = json.symbol;
-        this.number = json.atomicNumber;
-        this.radius = json.vanDelWaalsRadius;
-        this.singleBondRadius = json.singleBondRadius;
-        this.doubleBondRadius = json.doubleBondRadius;
-        this.tripleBondRadius = json.tripleBondRadius;
-        this.color = parseInt(json.cpkHexColor, 16);     // http://jmol.sourceforge.net/jscolors/#Jmol colors
-    }
+  constructor(json: any) {
+    this.name = json.name;
+    this.symbol = json.symbol;
+    this.number = json.atomicNumber;
+    this.radius = json.vanDelWaalsRadius;
+    this.singleBondRadius = json.singleBondRadius;
+    this.doubleBondRadius = json.doubleBondRadius;
+    this.tripleBondRadius = json.tripleBondRadius;
+    this.color = Number.parseInt(json.cpkHexColor, 16); // http://jmol.sourceforge.net/jscolors/#Jmol colors
+  }
 }
