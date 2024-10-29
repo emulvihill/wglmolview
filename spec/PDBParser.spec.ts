@@ -1,11 +1,13 @@
 import {Molecule} from "../src/molview/model/Molecule";
 import {PDBParser} from "../src/molview/PDBParser";
+import {beforeAll, describe, expect, it} from "vitest";
+// @vitest-environment jsdom
 
 describe("PDBParser", () => {
 
     let pdbData: string;
 
-    beforeAll(done => {
+    beforeAll(() => {
         // need dom elements to exist
         document.createElement("wglContent");
         document.createElement("wglInfo");
@@ -22,7 +24,6 @@ describe("PDBParser", () => {
                         .then((data) => {
                             pdbData = data;
                             console.log(pdbData);
-                            done();
                         });
                 });
     }, 10000);

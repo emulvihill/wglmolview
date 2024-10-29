@@ -10,7 +10,7 @@
  * =================================================================================================
  */
 
-import { Constants } from "./Constants";
+import {Constants} from "./Constants";
 
 /**
  * Global configuration for MolView

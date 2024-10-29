@@ -9,9 +9,9 @@
  *
  * =================================================================================================
  */
-import type { Vector3 } from "three";
-import type { IMolRenderer } from "../renderer/IMolRenderer";
-import type { ViewObject } from "../renderer/ViewObject";
+import type {Vector3} from "three";
+import type {IMolRenderer} from "../renderer/IMolRenderer";
+import type {ViewObject} from "../renderer/ViewObject";
 
 /**
  * Base 3D Renderable, any WebGL objects should extend this and add specific properties
@@ -24,6 +24,6 @@ export class RenderableObject {
   loc: Vector3;
 
   render(renderer: IMolRenderer): void {
-    console.info("rendering " + this.id);
+    console.info(`rendering ${this.id} using renderer ${renderer}`);
   }
 }

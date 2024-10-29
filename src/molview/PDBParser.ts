@@ -10,11 +10,10 @@
  * =================================================================================================
  */
 
-import { Configuration } from "./Configuration";
-import { Atom } from "./model/Atom";
-import type { AtomInitializer } from "./model/AtomInitializer";
-import { Bond } from "./model/Bond";
-import { Molecule } from "./model/Molecule";
+import {Atom} from "./model/Atom";
+import type {AtomInitializer} from "./model/AtomInitializer";
+import {Bond} from "./model/Bond";
+import {Molecule} from "./model/Molecule";
 
 /**
  * Parses .PDB molecule definition format.
@@ -105,7 +104,7 @@ export class PDBParser {
                      --   9 - 10        Continuation      continuation   Allows concatenation of multiple records.
                      --  11 - 70        Specification     compound       Description of the molecular list components.
                      */
-          compound = { continuation: currLine.substring(8, 10), compound: currLine.substring(10, 70) };
+          compound = {continuation: currLine.substring(8, 10), compound: currLine.substring(10, 70)};
 
           break;
 
@@ -118,6 +117,7 @@ export class PDBParser {
                      --   7 - 30        String            id             identifier for the object to be recolored
                      --   31 - 36       RRGGBB            newcolor       new color in RRGGBB hex string format
                      */
+        {
           const id = currLine.substring(6, 30).trim();
           const newcolor: string = currLine.substring(30, 36);
           const obj: Atom | Bond = objects.filter((o) => o.id === id)[0];
@@ -125,6 +125,7 @@ export class PDBParser {
             obj.color = newcolor;
           }
           break;
+        }
 
         case "ATOM  ":
         case "HETATM":
@@ -149,6 +150,7 @@ export class PDBParser {
                      -- 79 - 80        LString(2)      charge         Charge on the atom.
                      */
 
+        {
           const serial = Number.parseInt(currLine.substring(6, 11), 10);
           const init: AtomInitializer = {
             id: "atom" + serial,
@@ -177,6 +179,7 @@ export class PDBParser {
           }
 
           break;
+        }
 
         case "CONECT":
         case "CONEC2":
@@ -197,7 +200,7 @@ export class PDBParser {
                      -- 52 - 56         Integer          serial          Serial number of hydrogen bonded atom
                      -- 57 - 61         Integer          serial          Serial number of salt bridged atom
                      */
-          const cAtom: number = Number.parseInt(currLine.substring(6, 11), 10);
+          { const cAtom: number = Number.parseInt(currLine.substring(6, 11), 10);
           const s: number[] = [
             Number.parseInt(currLine.substring(11, 16), 10),
             Number.parseInt(currLine.substring(16, 21), 10),
@@ -232,14 +235,14 @@ export class PDBParser {
                 let bond: Bond = objects.find((o) => o.id === "bond" + bondId) as Bond;
                 if (!bond) {
                   // no bond exists here
-                  bond = new Bond({ t, a1, a2, id: bondId });
+                  bond = new Bond({t, a1, a2, id: bondId});
                   objects.push(bond);
                 }
               }
             }
           }
 
-          break;
+          break; }
 
         case "END   ":
         case "TER   ":
@@ -247,6 +250,6 @@ export class PDBParser {
       } // end switch
     }
 
-    return new Molecule({ objects, compound, header, title });
+    return new Molecule({objects, compound, header, title});
   }
 }

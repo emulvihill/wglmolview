@@ -16,15 +16,15 @@ import { MolView } from "./molview/MolView";
 import { Utility } from "./molview/Utility";
 
 interface Window {
-  [molview_config: string]: any;
+  [molview_config: string]: object;
 }
 
 /**
  * Launches MolView on window.onLoad.  Include this script in an HTML page.
  */
-window.onload = function onLoad(event: Event) {
+window.onload = function onLoad() {
   // Modify baseUrl & pdbUrl as appropriate to your deployment environment
-  const config: object = ((window as Window).molview_config as Configuration) || {
+  const config: object = ((window as unknown as Window).molview_config as Configuration) || {
     pdbUrl: "pdb/aa/ala.pdb",
     domElement: "wglContent",
     infoElement: "wglInfo",

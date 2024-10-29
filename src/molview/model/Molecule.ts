@@ -10,14 +10,14 @@
  * =================================================================================================
  */
 
-import { Vector3 } from "three";
-import { Configuration } from "../Configuration";
-import { Constants } from "../Constants";
-import type { IMolRenderer } from "../renderer/IMolRenderer";
-import { Atom } from "./Atom";
-import { Bond } from "./Bond";
-import type { MoleculeInitializer } from "./MoleculeInitializer";
-import { RenderableObject } from "./RenderableObject";
+import {Vector3} from "three";
+import {Configuration} from "../Configuration";
+import {Constants} from "../Constants";
+import type {IMolRenderer} from "../renderer/IMolRenderer";
+import {Atom} from "./Atom";
+import {Bond} from "./Bond";
+import type {MoleculeInitializer} from "./MoleculeInitializer";
+import {RenderableObject} from "./RenderableObject";
 
 /**
  * Renderable Molecule
@@ -39,6 +39,14 @@ export class Molecule extends RenderableObject {
     this.compound = init.compound;
     this.selections = [];
     this.residueSequence = {};
+  }
+
+  public get numAtoms(): number {
+    return this.objects.filter((o) => o instanceof Atom).length;
+  }
+
+  public get numBonds(): number {
+    return this.objects.filter((o) => o instanceof Bond).length;
   }
 
   render(renderer: IMolRenderer): void {
@@ -132,14 +140,6 @@ export class Molecule extends RenderableObject {
     }
 
     return res;
-  }
-
-  public get numAtoms(): number {
-    return this.objects.filter((o) => o instanceof Atom).length;
-  }
-
-  public get numBonds(): number {
-    return this.objects.filter((o) => o instanceof Bond).length;
   }
 
   /**

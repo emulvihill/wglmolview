@@ -10,29 +10,19 @@
  * =================================================================================================
  */
 
-import { Configuration } from "../Configuration";
-import { Constants } from "../Constants";
-import type { IMolRenderer } from "../renderer/IMolRenderer";
-import type { Atom } from "./Atom";
-import type { BondInitializer } from "./BondInitializer";
-import { RenderableObject } from "./RenderableObject";
+import {Configuration} from "../Configuration";
+import {Constants} from "../Constants";
+import type {IMolRenderer} from "../renderer/IMolRenderer";
+import type {Atom} from "./Atom";
+import type {BondInitializer} from "./BondInitializer";
+import {RenderableObject} from "./RenderableObject";
 
 /**
  * Renderable Bond
  */
 export class Bond extends RenderableObject {
-  private _atoms: Atom[];
   color: string;
   type: number;
-  private _length: number;
-
-  public get atoms(): Atom[] {
-    return this._atoms.slice();
-  }
-
-  public get length(): number {
-    return this._length;
-  }
 
   constructor(init: BondInitializer) {
     super();
@@ -47,6 +37,18 @@ export class Bond extends RenderableObject {
     this.type = Configuration.estimateBondTypes ? this.estimatedBondType() : init.t;
     // color for the type of bond
     this.setColorMode(Constants.COLORMODE_CPK);
+  }
+
+  private _atoms: Atom[];
+
+  public get atoms(): Atom[] {
+    return this._atoms.slice();
+  }
+
+  private _length: number;
+
+  public get length(): number {
+    return this._length;
   }
 
   public estimatedBondType(): number {

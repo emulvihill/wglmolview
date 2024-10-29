@@ -10,15 +10,15 @@
  * =================================================================================================
  */
 
-import { Vector3 } from "three";
-import { AminoAcidData } from "../AminoAcidData";
-import { Configuration } from "../Configuration";
-import { Constants } from "../Constants";
-import { ElementData } from "../ElementData";
-import type { IMolRenderer } from "../renderer/IMolRenderer";
-import type { AtomInitializer } from "./AtomInitializer";
-import type { Bond } from "./Bond";
-import { RenderableObject } from "./RenderableObject";
+import {Vector3} from "three";
+import {AminoAcidData} from "../AminoAcidData";
+import {Configuration} from "../Configuration";
+import {Constants} from "../Constants";
+import {ElementData} from "../ElementData";
+import type {IMolRenderer} from "../renderer/IMolRenderer";
+import type {AtomInitializer} from "./AtomInitializer";
+import type {Bond} from "./Bond";
+import {RenderableObject} from "./RenderableObject";
 
 /**
  * Renderable Atom
@@ -41,16 +41,6 @@ export class Atom extends RenderableObject {
   private resSeq: string;
   private iCode: string;
   private occupancy: string;
-
-  private _bonds: Bond[];
-
-  /**
-   * All bonds connected to this Atom (read-only)
-   * @returns {Bond[]}
-   */
-  public get bonds(): Bond[] {
-    return this._bonds.slice();
-  }
 
   constructor(init: AtomInitializer) {
     super();
@@ -98,6 +88,16 @@ export class Atom extends RenderableObject {
     this._bonds = [];
   }
 
+  private _bonds: Bond[];
+
+  /**
+   * All bonds connected to this Atom (read-only)
+   * @returns {Bond[]}
+   */
+  public get bonds(): Bond[] {
+    return this._bonds.slice();
+  }
+
   /**
    * Set the location in 3D space for this Atom
    * @param x
@@ -122,10 +122,11 @@ export class Atom extends RenderableObject {
         this.color = this.elementData.color || ElementData.getData("C").color;
         break;
 
-      case Constants.COLORMODE_AMINO_ACID:
+      case Constants.COLORMODE_AMINO_ACID: {
         const aaData = AminoAcidData.getData(this.resName).color;
         this.color = aaData ? aaData : 0xcccccc;
         break;
+      }
     }
   }
 }

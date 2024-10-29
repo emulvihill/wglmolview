@@ -10,17 +10,17 @@
  * =================================================================================================
  */
 
-import { Vector3 } from "three";
-import { Configuration } from "./Configuration";
-import { Constants } from "./Constants";
-import { Messages } from "./Messages";
-import { PDBParser } from "./PDBParser";
-import { Utility } from "./Utility";
-import { Atom } from "./model/Atom";
-import type { Molecule } from "./model/Molecule";
-import type { RenderableObject } from "./model/RenderableObject";
-import type { IMolRenderer } from "./renderer/IMolRenderer";
-import { ThreeJsRenderer } from "./renderer/ThreeJsRenderer";
+import {Vector3} from "three";
+import {Configuration} from "./Configuration";
+import {Constants} from "./Constants";
+import {Messages} from "./Messages";
+import {PDBParser} from "./PDBParser";
+import {Utility} from "./Utility";
+import {Atom} from "./model/Atom";
+import type {Molecule} from "./model/Molecule";
+import type {RenderableObject} from "./model/RenderableObject";
+import type {IMolRenderer} from "./renderer/IMolRenderer";
+import {ThreeJsRenderer} from "./renderer/ThreeJsRenderer";
 
 /**
  * MolView - a simple 3D molecule viewer.
@@ -28,11 +28,11 @@ import { ThreeJsRenderer } from "./renderer/ThreeJsRenderer";
  */
 export class MolView {
   private selections: Atom[];
-  private molecule: Molecule;
+  private molecule: Molecule | undefined;
   private renderer: IMolRenderer;
   private domElement: HTMLElement;
   private infoElement: HTMLElement;
-  private initialized: boolean;
+  private initialized: boolean = false;
 
   constructor(params: {
     pdbUrl?: string;
@@ -74,7 +74,7 @@ export class MolView {
     this.clearSelections();
     // rebuild and redraw the molecule
     this.renderer.reset();
-    this.molecule.render(this.renderer);
+    this.molecule?.render(this.renderer);
   }
 
   setSelectionMode(mode: string): void {
@@ -99,7 +99,7 @@ export class MolView {
 
     this.molecule = PDBParser.parsePDB(pdbData);
 
-    if (Configuration.autoCenter === true) {
+    if (Configuration.autoCenter) {
       this.molecule.center();
     }
 
@@ -113,7 +113,7 @@ export class MolView {
   }
 
   private handleSelect(event: MouseEvent): void {
-    if (Configuration.selectable === false) {
+    if (!this.molecule || !Configuration.selectable) {
       return;
     }
 

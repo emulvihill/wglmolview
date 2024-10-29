@@ -1,5 +1,8 @@
 "use strict";
 import {Utility} from "../src/molview/Utility";
+import {beforeAll, describe, expect, it} from "vitest";
+
+// @vitest-environment jsdom
 
 beforeAll(() => {
     // need dom elements to exist

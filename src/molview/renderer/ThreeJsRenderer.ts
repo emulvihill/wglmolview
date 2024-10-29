@@ -14,7 +14,7 @@ import {
   CylinderGeometry,
   DirectionalLight,
   type Geometry,
-  type Light,
+  type Light, Material,
   Matrix4,
   MeshBasicMaterial,
   MeshLambertMaterial,
@@ -26,15 +26,15 @@ import {
   type Vector3,
   WebGLRenderer,
 } from "three";
-import { OrbitControls } from "../../three/OrbitControls";
-import { Configuration } from "../Configuration";
-import { Constants } from "../Constants";
+import {Configuration} from "../Configuration";
+import {Constants} from "../Constants";
 
-import { Atom } from "../model/Atom";
-import { Bond } from "../model/Bond";
-import type { RenderableObject } from "../model/RenderableObject";
-import type { IMolRenderer } from "./IMolRenderer";
-import { ViewObject } from "./ViewObject";
+import {Atom} from "../model/Atom";
+import {Bond} from "../model/Bond";
+import type {RenderableObject} from "../model/RenderableObject";
+import type {IMolRenderer} from "./IMolRenderer";
+import {ViewObject} from "./ViewObject";
+import {OrbitControls} from "@/three/OrbitControls";
 
 /**
  * Renderer for ThreeJS framework by Mr. Doob
@@ -52,11 +52,11 @@ export class ThreeJsRenderer implements IMolRenderer {
   private static readonly SELECTION_COLOR = 0xff0000;
   private static readonly SELECTION_OPACITY = 0.5;
 
-  private scene: Scene;
-  private webGLRenderer: WebGLRenderer;
-  private camera: PerspectiveCamera;
-  private controls: OrbitControls;
-  private domElement: HTMLDivElement;
+  private scene: Scene | undefined;
+  private webGLRenderer: WebGLRenderer | undefined;
+  private camera: PerspectiveCamera | undefined;
+  private controls: OrbitControls | undefined;
+  private domElement: HTMLDivElement | undefined;
   private lights: Light[] = [];
   private objects: ViewObject[] = [];
   private selections: ViewObject[] = [];
@@ -66,7 +66,7 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     // create a WebGL renderer, camera
     // and a scene
-    if (this.testWebGL() === false) {
+    if (!this.testWebGL()) {
       alert("Sorry. Please use WebGL-enabled browser (Chrome, Firefox, Safari, IE 11+)");
       return;
     }
@@ -189,27 +189,27 @@ export class ThreeJsRenderer implements IMolRenderer {
     for (let i = 0; i < this.selections.length; i++) {
       if (this.selections[i].modelObject === modelObject) {
         const sels: ViewObject[] = this.selections.splice(i, 1);
-        this.scene.remove(sels[0]);
+        this.scene?.remove(sels[0]);
       }
     }
   }
 
   deselectAll(): void {
     for (const sel of this.selections) {
-      this.scene.remove(sel);
+      this.scene?.remove(sel);
     }
     this.selections = [];
   }
 
   render(): void {
     // draw!
-    this.webGLRenderer.render(this.scene, this.camera);
+    this.webGLRenderer?.render(this.scene, this.camera);
   }
 
   public animate(step: number): void {
     const rot = step * 0.0004;
 
-    this.controls.update();
+    this.controls?.update();
 
     this.lights[0].rotation.x = rot;
     this.lights[0].rotation.y = rot * 0.7;
@@ -226,7 +226,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     const segments = Configuration.renderQuality === Constants.RENDERQUALITY_HIGH ? 24 : 12;
 
     // create the sphere's material
-    const sphereMaterial: MeshLambertMaterial = new MeshLambertMaterial({ color: modelObject.color });
+    const sphereMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: modelObject.color});
     // create a new mesh with sphere geometry
     const geometry: SphereGeometry = new SphereGeometry(radius, segments, segments);
     const viewObject: ViewObject = new ViewObject(geometry, sphereMaterial);
@@ -237,7 +237,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     viewObject.modelObject = modelObject;
     modelObject.viewObject = viewObject;
 
-    this.scene.add(viewObject);
+    this.scene?.add(viewObject);
     return viewObject;
   }
 
@@ -251,22 +251,22 @@ export class ThreeJsRenderer implements IMolRenderer {
     const bondSeparation = 10;
     switch (modelObject.type) {
       case 1:
-        const m1: MeshLambertMaterial = new MeshLambertMaterial({ color: 0x0000ff });
+        { const m1: MeshLambertMaterial = new MeshLambertMaterial({color: 0x0000ff});
         tubes.push(this.makeCylinder(bondWidth, bondLength, m1));
-        break;
+        break; }
 
       case 2:
         // double cylinders side-by-side
-        const m2: MeshLambertMaterial = new MeshLambertMaterial({ color: 0x5500dd });
+        { const m2: MeshLambertMaterial = new MeshLambertMaterial({color: 0x5500dd});
         tubes.push(this.makeCylinder(bondWidth - 1, bondLength, m2));
         tubes.push(this.makeCylinder(bondWidth - 1, bondLength, m2));
         // tubes[0].translateX(bondSeparation);
         tubes[1].translateX(-bondSeparation);
-        break;
+        break; }
 
       case 3:
         // triple cylinders in triangle formation
-        const m3: MeshLambertMaterial = new MeshLambertMaterial({ color: 0x990099 });
+        { const m3: MeshLambertMaterial = new MeshLambertMaterial({color: 0x990099});
         tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
         tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
         tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
@@ -275,7 +275,7 @@ export class ThreeJsRenderer implements IMolRenderer {
         tubes[1].translateY((-bondSeparation * Math.sqrt(3)) / 2);
         tubes[2].translateX(bondSeparation / 2);
         tubes[2].translateY((-bondSeparation * Math.sqrt(3)) / 2);
-        break;
+        break; }
     }
 
     const viewObject: ViewObject = tubes[0];
@@ -298,11 +298,12 @@ export class ThreeJsRenderer implements IMolRenderer {
     viewObject.modelObject = modelObject;
     modelObject.viewObject = viewObject;
 
-    this.scene.add(viewObject);
+    this.scene?.add(viewObject);
     return viewObject;
   }
 
   private renderAtomSelection(modelObject: Atom): ViewObject {
+
     // set up the sphere vars
     const radius = 1.1 * this.radiusConversion(modelObject.radius);
     const segments = Configuration.renderQuality === Constants.RENDERQUALITY_HIGH ? 20 : 10;
@@ -321,7 +322,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     viewObject.position.set(p.x, p.y, p.z);
 
     // add the sphere to the scene
-    this.scene.add(viewObject);
+    this.scene?.add(viewObject);
 
     viewObject.modelObject = modelObject;
 
@@ -344,12 +345,12 @@ export class ThreeJsRenderer implements IMolRenderer {
     selObj.position.set(p.x, p.y, p.z);
     selObj.lookAt(v1);
     selObj.modelObject = bond;
-    this.scene.add(selObj);
+    this.scene?.add(selObj);
 
     return selObj;
   }
 
-  private makeCylinder(width: number, height: number, material: any) {
+  private makeCylinder(width: number, height: number, material:  Material | Material[]) {
     const segments = Configuration.renderQuality === Constants.RENDERQUALITY_HIGH ? 24 : 12;
     const g: CylinderGeometry = new CylinderGeometry(width, width, height, segments, 1, true);
     g.applyMatrix(new Matrix4().makeRotationX(Math.PI / 2));
@@ -357,12 +358,15 @@ export class ThreeJsRenderer implements IMolRenderer {
   }
 
   private onWindowResize(): void {
+    if (!this.domElement || !this.camera) {
+      return;
+    }
     const w = this.domElement.clientWidth;
     const h = this.domElement.clientHeight;
     this.camera.aspect = w / h; //window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
-    this.webGLRenderer.setSize(w, h);
-    this.controls.reset();
+    this.webGLRenderer?.setSize(w, h);
+    this.controls?.reset();
 
     this.render();
   }

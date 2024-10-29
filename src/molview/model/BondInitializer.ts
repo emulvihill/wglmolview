@@ -10,7 +10,7 @@
  * =================================================================================================
  */
 
-import type { Atom } from "./Atom";
+import type {Atom} from "./Atom";
 
 /**
  * Initializer for Bond

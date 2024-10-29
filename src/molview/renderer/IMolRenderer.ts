@@ -10,7 +10,7 @@
  * =================================================================================================
  */
 
-import type { RenderableObject } from "../model/RenderableObject";
+import type {RenderableObject} from "../model/RenderableObject";
 
 /**
  * Interface for graphics rendering API
@@ -18,12 +18,20 @@ import type { RenderableObject } from "../model/RenderableObject";
  */
 export interface IMolRenderer {
   init(domElement: HTMLElement): void;
+
   reset(): void;
+
   addRenderableObject(obj: RenderableObject): void;
+
   render(): void;
+
   getSelectedObject(event: MouseEvent): RenderableObject | undefined;
+
   select(obj: RenderableObject): void;
+
   deselect(obj: RenderableObject): void;
+
   deselectAll(): void;
+
   animate(step: number): void;
 }

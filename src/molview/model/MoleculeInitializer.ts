@@ -10,8 +10,8 @@
  * =================================================================================================
  */
 
-import type { Atom } from "./Atom";
-import type { Bond } from "./Bond";
+import type {Atom} from "./Atom";
+import type {Bond} from "./Bond";
 
 /**
  * Initializer for Molecule
