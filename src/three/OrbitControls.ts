@@ -175,7 +175,7 @@ export class OrbitControls extends THREE.EventDispatcher {
     this.updateOffset = new THREE.Vector3();
     // so camera.up is the orbit axis
     this.updateQuat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
-    this.updateQuatInverse = this.updateQuat.clone().inverse();
+    this.updateQuatInverse = this.updateQuat.clone().invert();
     this.updateLastPosition = new THREE.Vector3();
     this.updateLastQuaternion = new THREE.Quaternion();
 

@@ -25,7 +25,7 @@
     "http-status-codes": "^2.3.0",
     "pino": "^9.4.0",
     "pino-http": "^10.0.0",
-    "three": "0.85.2"
+    "three": "0.170.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
@@ -34,7 +34,7 @@
     "@types/eslint__js": "^8.42.3",
     "@types/express": "^4.17.21",
     "@types/supertest": "^6.0.2",
-    "@types/three": "0.89.12",
+    "@types/three": "^0.169.0",
     "eslint": "^9.13.0",
     "jsdom": "^25.0.1",
     "pino-pretty": "^11.0.0",

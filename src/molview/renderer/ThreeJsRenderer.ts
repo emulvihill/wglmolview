@@ -13,11 +13,10 @@
 import {
   CylinderGeometry,
   DirectionalLight,
-  type Geometry,
   type Light, Material,
   Matrix4,
   MeshBasicMaterial,
-  MeshLambertMaterial,
+  MeshPhongMaterial,
   PerspectiveCamera,
   Raycaster,
   Scene,
@@ -90,7 +89,8 @@ export class ThreeJsRenderer implements IMolRenderer {
     this.webGLRenderer.setSize(w, h);
 
     // create directional light
-    const light = new DirectionalLight(0xffffff, 1.0);
+    const light = new DirectionalLight(0xffffff, 3.0);
+    light.position.set(99, 99, 9999);
     this.lights.push(light);
     this.camera.add(light);
 
@@ -226,7 +226,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     const segments = Configuration.renderQuality === Constants.RENDERQUALITY_HIGH ? 24 : 12;
 
     // create the sphere's material
-    const sphereMaterial: MeshLambertMaterial = new MeshLambertMaterial({color: modelObject.color});
+    const sphereMaterial = new MeshPhongMaterial({color: modelObject.color});
     // create a new mesh with sphere geometry
     const geometry: SphereGeometry = new SphereGeometry(radius, segments, segments);
     const viewObject: ViewObject = new ViewObject(geometry, sphereMaterial);
@@ -251,13 +251,13 @@ export class ThreeJsRenderer implements IMolRenderer {
     const bondSeparation = 10;
     switch (modelObject.type) {
       case 1:
-        { const m1: MeshLambertMaterial = new MeshLambertMaterial({color: 0x0000ff});
+        { const m1 = new MeshPhongMaterial({color: 0x0000ff});
         tubes.push(this.makeCylinder(bondWidth, bondLength, m1));
         break; }
 
       case 2:
         // double cylinders side-by-side
-        { const m2: MeshLambertMaterial = new MeshLambertMaterial({color: 0x5500dd});
+        { const m2 = new MeshPhongMaterial({color: 0x5500dd});
         tubes.push(this.makeCylinder(bondWidth - 1, bondLength, m2));
         tubes.push(this.makeCylinder(bondWidth - 1, bondLength, m2));
         // tubes[0].translateX(bondSeparation);
@@ -266,7 +266,7 @@ export class ThreeJsRenderer implements IMolRenderer {
 
       case 3:
         // triple cylinders in triangle formation
-        { const m3: MeshLambertMaterial = new MeshLambertMaterial({color: 0x990099});
+        { const m3 = new MeshPhongMaterial({color: 0x990099});
         tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
         tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
         tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
@@ -279,15 +279,17 @@ export class ThreeJsRenderer implements IMolRenderer {
     }
 
     const viewObject: ViewObject = tubes[0];
-    const viewGeometry: Geometry = viewObject.geometry as Geometry;
     viewObject.updateMatrix();
+/* This broke in r125
+   const mergedTubes = BufferGeometryUtils.mergeBufferGeometries(tubes.map((t) => t.geometry as BufferGeometry));
     for (let i = 1; i < tubes.length; i++) {
       // Merge additional bond tube geometries into a single geometry object
       tubes[i].updateMatrix();
-      viewGeometry.merge(tubes[i].geometry as Geometry, tubes[i].matrix, 0);
+      viewGeometry.merge(tubes[i].geometry as Geometry, tubes[i].matrix, 0); // breaks in r125
+      console.log(`merging geometry ${i}`);
     }
     viewObject.updateMatrix();
-
+ */
     const v0: Vector3 = modelObject.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
     const v1: Vector3 = modelObject.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
     const p: Vector3 = v0.add(v1).divideScalar(2);
@@ -353,7 +355,7 @@ export class ThreeJsRenderer implements IMolRenderer {
   private makeCylinder(width: number, height: number, material:  Material | Material[]) {
     const segments = Configuration.renderQuality === Constants.RENDERQUALITY_HIGH ? 24 : 12;
     const g: CylinderGeometry = new CylinderGeometry(width, width, height, segments, 1, true);
-    g.applyMatrix(new Matrix4().makeRotationX(Math.PI / 2));
+    g.applyMatrix4(new Matrix4().makeRotationX(Math.PI / 2));
     return new ViewObject(g, material);
   }
 

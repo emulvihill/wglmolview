@@ -61,12 +61,13 @@ export class MolView {
     if (!pdbUrl) {
       console.warn("empty 3D molecule name");
     }
-    fetch(pdbUrl).then((response) =>
-      response.text().then((data) => {
+    fetch(pdbUrl)
+      .then((response) => response.text())
+      .then((data) => {
         Configuration.pdbData = data;
         this.renderPDBData(data);
-      }),
-    );
+      })
+      .catch((error) => console.error("Failed to load PDB data:", error));
   }
 
   setRenderMode(mode: string): void {
@@ -96,8 +97,6 @@ export class MolView {
     } else {
       this.renderer.reset();
     }
-
-    this.molecule = PDBParser.parsePDB(pdbData);
 
     if (Configuration.autoCenter) {
       this.molecule.center();
