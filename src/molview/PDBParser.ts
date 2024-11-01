@@ -2,7 +2,7 @@
  * =================================================================================================
  *
  * 	WebGL MolView
- * 	Copyright 2013-2017 Eric Mulvihill. All Rights Reserved.
+ * 	Copyright 2013-2024 Eric Mulvihill. All Rights Reserved.
  *
  * 	This program is free software. You can redistribute and/or modify it
  * 	in accordance with the terms of the accompanying license agreement.
@@ -200,7 +200,8 @@ export class PDBParser {
                      -- 52 - 56         Integer          serial          Serial number of hydrogen bonded atom
                      -- 57 - 61         Integer          serial          Serial number of salt bridged atom
                      */
-          { const cAtom: number = Number.parseInt(currLine.substring(6, 11), 10);
+        {
+          const cAtom: number = Number.parseInt(currLine.substring(6, 11), 10);
           const s: number[] = [
             Number.parseInt(currLine.substring(11, 16), 10),
             Number.parseInt(currLine.substring(16, 21), 10),
@@ -242,7 +243,8 @@ export class PDBParser {
             }
           }
 
-          break; }
+          break;
+        }
 
         case "END   ":
         case "TER   ":

@@ -2,7 +2,7 @@
  * =================================================================================================
  *
  * 	WebGL MolView
- * 	Copyright 2013-2017 Eric Mulvihill. All Rights Reserved.
+ * 	Copyright 2013-2024 Eric Mulvihill. All Rights Reserved.
  *
  * 	This program is free software. You can redistribute and/or modify it
  * 	in accordance with the terms of the accompanying license agreement.
@@ -33,7 +33,7 @@ import {Bond} from "../model/Bond";
 import type {RenderableObject} from "../model/RenderableObject";
 import type {IMolRenderer} from "./IMolRenderer";
 import {ViewObject} from "./ViewObject";
-import {OrbitControls} from "@/three/OrbitControls";
+import {TrackballControls} from "../../three/examples/controls/TrackballControls";
 
 /**
  * Renderer for ThreeJS framework by Mr. Doob
@@ -54,7 +54,7 @@ export class ThreeJsRenderer implements IMolRenderer {
   private scene: Scene | undefined;
   private webGLRenderer: WebGLRenderer | undefined;
   private camera: PerspectiveCamera | undefined;
-  private controls: OrbitControls | undefined;
+  private controls: TrackballControls | undefined;
   private domElement: HTMLDivElement | undefined;
   private lights: Light[] = [];
   private objects: ViewObject[] = [];
@@ -89,17 +89,16 @@ export class ThreeJsRenderer implements IMolRenderer {
     this.webGLRenderer.setSize(w, h);
 
     // create directional light
-    const light = new DirectionalLight(0xffffff, 3.0);
-    light.position.set(99, 99, 9999);
+    const light = new DirectionalLight(0xFFFFFF, 2.5);
+    light.position.set(50, 50, 1000);
     this.lights.push(light);
     this.camera.add(light);
 
     // attach the render-supplied DOM element
     this.domElement.appendChild(this.webGLRenderer.domElement);
 
-    this.controls = new OrbitControls(this.camera, this.webGLRenderer.domElement);
-    this.controls.rotateSpeed = 0.5;
-    this.controls.addEventListener("change", () => this.render);
+    this.controls = new TrackballControls(this.camera, this.webGLRenderer.domElement);
+    this.controls.rotateSpeed = 2.5;
     window.addEventListener(
       "resize",
       () => {
@@ -250,23 +249,27 @@ export class ThreeJsRenderer implements IMolRenderer {
     const bondWidth = 6;
     const bondSeparation = 10;
     switch (modelObject.type) {
-      case 1:
-        { const m1 = new MeshPhongMaterial({color: 0x0000ff});
+      case 1: {
+        const m1 = new MeshPhongMaterial({color: 0x0000ff});
         tubes.push(this.makeCylinder(bondWidth, bondLength, m1));
-        break; }
+        break;
+      }
 
       case 2:
         // double cylinders side-by-side
-        { const m2 = new MeshPhongMaterial({color: 0x5500dd});
+      {
+        const m2 = new MeshPhongMaterial({color: 0x5500dd});
         tubes.push(this.makeCylinder(bondWidth - 1, bondLength, m2));
         tubes.push(this.makeCylinder(bondWidth - 1, bondLength, m2));
         // tubes[0].translateX(bondSeparation);
         tubes[1].translateX(-bondSeparation);
-        break; }
+        break;
+      }
 
       case 3:
         // triple cylinders in triangle formation
-        { const m3 = new MeshPhongMaterial({color: 0x990099});
+      {
+        const m3 = new MeshPhongMaterial({color: 0x990099});
         tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
         tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
         tubes.push(this.makeCylinder(bondWidth - 2, bondLength, m3));
@@ -275,21 +278,22 @@ export class ThreeJsRenderer implements IMolRenderer {
         tubes[1].translateY((-bondSeparation * Math.sqrt(3)) / 2);
         tubes[2].translateX(bondSeparation / 2);
         tubes[2].translateY((-bondSeparation * Math.sqrt(3)) / 2);
-        break; }
+        break;
+      }
     }
 
     const viewObject: ViewObject = tubes[0];
     viewObject.updateMatrix();
-/* This broke in r125
-   const mergedTubes = BufferGeometryUtils.mergeBufferGeometries(tubes.map((t) => t.geometry as BufferGeometry));
-    for (let i = 1; i < tubes.length; i++) {
-      // Merge additional bond tube geometries into a single geometry object
-      tubes[i].updateMatrix();
-      viewGeometry.merge(tubes[i].geometry as Geometry, tubes[i].matrix, 0); // breaks in r125
-      console.log(`merging geometry ${i}`);
-    }
-    viewObject.updateMatrix();
- */
+    /* This broke in r125
+       const mergedTubes = BufferGeometryUtils.mergeBufferGeometries(tubes.map((t) => t.geometry as BufferGeometry));
+        for (let i = 1; i < tubes.length; i++) {
+          // Merge additional bond tube geometries into a single geometry object
+          tubes[i].updateMatrix();
+          viewGeometry.merge(tubes[i].geometry as Geometry, tubes[i].matrix, 0); // breaks in r125
+          console.log(`merging geometry ${i}`);
+        }
+        viewObject.updateMatrix();
+     */
     const v0: Vector3 = modelObject.atoms[0].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
     const v1: Vector3 = modelObject.atoms[1].loc.clone().multiplyScalar(ThreeJsRenderer.SCALE);
     const p: Vector3 = v0.add(v1).divideScalar(2);
@@ -352,7 +356,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     return selObj;
   }
 
-  private makeCylinder(width: number, height: number, material:  Material | Material[]) {
+  private makeCylinder(width: number, height: number, material: Material | Material[]) {
     const segments = Configuration.renderQuality === Constants.RENDERQUALITY_HIGH ? 24 : 12;
     const g: CylinderGeometry = new CylinderGeometry(width, width, height, segments, 1, true);
     g.applyMatrix4(new Matrix4().makeRotationX(Math.PI / 2));
