@@ -1,16 +1,4 @@
-﻿/*
- * =================================================================================================
- *
- * 	WebGL MolView
- * 	Copyright 2013-2024 Eric Mulvihill. All Rights Reserved.
- *
- * 	This program is free software. You can redistribute and/or modify it
- * 	in accordance with the terms of the accompanying license agreement.
- *
- * =================================================================================================
- */
-
-import {Atom} from "./model/Atom";
+﻿import {Atom} from "./model/Atom";
 import type {AtomInitializer} from "./model/AtomInitializer";
 import {Bond} from "./model/Bond";
 import {Molecule} from "./model/Molecule";

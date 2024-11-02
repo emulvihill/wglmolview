@@ -1,16 +1,4 @@
-﻿/*
- * =================================================================================================
- *
- * 	WebGL MolView
- * 	Copyright 2013-2024 Eric Mulvihill. All Rights Reserved.
- *
- * 	This program is free software. You can redistribute and/or modify it
- * 	in accordance with the terms of the accompanying license agreement.
- *
- * =================================================================================================
- */
-
-import {Vector3} from "three";
+﻿import {Vector3} from "three";
 import {AminoAcidData} from "../AminoAcidData";
 import {Configuration} from "../Configuration";
 import {Constants} from "../Constants";

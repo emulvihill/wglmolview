@@ -4,9 +4,9 @@
   "description": "Simple WebGL Molecule Viewer",
   "author": "eric.mulvihill@gmail.com",
   "repository": "ericmulvihill/wglmolview",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "main": "index.ts",
-  "private": true,
+  "private": false,
   "scripts": {
     "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
     "build": "tsup && browserify dist/main.js --outfile www/dist/molview.bundle.js",
