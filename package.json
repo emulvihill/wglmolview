@@ -3,7 +3,10 @@
   "version": "2.1.0",
   "description": "Simple WebGL Molecule Viewer",
   "author": "eric.mulvihill@gmail.com",
-  "repository": "ericmulvihill/wglmolview",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/ericmulvihill/wglmolview.git"
+  },
   "license": "MIT",
   "main": "src/main.ts",
   "private": false,
