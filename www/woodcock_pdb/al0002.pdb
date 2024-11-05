@@ -1,9 +1,0 @@
-COMPND      DICHLOROMETHANE
-AUTHOR      DAVE WOODCOCK  96 05 08
-ATOM      1  C           1      -0.254  -0.572   0.101  1.00  0.00
-ATOM      2  H           1      -0.105  -0.931   1.119  1.00  0.00
-ATOM      3  H           1      -1.218  -0.922  -0.270  1.00  0.00
-ATOM      4 CL           1      -0.226   1.188   0.088  1.00  0.00
-ATOM      5 CL           1       1.031  -1.188  -0.932  1.00  0.00
-TER       6              1
-END

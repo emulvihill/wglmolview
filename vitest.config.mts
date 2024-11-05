@@ -1,8 +1,18 @@
-import { defineConfig } from 'vitest/config'
+/// <reference types="vitest" />
+
+import {defineConfig} from 'vitest/config';
+import {resolve} from 'node:path';
 
 export default defineConfig({
-    test: {
-        include: ['*.ts', '*.tsx'], // FIXME
-        environment: 'jsdom',
+  resolve: {
+    alias: {
+      '~': resolve(__dirname, 'src'),
     },
-})
+  },
+  test: {
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'json-summary', 'html'],
+    },
+  },
+});

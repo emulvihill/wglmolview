@@ -1,10 +1,18 @@
 import {defineConfig} from 'tsup';
 
-export default defineConfig({
-  entry: ['src/main.ts'],
-  outDir: "www/dist",
-  target: ['es2015'],
-  format: ["iife"],
-  minify: true,
-  dts: true
-});
+const isProduction = process.env.NODE_ENV === 'production';
+
+export default defineConfig(({watch = false}) => ({
+  clean: true,
+  dts: true,
+  entry: {
+    index: 'src/index.ts',
+  },
+  name: 'wglmolview',
+  external: [],
+  format: ['cjs', 'esm'],
+  treeshake: isProduction,
+  minify: isProduction,
+  sourcemap: isProduction,
+  watch,
+}));
