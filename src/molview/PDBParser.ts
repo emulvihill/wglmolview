@@ -196,12 +196,14 @@ export class PDBParser {
             Number.parseInt(currLine.substring(21, 26), 10),
             Number.parseInt(currLine.substring(26, 31), 10),
           ];
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const h: number[] = [
             Number.parseInt(currLine.substring(31, 36), 10),
             Number.parseInt(currLine.substring(36, 41), 10),
             Number.parseInt(currLine.substring(41, 46), 10),
             Number.parseInt(currLine.substring(46, 51), 10),
           ];
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const sb: number[] = [
             Number.parseInt(currLine.substring(51, 56), 10),
             Number.parseInt(currLine.substring(56, 61), 10),

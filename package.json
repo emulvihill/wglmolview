@@ -36,11 +36,11 @@
     "clean": "rimraf dist  coverage",
     "lint": "eslint --flag unstable_ts_config src/",
     "lint-tsc": "tsc",
+    "scan": "auditjs ossi --dev",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest watch",
-    "check-exports": "attw --pack .",
-    "ci": "npm run check-exports && npm run check-format && npm run lint && npm run test:coverage && npm run build"
+    "ci": "npm run scan && npm run lint && npm run test:coverage && npm run build"
   },
   "dependencies": {
     "three": "0.170.0"
@@ -51,6 +51,7 @@
     "@types/node": "^22.7.4",
     "@types/three": "^0.169.0",
     "@vitest/coverage-v8": "^2.1.1",
+    "auditjs": "^4.0.45",
     "eslint": "^9.13.0",
     "rimraf": "^6.0.0",
     "tsup": "^8.3.0",

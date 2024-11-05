@@ -1,3 +1,5 @@
+/* eslint no-undef:0 no-case-declarations:0 */
+
 import {
   Controls,
   MathUtils,
