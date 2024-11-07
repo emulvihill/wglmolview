@@ -10,286 +10,316 @@ import type {RenderableObject} from "./model/RenderableObject";
 import type {IMolRenderer} from "./renderer/IMolRenderer";
 import {ThreeJsRenderer} from "./renderer/ThreeJsRenderer";
 
+export interface ContextInfo {
+    atoms: Atom[];
+    distance?: number;
+    rotationAngle?: number;
+    torsionAngle?: number;
+}
+
+export interface ConstructorParams {
+    pdbUrl?: string;
+    pdbData?: string;
+    domElement?: string;
+    infoElement?: string;
+    onInfoUpdated?: (info: ContextInfo) => void;
+}
+
+export type MolViewRenderMode = "ball_and_stick" | "space_fill" | "sticks";
+
+export type MolViewSelectionMode = "identify" | "distance" | "rotation" | "torsion";
+
 /**
  * MolView - a simple 3D molecule viewer.
  * For instructions, please read README.md
  */
 export class MolView {
-  private selections: Atom[];
-  private molecule: Molecule | undefined;
-  private renderer: IMolRenderer;
-  private domElement: HTMLElement;
-  private infoElement: HTMLElement;
-  private initialized: boolean = false;
+    private selections: Atom[];
+    private molecule: Molecule | undefined;
+    private renderer: IMolRenderer;
+    private domElement: HTMLElement;
+    private infoElement: HTMLElement;
+    private initialized: boolean = false;
+    private onInfoUpdated: (info: ContextInfo) => void;
 
-  constructor(params: {
-    pdbUrl?: string;
-    pdbData?: string;
-    domElement?: string;
-    infoElement?: string;
-  }) {
-    this.renderer = new ThreeJsRenderer();
+    constructor(params: ConstructorParams) {
+        // get the DOM element to which we should attach the renderer & info display
+        this.domElement = Utility.getElement(params.domElement || Configuration.domElement)!;
+        this.infoElement = Utility.getElement(params.infoElement || Configuration.infoElement)!;
+        this.onInfoUpdated = params.onInfoUpdated;
 
-    this.selections = [];
+        this.renderer = new ThreeJsRenderer();
 
-    // load the molecule from the init settings
-    if (params.pdbUrl) {
-      this.loadPDB(params.pdbUrl);
-    } else if (params.pdbData) {
-      Configuration.pdbData = params.pdbData;
-      this.renderPDBData(params.pdbData);
-    }
+        this.selections = [];
 
-    // get the DOM element to which we should attach the renderer & info display
-    this.domElement = Utility.getElement(params.domElement || Configuration.domElement)!;
-    this.infoElement = Utility.getElement(params.infoElement || Configuration.infoElement)!;
-  }
-
-  loadPDB(pdbUrl: string): void {
-    if (!pdbUrl) {
-      console.warn("empty 3D molecule name");
-    }
-    fetch(pdbUrl)
-      .then((response) => response.text())
-      .then((data) => {
-        Configuration.pdbData = data;
-        this.renderPDBData(data);
-      })
-      .catch((error) => console.error("Failed to load PDB data:", error));
-  }
-
-  setRenderMode(mode: string): void {
-    Configuration.renderMode = mode;
-    this.clearSelections();
-    // rebuild and redraw the molecule
-    this.renderer.reset();
-    this.molecule?.render(this.renderer);
-  }
-
-  setSelectionMode(mode: string): void {
-    Configuration.selectionMode = mode;
-    this.clearSelections();
-    this.updateInfoDisplay();
-    // redraw the molecule (without rebuilding)
-    this.renderer.render();
-  }
-
-  private renderPDBData(pdbData: string): void {
-    this.molecule = PDBParser.parsePDB(pdbData);
-
-    this.updateDisplay("");
-
-    if (this.domElement && !this.initialized) {
-      this.renderer.init(this.domElement);
-      this.domElement.onclick = (event) => this.handleSelect(event);
-    } else {
-      this.renderer.reset();
-    }
-
-    if (Configuration.autoCenter) {
-      this.molecule.center();
-    }
-
-    // render the molecule as 3d items
-    this.molecule.render(this.renderer);
-
-    // draw the molecule on screen
-    this.renderer.render();
-
-    this.initialized = true;
-  }
-
-  private handleSelect(event: MouseEvent): void {
-    if (!this.molecule || !Configuration.selectable) {
-      return;
-    }
-
-    const selObj: RenderableObject = this.renderer.getSelectedObject(event)!;
-    if (!(selObj instanceof Atom)) {
-      return;
-    }
-
-    const index: number = this.selections.indexOf(selObj);
-
-    if (index > -1) {
-      // already selected so deselect	if possible
-      if (index === 0) {
-        this.renderer.deselect(selObj);
-        if (this.selections.length >= 2) {
-          const bondBetween = this.molecule.getBondBetween(selObj, this.selections[1]);
-          if (bondBetween) {
-            this.renderer.deselect(bondBetween);
-          }
+        // load the molecule from the init settings
+        if (params.pdbUrl) {
+            this.loadPDB(params.pdbUrl);
+        } else if (params.pdbData) {
+            Configuration.pdbData = params.pdbData;
+            this.setPDBData(params.pdbData);
         }
-        this.selections.shift();
-      } else if (index === this.selections.length - 1) {
-        this.renderer.deselect(selObj);
-        if (this.selections.length >= 2) {
-          const bondBetween = this.molecule.getBondBetween(selObj, this.selections[this.selections.length - 2]);
-          if (bondBetween) {
-            this.renderer.deselect(bondBetween);
-          }
+    }
+
+    init() {
+        if (this.domElement && !this.initialized) {
+            this.renderer.init(this.domElement);
+            this.domElement.onclick = (event) => this.handleSelect(event);
+            this.initialized = true;
         }
-        this.selections.pop();
-      }
-      this.updateInfoDisplay();
-      this.renderer.render();
-      return;
     }
 
-    if (Configuration.selectionMode === Constants.SELECTIONMODE_IDENTIFY && this.selections.length >= 1) {
-      // clear current but allow a different selection
-      this.clearSelections();
-    }
-
-    if (
-      (Configuration.selectionMode === Constants.SELECTIONMODE_DISTANCE && this.selections.length >= 2) ||
-      (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION && this.selections.length >= 3) ||
-      (Configuration.selectionMode === Constants.SELECTIONMODE_TORSION && this.selections.length >= 4)
-    ) {
-      // too many selected for current mode
-      return;
-    }
-
-    if (
-      this.selections.length > 0 &&
-      (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION ||
-        Configuration.selectionMode === Constants.SELECTIONMODE_TORSION)
-    ) {
-      // check that requested selected atom is neighbor of existing selection before growing selection
-      const neighbors: RenderableObject[] = this.molecule.getNeighbors(selObj);
-
-      if (neighbors.indexOf(this.selections[0]) > -1) {
-        // neighbor of first selection
-        this.renderer.select(selObj);
-        const bondBetween = this.molecule.getBondBetween(selObj, this.selections[0]);
-        if (bondBetween) {
-          // put a visual selection on the bond
-          this.renderer.select(bondBetween);
-          // add to beginning selected atoms
-          this.selections.unshift(selObj);
+    loadPDB(pdbUrl: string): void {
+        if (!pdbUrl) {
+            console.warn("empty 3D molecule name");
         }
-      } else if (neighbors.indexOf(this.selections[this.selections.length - 1]) > -1) {
-        // neighbor of last selection
-        this.renderer.select(selObj);
-        const bondBetween = this.molecule.getBondBetween(selObj, this.selections[this.selections.length - 1]);
-        if (bondBetween) {
-          // put a visual selection on the bond
-          this.renderer.select(bondBetween);
-          // add to end of selected atoms
-          this.selections.push(selObj);
+        fetch(pdbUrl)
+            .then((response) => response.text())
+            .then((data) => {
+                Configuration.pdbData = data;
+                this.setPDBData(data);
+            })
+            .catch((error) => console.error("Failed to load PDB data:", error));
+    }
+
+    setRenderMode(mode: string): void {
+        Configuration.renderMode = mode;
+        this.clearSelections();
+        // rebuild and redraw the molecule
+        this.renderer.reset();
+        this.molecule?.render(this.renderer);
+    }
+
+    setSelectionMode(mode: string): void {
+        Configuration.selectionMode = mode;
+        this.clearSelections();
+        this.updateInfo();
+        // redraw the molecule (without rebuilding)
+        this.renderer.render();
+    }
+
+    setPDBData(pdbData: string): void {
+        this.molecule = PDBParser.parsePDB(pdbData);
+
+        this.updateDisplay("");
+        this.init();
+
+        if (Configuration.autoCenter) {
+            this.molecule.center();
         }
-      }
-    } else {
-      // no restrictions in other modes so just add the selection
-      this.renderer.select(selObj);
-      this.selections.push(selObj);
-    }
-    this.updateInfoDisplay();
-    this.renderer.render();
-  }
 
-  private clearSelections(): void {
-    this.renderer.deselectAll();
-    this.selections = [];
-  }
+        // render the molecule as 3d items
+        this.molecule.render(this.renderer);
 
-  private updateInfoDisplay(): void {
-    switch (Configuration.selectionMode) {
-      case Constants.SELECTIONMODE_IDENTIFY:
-        this.displayIdentify();
-        break;
-      case Constants.SELECTIONMODE_DISTANCE:
-        this.displayDistance();
-        break;
-      case Constants.SELECTIONMODE_ROTATION:
-        this.displayRotation();
-        break;
-      case Constants.SELECTIONMODE_TORSION:
-        this.displayTorsion();
-        break;
-    }
-  }
-
-  private displayIdentify(): void {
-    if (this.selections.length < 1) {
-      this.updateDisplay(Messages.INSTRUCT_IDENTIFY);
-      return;
-    }
-    const a: Atom = this.selections[0];
-    const text: string = a.name + " (" + a.element + ")";
-
-    this.updateDisplay(text);
-  }
-
-  private displayDistance(): void {
-    if (this.selections.length < 2) {
-      this.updateDisplay(Messages.INSTRUCT_DISTANCE);
-      return;
-    }
-    const d: number = this.selections[0].loc.distanceTo(this.selections[1].loc);
-    const text: string = d.toFixed(4) + " nm\n" + this.selections[0].element + " - " + this.selections[1].element;
-
-    this.updateDisplay(text);
-  }
-
-  private displayRotation(): void {
-    if (this.selections.length < 3) {
-      this.updateDisplay(Messages.INSTRUCT_ROTATION);
-      return;
-    }
-    const v: Vector3 = new Vector3().subVectors(this.selections[0].loc, this.selections[1].loc);
-    const w: Vector3 = new Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
-    const ang: number = v.angleTo(w);
-
-    if (!ang) {
-      this.updateDisplay("Invalid atoms selected. Please select a chain of 3 atoms.");
-      return;
+        // draw the molecule on screen
+        this.renderer.render();
     }
 
-    const text: string =
-      Utility.r2d(ang).toFixed(4) +
-      " degrees\n" +
-      this.selections[0].element +
-      " - " +
-      this.selections[1].element +
-      " - " +
-      this.selections[2].element;
-    this.updateDisplay(text);
-  }
+    private handleSelect(event: MouseEvent): void {
+        if (!this.molecule || !Configuration.selectable) {
+            return;
+        }
 
-  private displayTorsion(): void {
-    if (this.selections.length < 4) {
-      this.updateDisplay(Messages.INSTRUCT_TORSION);
-      return;
+        const selObj: RenderableObject = this.renderer.getSelectedObject(event)!;
+        if (!(selObj instanceof Atom)) {
+            return;
+        }
+
+        const index: number = this.selections.indexOf(selObj);
+
+        if (index > -1) {
+            // already selected so deselect	if possible
+            if (index === 0) {
+                this.renderer.deselect(selObj);
+                if (this.selections.length >= 2) {
+                    const bondBetween = this.molecule.getBondBetween(selObj, this.selections[1]);
+                    if (bondBetween) {
+                        this.renderer.deselect(bondBetween);
+                    }
+                }
+                this.selections.shift();
+            } else if (index === this.selections.length - 1) {
+                this.renderer.deselect(selObj);
+                if (this.selections.length >= 2) {
+                    const bondBetween = this.molecule.getBondBetween(selObj, this.selections[this.selections.length - 2]);
+                    if (bondBetween) {
+                        this.renderer.deselect(bondBetween);
+                    }
+                }
+                this.selections.pop();
+            }
+            this.updateInfo();
+            this.renderer.render();
+            return;
+        }
+
+        if (Configuration.selectionMode === Constants.SELECTIONMODE_IDENTIFY && this.selections.length >= 1) {
+            // clear current but allow a different selection
+            this.clearSelections();
+        }
+
+        if (
+            (Configuration.selectionMode === Constants.SELECTIONMODE_DISTANCE && this.selections.length >= 2) ||
+            (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION && this.selections.length >= 3) ||
+            (Configuration.selectionMode === Constants.SELECTIONMODE_TORSION && this.selections.length >= 4)
+        ) {
+            // too many selected for current mode
+            return;
+        }
+
+        if (
+            this.selections.length > 0 &&
+            (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION ||
+                Configuration.selectionMode === Constants.SELECTIONMODE_TORSION)
+        ) {
+            // check that requested selected atom is neighbor of existing selection before growing selection
+            const neighbors: RenderableObject[] = this.molecule.getNeighbors(selObj);
+
+            if (neighbors.indexOf(this.selections[0]) > -1) {
+                // neighbor of first selection
+                this.renderer.select(selObj);
+                const bondBetween = this.molecule.getBondBetween(selObj, this.selections[0]);
+                if (bondBetween) {
+                    // put a visual selection on the bond
+                    this.renderer.select(bondBetween);
+                    // add to beginning selected atoms
+                    this.selections.unshift(selObj);
+                }
+            } else if (neighbors.indexOf(this.selections[this.selections.length - 1]) > -1) {
+                // neighbor of last selection
+                this.renderer.select(selObj);
+                const bondBetween = this.molecule.getBondBetween(selObj, this.selections[this.selections.length - 1]);
+                if (bondBetween) {
+                    // put a visual selection on the bond
+                    this.renderer.select(bondBetween);
+                    // add to end of selected atoms
+                    this.selections.push(selObj);
+                }
+            }
+        } else {
+            // no restrictions in other modes so just add the selection
+            this.renderer.select(selObj);
+            this.selections.push(selObj);
+        }
+        this.updateInfo();
+        this.renderer.render();
     }
-    const u: Vector3 = new Vector3().subVectors(this.selections[1].loc, this.selections[0].loc);
-    const v: Vector3 = new Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
-    const w: Vector3 = new Vector3().subVectors(this.selections[3].loc, this.selections[2].loc);
-    const uXv: Vector3 = u.cross(v);
-    const vXw: Vector3 = v.cross(w);
-    const ang: number = uXv && vXw ? uXv.angleTo(vXw) : Number.NaN;
-    if (ang === null) {
-      this.updateDisplay("Invalid atoms selected. Please select a chain of 4 atoms.");
-      return;
+
+    private clearSelections(): void {
+        this.renderer.deselectAll();
+        this.selections = [];
     }
 
-    const text: string =
-      Utility.r2d(ang).toFixed(4) +
-      " degrees\n" +
-      this.selections[0].element +
-      " - " +
-      this.selections[1].element +
-      " - " +
-      this.selections[2].element +
-      " - " +
-      this.selections[3].element;
-    this.updateDisplay(text);
-  }
+    private updateInfo(): void {
+        switch (Configuration.selectionMode) {
+            case Constants.SELECTIONMODE_IDENTIFY:
+                this.displayIdentify();
+                break;
+            case Constants.SELECTIONMODE_DISTANCE:
+                this.displayDistance();
+                break;
+            case Constants.SELECTIONMODE_ROTATION:
+                this.displayRotation();
+                break;
+            case Constants.SELECTIONMODE_TORSION:
+                this.displayTorsion();
+                break;
+        }
+    }
 
-  private updateDisplay(str: string): void {
-    this.infoElement.textContent = str;
-  }
+    private displayIdentify(): void {
+        if (this.selections.length < 1) {
+            this.updateDisplay(Messages.INSTRUCT_IDENTIFY);
+            return;
+        }
+        const a: Atom = this.selections[0];
+        const text: string = a.name + " (" + a.element + ")";
+
+        this.updateDisplay(text);
+
+        const info = {atoms: [a]};
+        this.onInfoUpdated(info);
+    }
+
+    private displayDistance(): void {
+        if (this.selections.length < 2) {
+            this.updateDisplay(Messages.INSTRUCT_DISTANCE);
+            return;
+        }
+        const d: number = this.selections[0].loc.distanceTo(this.selections[1].loc);
+        const text: string = d.toFixed(4) + " nm\n" + this.selections[0].element + " - " + this.selections[1].element;
+
+        this.updateDisplay(text);
+
+        const info = {atoms: this.selections.slice(0, 2), distance: d};
+        this.onInfoUpdated(info);
+    }
+
+    private displayRotation(): void {
+        if (this.selections.length < 3) {
+            this.updateDisplay(Messages.INSTRUCT_ROTATION);
+            return;
+        }
+        const v: Vector3 = new Vector3().subVectors(this.selections[0].loc, this.selections[1].loc);
+        const w: Vector3 = new Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
+        const ang: number = v.angleTo(w);
+
+        if (ang === null || Number.isNaN(ang)) {
+            this.updateDisplay("Invalid atoms selected. Please select a chain of 3 atoms.");
+            return;
+        }
+
+        const text: string =
+            Utility.r2d(ang).toFixed(4) +
+            " degrees\n" +
+            this.selections[0].element +
+            " - " +
+            this.selections[1].element +
+            " - " +
+            this.selections[2].element;
+        this.updateDisplay(text);
+
+        const info = {atoms: this.selections.slice(0, 3), rotationAngle: ang};
+        this.onInfoUpdated(info);
+    }
+
+    private displayTorsion(): void {
+        if (this.selections.length < 4) {
+            this.updateDisplay(Messages.INSTRUCT_TORSION);
+            return;
+        }
+        const u: Vector3 = new Vector3().subVectors(this.selections[1].loc, this.selections[0].loc);
+        const v: Vector3 = new Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
+        const w: Vector3 = new Vector3().subVectors(this.selections[3].loc, this.selections[2].loc);
+        const uXv: Vector3 = u.cross(v);
+        const vXw: Vector3 = v.cross(w);
+        const ang: number = uXv && vXw ? uXv.angleTo(vXw) : Number.NaN;
+        if (ang === null || Number.isNaN(ang)) {
+            this.updateDisplay("Invalid atoms selected. Please select a chain of 4 atoms.");
+            return;
+        }
+
+        const text: string =
+            Utility.r2d(ang).toFixed(4) +
+            " degrees\n" +
+            this.selections[0].element +
+            " - " +
+            this.selections[1].element +
+            " - " +
+            this.selections[2].element +
+            " - " +
+            this.selections[3].element;
+        this.updateDisplay(text);
+
+        const info = {atoms: this.selections.slice(0, 4), torsionAngle: ang};
+        this.onInfoUpdated(info);
+    }
+
+    private updateDisplay(str: string): void {
+        if (this.infoElement) {
+            this.infoElement.textContent = str;
+        }
+    }
 }
 
-export default MolView
+export default MolView;
