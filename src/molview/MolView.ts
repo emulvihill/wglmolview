@@ -12,6 +12,7 @@ import {ThreeJsRenderer} from "./renderer/ThreeJsRenderer";
 
 export interface ContextInfo {
     atoms: Atom[];
+    message?: string;
     distance?: number;
     rotationAngle?: number;
     torsionAngle?: number;
@@ -21,7 +22,6 @@ export interface ConstructorParams {
     pdbUrl?: string;
     pdbData?: string;
     domElement?: string;
-    infoElement?: string;
     onInfoUpdated?: (info: ContextInfo) => void;
 }
 
@@ -38,14 +38,12 @@ export class MolView {
     private molecule: Molecule | undefined;
     private renderer: IMolRenderer;
     private domElement: HTMLElement;
-    private infoElement: HTMLElement;
     private initialized: boolean = false;
     private onInfoUpdated: (info: ContextInfo) => void;
 
     constructor(params: ConstructorParams) {
         // get the DOM element to which we should attach the renderer & info display
         this.domElement = Utility.getElement(params.domElement || Configuration.domElement)!;
-        this.infoElement = Utility.getElement(params.infoElement || Configuration.infoElement)!;
         this.onInfoUpdated = params.onInfoUpdated;
 
         this.renderer = new ThreeJsRenderer();
@@ -74,12 +72,12 @@ export class MolView {
             console.warn("empty 3D molecule name");
         }
         fetch(pdbUrl)
-            .then((response) => response.text())
-            .then((data) => {
+            .then(response => response.text())
+            .then(data => {
                 Configuration.pdbData = data;
                 this.setPDBData(data);
             })
-            .catch((error) => console.error("Failed to load PDB data:", error));
+            .catch(error => console.error("Failed to load PDB data:", error));
     }
 
     setRenderMode(mode: string): void {
@@ -101,7 +99,7 @@ export class MolView {
     setPDBData(pdbData: string): void {
         this.molecule = PDBParser.parsePDB(pdbData);
 
-        this.updateDisplay("");
+        this.clearDisplay();
         this.init();
 
         if (Configuration.autoCenter) {
@@ -229,35 +227,30 @@ export class MolView {
 
     private displayIdentify(): void {
         if (this.selections.length < 1) {
-            this.updateDisplay(Messages.INSTRUCT_IDENTIFY);
+            this.onInfoUpdated({atoms: [...this.selections], message: Messages.INSTRUCT_IDENTIFY});
             return;
         }
         const a: Atom = this.selections[0];
-        const text: string = a.name + " (" + a.element + ")";
+        const text: string = `${a.name} (${a.element})`;
 
-        this.updateDisplay(text);
-
-        const info = {atoms: [a]};
-        this.onInfoUpdated(info);
+        this.onInfoUpdated({atoms: [...this.selections], message: text});
     }
 
     private displayDistance(): void {
         if (this.selections.length < 2) {
-            this.updateDisplay(Messages.INSTRUCT_DISTANCE);
+            this.onInfoUpdated({atoms: [...this.selections], message: Messages.INSTRUCT_DISTANCE});
             return;
         }
         const d: number = this.selections[0].loc.distanceTo(this.selections[1].loc);
-        const text: string = d.toFixed(4) + " nm\n" + this.selections[0].element + " - " + this.selections[1].element;
+        const text: string = `${d.toFixed(4)} nm
+${this.selections[0].element} - ${this.selections[1].element}`;
 
-        this.updateDisplay(text);
-
-        const info = {atoms: this.selections.slice(0, 2), distance: d};
-        this.onInfoUpdated(info);
+        this.onInfoUpdated({atoms: this.selections.slice(0, 2), message: text, distance: d});
     }
 
     private displayRotation(): void {
         if (this.selections.length < 3) {
-            this.updateDisplay(Messages.INSTRUCT_ROTATION);
+            this.onInfoUpdated({atoms: [...this.selections], message: Messages.INSTRUCT_ROTATION});
             return;
         }
         const v: Vector3 = new Vector3().subVectors(this.selections[0].loc, this.selections[1].loc);
@@ -265,27 +258,23 @@ export class MolView {
         const ang: number = v.angleTo(w);
 
         if (ang === null || Number.isNaN(ang)) {
-            this.updateDisplay("Invalid atoms selected. Please select a chain of 3 atoms.");
+            this.onInfoUpdated({
+                atoms: [...this.selections],
+                message: "Invalid atoms selected. Please select a chain of 3 atoms."
+            });
             return;
         }
 
         const text: string =
-            Utility.r2d(ang).toFixed(4) +
-            " degrees\n" +
-            this.selections[0].element +
-            " - " +
-            this.selections[1].element +
-            " - " +
-            this.selections[2].element;
-        this.updateDisplay(text);
+            `${Utility.r2d(ang).toFixed(4)} degrees
+${this.selections[0].element} - ${this.selections[1].element} - ${this.selections[2].element}`;
 
-        const info = {atoms: this.selections.slice(0, 3), rotationAngle: ang};
-        this.onInfoUpdated(info);
+        this.onInfoUpdated({atoms: this.selections.slice(0, 3), message: text, rotationAngle: ang});
     }
 
     private displayTorsion(): void {
         if (this.selections.length < 4) {
-            this.updateDisplay(Messages.INSTRUCT_TORSION);
+            this.onInfoUpdated({atoms: [...this.selections], message: Messages.INSTRUCT_TORSION});
             return;
         }
         const u: Vector3 = new Vector3().subVectors(this.selections[1].loc, this.selections[0].loc);
@@ -295,30 +284,22 @@ export class MolView {
         const vXw: Vector3 = v.cross(w);
         const ang: number = uXv && vXw ? uXv.angleTo(vXw) : Number.NaN;
         if (ang === null || Number.isNaN(ang)) {
-            this.updateDisplay("Invalid atoms selected. Please select a chain of 4 atoms.");
+            this.onInfoUpdated({
+                atoms: [...this.selections],
+                message: "Invalid atoms selected. Please select a chain of 4 atoms."
+            });
             return;
         }
 
         const text: string =
-            Utility.r2d(ang).toFixed(4) +
-            " degrees\n" +
-            this.selections[0].element +
-            " - " +
-            this.selections[1].element +
-            " - " +
-            this.selections[2].element +
-            " - " +
-            this.selections[3].element;
-        this.updateDisplay(text);
+            `${Utility.r2d(ang).toFixed(4)} degrees
+${this.selections[0].element} - ${this.selections[1].element} - ${this.selections[2].element} - ${this.selections[3].element}`;
 
-        const info = {atoms: this.selections.slice(0, 4), torsionAngle: ang};
-        this.onInfoUpdated(info);
+        this.onInfoUpdated({atoms: this.selections.slice(0, 4), message: text, torsionAngle: ang});
     }
 
-    private updateDisplay(str: string): void {
-        if (this.infoElement) {
-            this.infoElement.textContent = str;
-        }
+    private clearDisplay(): void {
+        this.onInfoUpdated({atoms: []});
     }
 }
 
