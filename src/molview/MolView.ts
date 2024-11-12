@@ -80,7 +80,7 @@ export class MolView {
             .catch(error => console.error("Failed to load PDB data:", error));
     }
 
-    setRenderMode(mode: string): void {
+    setRenderMode(mode: MolViewRenderMode): void {
         Configuration.renderMode = mode;
         this.clearSelections();
         // rebuild and redraw the molecule
@@ -88,7 +88,7 @@ export class MolView {
         this.molecule?.render(this.renderer);
     }
 
-    setSelectionMode(mode: string): void {
+    setSelectionMode(mode: MolViewSelectionMode): void {
         Configuration.selectionMode = mode;
         this.clearSelections();
         this.updateInfo();
@@ -255,7 +255,7 @@ ${this.selections[0].element} - ${this.selections[1].element}`;
         }
         const v: Vector3 = new Vector3().subVectors(this.selections[0].loc, this.selections[1].loc);
         const w: Vector3 = new Vector3().subVectors(this.selections[2].loc, this.selections[1].loc);
-        const ang: number = v.angleTo(w);
+        const ang: number = Utility.r2d(v.angleTo(w));
 
         if (ang === null || Number.isNaN(ang)) {
             this.onInfoUpdated({
@@ -266,7 +266,7 @@ ${this.selections[0].element} - ${this.selections[1].element}`;
         }
 
         const text: string =
-            `${Utility.r2d(ang).toFixed(4)} degrees
+            `${ang.toFixed(4)} degrees
 ${this.selections[0].element} - ${this.selections[1].element} - ${this.selections[2].element}`;
 
         this.onInfoUpdated({atoms: this.selections.slice(0, 3), message: text, rotationAngle: ang});
@@ -282,7 +282,7 @@ ${this.selections[0].element} - ${this.selections[1].element} - ${this.selection
         const w: Vector3 = new Vector3().subVectors(this.selections[3].loc, this.selections[2].loc);
         const uXv: Vector3 = u.cross(v);
         const vXw: Vector3 = v.cross(w);
-        const ang: number = uXv && vXw ? uXv.angleTo(vXw) : Number.NaN;
+        const ang: number = uXv && vXw ? Utility.r2d(uXv.angleTo(vXw)) : Number.NaN;
         if (ang === null || Number.isNaN(ang)) {
             this.onInfoUpdated({
                 atoms: [...this.selections],
@@ -292,7 +292,7 @@ ${this.selections[0].element} - ${this.selections[1].element} - ${this.selection
         }
 
         const text: string =
-            `${Utility.r2d(ang).toFixed(4)} degrees
+            `${ang.toFixed(4)} degrees
 ${this.selections[0].element} - ${this.selections[1].element} - ${this.selections[2].element} - ${this.selections[3].element}`;
 
         this.onInfoUpdated({atoms: this.selections.slice(0, 4), message: text, torsionAngle: ang});
