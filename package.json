@@ -1,6 +1,6 @@
 {
   "name": "wglmolview",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple WebGL Molecule Viewer",
   "author": "eric.mulvihill@gmail.com",
   "repository": {
