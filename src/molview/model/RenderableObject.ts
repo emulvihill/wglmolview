@@ -13,6 +13,6 @@ export class RenderableObject {
   loc: Vector3;
 
   render(renderer: IMolRenderer): void {
-    console.info(`rendering ${this.id} using renderer ${renderer}`);
+    console.log(`rendering ${this.id} using renderer ${renderer.getName()}`);
   }
 }

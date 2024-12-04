@@ -105,6 +105,8 @@ export class MolView {
   setPDBData(pdbData: string): void {
     this.molecule = PDBParser.parsePDB(pdbData);
 
+    console.log("Molecule loaded:", this.molecule);
+    
     this.clearDisplay();
     this.init();
 

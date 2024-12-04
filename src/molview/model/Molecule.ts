@@ -38,6 +38,7 @@ export class Molecule extends RenderableObject {
   }
 
   render(renderer: IMolRenderer): void {
+    super.render(renderer);
     this.objects
       .filter((o) => {
         // We filter bonds in space-fill mode and atoms in sticks mode

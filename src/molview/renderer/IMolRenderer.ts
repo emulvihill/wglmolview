@@ -5,6 +5,9 @@ import type {RenderableObject} from "../model/RenderableObject";
  * Extend this class to display molecules using a specific API (WebGL, etc)
  */
 export interface IMolRenderer {
+  
+  getName(): string;
+
   init(domElement: HTMLElement): void;
 
   reset(): void;

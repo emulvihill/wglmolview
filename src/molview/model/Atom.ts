@@ -101,6 +101,7 @@ export class Atom extends RenderableObject {
   }
 
   public render(renderer: IMolRenderer): void {
+    super.render(renderer);
     renderer.addRenderableObject(this);
   }
 

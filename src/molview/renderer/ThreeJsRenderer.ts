@@ -48,6 +48,10 @@ export class ThreeJsRenderer implements IMolRenderer {
   private objects: ViewObject[] = [];
   private selections: ViewObject[] = [];
 
+  getName(): string {
+    return "ThreeJsRenderer";
+  }
+
   init(domElement: HTMLElement): void {
     this.domElement = domElement as HTMLDivElement;
 

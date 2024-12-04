@@ -50,7 +50,8 @@ export class Bond extends RenderableObject {
     return 1 + minIndex;
   }
 
-  public render(renderer: IMolRenderer): void {
+  public render(renderer: IMolRenderer): void {    
+    super.render(renderer);
     renderer.addRenderableObject(this);
   }
 
