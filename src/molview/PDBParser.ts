@@ -1,13 +1,13 @@
-﻿import {Atom} from "./model/Atom";
-import type {AtomInitializer} from "./model/AtomInitializer";
-import {Bond} from "./model/Bond";
-import {Molecule} from "./model/Molecule";
+﻿import { Atom, AtomInitializer } from "./model/Atom";
+import { Bond } from "./model/Bond";
+import { Molecule } from "./model/Molecule";
+import { Configuration } from "./MolView";
 
 /**
  * Parses .PDB molecule definition format.
  */
 export class PDBParser {
-  static parsePDB(pdb: string): Molecule {
+  static parsePDB(pdb: string, config: Configuration): Molecule {
     const objects: Array<Atom | Bond> = [];
     const pdbArray: string[] = pdb.split("\n");
     let compound: object = {};
@@ -92,7 +92,7 @@ export class PDBParser {
                      --   9 - 10        Continuation      continuation   Allows concatenation of multiple records.
                      --  11 - 70        Specification     compound       Description of the molecular list components.
                      */
-          compound = {continuation: currLine.substring(8, 10), compound: currLine.substring(10, 70)};
+          compound = { continuation: currLine.substring(8, 10), compound: currLine.substring(10, 70) };
 
           break;
 
@@ -105,15 +105,15 @@ export class PDBParser {
                      --   7 - 30        String            id             identifier for the object to be recolored
                      --   31 - 36       RRGGBB            newcolor       new color in RRGGBB hex string format
                      */
-        {
-          const id = currLine.substring(6, 30).trim();
-          const newcolor: string = currLine.substring(30, 36);
-          const obj: Atom | Bond = objects.filter((o) => o.id === id)[0];
-          if (obj) {
-            obj.color = newcolor;
+          {
+            const id = currLine.substring(6, 30).trim();
+            const newcolor: string = currLine.substring(30, 36);
+            const obj: Atom | Bond = objects.filter((o) => o.id === id)[0];
+            if (obj) {
+              obj.color = newcolor;
+            }
+            break;
           }
-          break;
-        }
 
         case "ATOM  ":
         case "HETATM":
@@ -138,36 +138,37 @@ export class PDBParser {
                      -- 79 - 80        LString(2)      charge         Charge on the atom.
                      */
 
-        {
-          const serial = Number.parseInt(currLine.substring(6, 11), 10);
-          const init: AtomInitializer = {
-            id: "atom" + serial,
-            serial,
-            element: currLine.substring(12, 14).trim(),
-            altLoc: Number.parseInt(currLine.substring(16, 17), 10),
-            resName: currLine.substring(17, 20),
-            chainId: Number.parseInt(currLine.substring(21, 22), 10),
-            resSeq: currLine.substring(22, 26),
-            iCode: currLine.substring(26, 27),
-            x: Number.parseFloat(currLine.substring(30, 38)),
-            y: Number.parseFloat(currLine.substring(38, 46)),
-            z: Number.parseFloat(currLine.substring(46, 54)),
-            occupancy: currLine.substring(60, 66),
-            tempFactor: Number.parseFloat(currLine.substring(72, 76)),
-            segId: Number.parseInt(currLine.substring(76, 78), 10),
-            element2: currLine.substring(78, 80).trim(),
-            charge: Number.parseInt(currLine.substring(80, 81), 10),
-          };
+          {
+            const serial = Number.parseInt(currLine.substring(6, 11), 10);
+            const init: AtomInitializer = {
+              id: "atom" + serial,
+              serial,
+              element: currLine.substring(12, 14).trim(),
+              altLoc: Number.parseInt(currLine.substring(16, 17), 10),
+              resName: currLine.substring(17, 20),
+              chainId: Number.parseInt(currLine.substring(21, 22), 10),
+              resSeq: currLine.substring(22, 26),
+              iCode: currLine.substring(26, 27),
+              x: Number.parseFloat(currLine.substring(30, 38)),
+              y: Number.parseFloat(currLine.substring(38, 46)),
+              z: Number.parseFloat(currLine.substring(46, 54)),
+              occupancy: currLine.substring(60, 66),
+              tempFactor: Number.parseFloat(currLine.substring(72, 76)),
+              segId: Number.parseInt(currLine.substring(76, 78), 10),
+              element2: currLine.substring(78, 80).trim(),
+              charge: Number.parseInt(currLine.substring(80, 81), 10),
+            };
 
-          const atom: Atom = (objects.find((o) => o.id === "atom" + serial) as Atom) || new Atom(init);
+            const atom: Atom = (objects.find((o) => o.id === "atom" + serial) as Atom) ||
+              new Atom(init, { colorMode: config.colorMode, radiusMode: config.atomRadiusMode, radiusScale: config.atomRadiusScale });
 
-          if (atom && atom.name) {
-            objects.push(atom);
-            atom.setLocation(init.x, init.y, init.z);
+            if (atom && atom.name) {
+              objects.push(atom);
+              atom.setLocation(init.x, init.y, init.z);
+            }
+
+            break;
           }
-
-          break;
-        }
 
         case "CONECT":
         case "CONEC2":
@@ -188,53 +189,53 @@ export class PDBParser {
                      -- 52 - 56         Integer          serial          Serial number of hydrogen bonded atom
                      -- 57 - 61         Integer          serial          Serial number of salt bridged atom
                      */
-        {
-          const cAtom: number = Number.parseInt(currLine.substring(6, 11), 10);
-          const s: number[] = [
-            Number.parseInt(currLine.substring(11, 16), 10),
-            Number.parseInt(currLine.substring(16, 21), 10),
-            Number.parseInt(currLine.substring(21, 26), 10),
-            Number.parseInt(currLine.substring(26, 31), 10),
-          ];
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const h: number[] = [
-            Number.parseInt(currLine.substring(31, 36), 10),
-            Number.parseInt(currLine.substring(36, 41), 10),
-            Number.parseInt(currLine.substring(41, 46), 10),
-            Number.parseInt(currLine.substring(46, 51), 10),
-          ];
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const sb: number[] = [
-            Number.parseInt(currLine.substring(51, 56), 10),
-            Number.parseInt(currLine.substring(56, 61), 10),
-          ];
+          {
+            const cAtom: number = Number.parseInt(currLine.substring(6, 11), 10);
+            const s: number[] = [
+              Number.parseInt(currLine.substring(11, 16), 10),
+              Number.parseInt(currLine.substring(16, 21), 10),
+              Number.parseInt(currLine.substring(21, 26), 10),
+              Number.parseInt(currLine.substring(26, 31), 10),
+            ];
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const h: number[] = [
+              Number.parseInt(currLine.substring(31, 36), 10),
+              Number.parseInt(currLine.substring(36, 41), 10),
+              Number.parseInt(currLine.substring(41, 46), 10),
+              Number.parseInt(currLine.substring(46, 51), 10),
+            ];
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const sb: number[] = [
+              Number.parseInt(currLine.substring(51, 56), 10),
+              Number.parseInt(currLine.substring(56, 61), 10),
+            ];
 
-          if (cAtom === 0) {
-            throw new Error("error in line: " + currLine);
-          }
-          // Unofficial PDB extension, CONECT -> single bond, CONECT2 -> double bond, CONEC3 -> triple bond
-          const tStr = currLine.substring(5, 6);
-          const t: number = tStr === "2" ? 2 : tStr === "3" ? 3 : 1;
+            if (cAtom === 0) {
+              throw new Error("error in line: " + currLine);
+            }
+            // Unofficial PDB extension, CONECT -> single bond, CONECT2 -> double bond, CONEC3 -> triple bond
+            const tStr = currLine.substring(5, 6);
+            const t: number = tStr === "2" ? 2 : tStr === "3" ? 3 : 1;
 
-          for (let cb = 0; cb < 4; cb++) {
-            if (s[cb] > cAtom) {
-              const a1: Atom = objects.find((o) => o.id === "atom" + cAtom) as Atom;
-              const a2: Atom = objects.find((o) => o.id === "atom" + s[cb]) as Atom;
-              // make the bond and add to current frame
-              if (a1 && a2) {
-                const bondId: string = a1.id + "-" + a2.id;
-                let bond: Bond = objects.find((o) => o.id === "bond" + bondId) as Bond;
-                if (!bond) {
-                  // no bond exists here
-                  bond = new Bond({t, a1, a2, id: bondId});
-                  objects.push(bond);
+            for (let cb = 0; cb < 4; cb++) {
+              if (s[cb] > cAtom) {
+                const a1: Atom = objects.find((o) => o.id === "atom" + cAtom) as Atom;
+                const a2: Atom = objects.find((o) => o.id === "atom" + s[cb]) as Atom;
+                // make the bond and add to current frame
+                if (a1 && a2) {
+                  const bondId: string = a1.id + "-" + a2.id;
+                  let bond: Bond = objects.find((o) => o.id === "bond" + bondId) as Bond;
+                  if (!bond) {
+                    // no bond exists here
+                    bond = new Bond({ t, a1, a2, id: bondId }, { colorMode: config.colorMode, estimateBondTypes: config.estimateBondTypes });
+                    objects.push(bond);
+                  }
                 }
               }
             }
-          }
 
-          break;
-        }
+            break;
+          }
 
         case "END   ":
         case "TER   ":
@@ -242,6 +243,6 @@ export class PDBParser {
       } // end switch
     }
 
-    return new Molecule({objects, compound, header, title});
+    return new Molecule({ objects, compound, header, title }, { renderMode: config.renderMode });
   }
 }

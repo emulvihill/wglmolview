@@ -1,9 +1,19 @@
-﻿import {Configuration} from "../Configuration";
-import {Constants} from "../Constants";
-import type {IMolRenderer} from "../renderer/IMolRenderer";
-import type {Atom} from "./Atom";
-import type {BondInitializer} from "./BondInitializer";
-import {RenderableObject} from "./RenderableObject";
+﻿import { MolViewColorMode } from "../MolView";
+import type { IMolRenderer } from "../renderer/IMolRenderer";
+import type { Atom } from "./Atom";
+import { RenderableObject } from "./RenderableObject";
+
+export interface BondInitializer {
+  id: string;
+  t: number;
+  a1: Atom;
+  a2: Atom;
+}
+
+export interface BondConfiguration {
+  estimateBondTypes: boolean;
+  colorMode: MolViewColorMode;
+}
 
 /**
  * Renderable Bond
@@ -12,7 +22,7 @@ export class Bond extends RenderableObject {
   color: string;
   type: number;
 
-  constructor(init: BondInitializer) {
+  constructor(init: BondInitializer, config: BondConfiguration) {
     super();
     this._atoms = [init.a1, init.a2];
     this.id = init.id;
@@ -22,9 +32,9 @@ export class Bond extends RenderableObject {
     this._atoms[1].addBond(this);
     this.calculateLength();
     // Optionally use a heuristic to determine which type of bond to display (info not in official PDB spec)
-    this.type = Configuration.estimateBondTypes ? this.estimatedBondType() : init.t;
+    this.type = config.estimateBondTypes ? this.estimatedBondType() : init.t;
     // color for the type of bond
-    this.setColorMode(Constants.COLORMODE_CPK);
+    this.setColorMode(config.colorMode);
   }
 
   private _atoms: Atom[];
@@ -50,22 +60,22 @@ export class Bond extends RenderableObject {
     return 1 + minIndex;
   }
 
-  public render(renderer: IMolRenderer): void {    
+  public render(renderer: IMolRenderer): void {
     super.render(renderer);
     renderer.addRenderableObject(this);
   }
 
-  public setColorMode(mode: string): void {
+  public setColorMode(mode: MolViewColorMode): void {
     if (!this.type) {
       throw new Error("bond type is undefined");
     }
 
     switch (mode) {
-      case Constants.COLORMODE_CPK: // i.e. "element color"
+      case "cpk": // i.e. "element color"
         this.color = ["0000FF", "8822FF", "2299FF"][this.type - 1];
         break;
 
-      case Constants.COLORMODE_AMINO_ACID:
+      case "amino_acid":
         // TODO
         break;
     }

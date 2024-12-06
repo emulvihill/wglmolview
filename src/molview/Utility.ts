@@ -7,6 +7,6 @@ export class Utility {
   }
 
   public static getElement(s: string): HTMLElement {
-    return document.getElementById(s)! || console.log("HtmlElement " + s + " not found");
+    return document.getElementById(s)! || console.error("HtmlElement " + s + " not found");
   }
 }

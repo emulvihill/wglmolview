@@ -1,15 +1,28 @@
-﻿import {Vector3} from "three";
-import {Configuration} from "./Configuration";
-import {Constants} from "./Constants";
-import {Messages} from "./Messages";
-import {PDBParser} from "./PDBParser";
-import {Utility} from "./Utility";
-import {Atom} from "./model/Atom";
-import type {Molecule} from "./model/Molecule";
-import type {RenderableObject} from "./model/RenderableObject";
-import type {IMolRenderer} from "./renderer/IMolRenderer";
-import {ThreeJsRenderer} from "./renderer/ThreeJsRenderer";
+﻿import { Vector3 } from "three";
+import { Messages } from "./Messages";
+import { PDBParser } from "./PDBParser";
+import { Utility } from "./Utility";
+import { Atom } from "./model/Atom";
+import type { Molecule } from "./model/Molecule";
+import type { RenderableObject } from "./model/RenderableObject";
+import type { IMolRenderer } from "./renderer/IMolRenderer";
+import { ThreeJsRenderer } from "./renderer/ThreeJsRenderer";
 
+/**
+ * String constants for MolView
+ */
+export type MolViewAtomRadiusMode = "accurate" | "reduced" | "uniform";
+export type MolViewColorMode = "cpk" | "amino_acid";
+export type MolViewSelectionMode = "identify" | "distance" | "rotation" | "torsion";
+export type MolViewRenderMode = "ball_and_stick" | "space_fill" | "sticks";
+
+export class MolViewConstants {
+  public static readonly ATOM_RADIUS_REDUCED_SCALE = 0.25;
+}
+
+/**
+ * Information returned to client on selection
+ */
 export interface ContextInfo {
   atoms: Atom[];
   message?: string;
@@ -18,16 +31,40 @@ export interface ContextInfo {
   torsionAngle?: number;
 }
 
-export interface ConstructorParams {
-  pdbUrl?: string;
-  pdbData?: string;
-  domElement?: string;
-  onInfoUpdated?: (info: ContextInfo) => void;
+/**
+ * Global configuration for MolView
+ */
+export interface Configuration {
+  colorMode: MolViewColorMode;
+  renderMode: MolViewRenderMode;
+  selectionMode: MolViewSelectionMode;
+  atomRadiusMode: MolViewAtomRadiusMode;
+  atomRadiusScale: number;
+  zoom: number;
+  selectable: boolean;
+  autoCenter: boolean;
+  estimateBondTypes: boolean;
+  pdbUrl: string | undefined;
+  pdbData: string | undefined;
+  domElement: string; // DOM element id to attach molecule renderer
+  onInfoUpdated: ((info: ContextInfo) => void);
 }
 
-export type MolViewRenderMode = "ball_and_stick" | "space_fill" | "sticks";
-
-export type MolViewSelectionMode = "identify" | "distance" | "rotation" | "torsion";
+export const defaultConfiguration: Configuration = {
+  colorMode: "cpk",
+  renderMode: "ball_and_stick",
+  selectionMode: "identify",
+  atomRadiusMode: "reduced",
+  atomRadiusScale: 1.0,
+  selectable: true,
+  zoom: 1.0,
+  autoCenter: true,
+  pdbUrl: undefined,
+  pdbData: undefined,
+  domElement: "wglContent",
+  estimateBondTypes: true,
+  onInfoUpdated: () => { }
+}
 
 /**
  * MolView - a simple 3D molecule viewer.
@@ -37,37 +74,41 @@ export class MolView {
   private selections: Atom[];
   private molecule: Molecule | undefined;
   private renderer: IMolRenderer;
-  private domElement: HTMLElement;
   private initialized: boolean = false;
-  private onInfoUpdated: (info: ContextInfo) => void;
+  private config: Configuration
+  private nativeElement: HTMLElement;
 
-  constructor(params: ConstructorParams) {
+  constructor(params: Partial<Configuration>) {
+
+    this.config = Object.assign({}, defaultConfiguration, params);
+
     // get the DOM element to which we should attach the renderer & info display
-    this.domElement = Utility.getElement(params.domElement || Configuration.domElement)!;
-    this.onInfoUpdated = params.onInfoUpdated;
+    this.nativeElement = Utility.getElement(this.config.domElement)!;
 
     this.renderer = new ThreeJsRenderer();
 
     this.selections = [];
 
     // load the molecule from the init settings
-    if (params.pdbUrl) {
-      this.loadPDB(params.pdbUrl);
-    } else if (params.pdbData) {
-      Configuration.pdbData = params.pdbData;
-      this.setPDBData(params.pdbData);
+    if (this.config.pdbUrl) {
+      this.loadPDB(this.config.pdbUrl);
+    } else if (this.config.pdbData) {
+      this.setPDBData(this.config.pdbData);
     }
   }
 
   init() {
-    if (this.domElement) {
+    if (this.nativeElement) {
       if (!this.initialized) {
-        console.log("Initializing renderer");
-        this.renderer.init(this.domElement);
-        this.domElement.onclick = (event) => this.handleSelect(event);
+        console.debug("Initializing renderer");
+        this.renderer.init(this.nativeElement, this.config);
+        this.nativeElement.onclick = (event) => {
+          console.log("click event", event);
+          this.handleSelect(event);
+        }
         this.initialized = true;
       } else {
-        console.log("Resetting renderer");
+        console.debug("Resetting renderer");
         this.renderer.reset();
       }
     }
@@ -80,14 +121,14 @@ export class MolView {
     fetch(pdbUrl)
       .then(response => response.text())
       .then(data => {
-        Configuration.pdbData = data;
+        this.config.pdbData = data;
         this.setPDBData(data);
       })
       .catch(error => console.error("Failed to load PDB data:", error));
   }
 
   setRenderMode(mode: MolViewRenderMode): void {
-    Configuration.renderMode = mode;
+    this.config.renderMode = mode;
     this.clearSelections();
     // rebuild and redraw the molecule
     this.renderer.reset();
@@ -95,7 +136,7 @@ export class MolView {
   }
 
   setSelectionMode(mode: MolViewSelectionMode): void {
-    Configuration.selectionMode = mode;
+    this.config.selectionMode = mode;
     this.clearSelections();
     this.updateInfo();
     // redraw the molecule (without rebuilding)
@@ -103,14 +144,14 @@ export class MolView {
   }
 
   setPDBData(pdbData: string): void {
-    this.molecule = PDBParser.parsePDB(pdbData);
+    this.molecule = PDBParser.parsePDB(pdbData, this.config);
 
-    console.log("Molecule loaded:", this.molecule);
-    
+    console.debug("Molecule loaded:", this.molecule);
+
     this.clearDisplay();
     this.init();
 
-    if (Configuration.autoCenter) {
+    if (this.config.autoCenter) {
       this.molecule.center();
     }
 
@@ -122,7 +163,7 @@ export class MolView {
   }
 
   private handleSelect(event: MouseEvent): void {
-    if (!this.molecule || !Configuration.selectable) {
+    if (!this.molecule || !this.config.selectable) {
       return;
     }
 
@@ -159,15 +200,15 @@ export class MolView {
       return;
     }
 
-    if (Configuration.selectionMode === Constants.SELECTIONMODE_IDENTIFY && this.selections.length >= 1) {
+    if (this.config.selectionMode === "identify" && this.selections.length >= 1) {
       // clear current but allow a different selection
       this.clearSelections();
     }
 
     if (
-      (Configuration.selectionMode === Constants.SELECTIONMODE_DISTANCE && this.selections.length >= 2) ||
-      (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION && this.selections.length >= 3) ||
-      (Configuration.selectionMode === Constants.SELECTIONMODE_TORSION && this.selections.length >= 4)
+      (this.config.selectionMode === "distance" && this.selections.length >= 2) ||
+      (this.config.selectionMode === "rotation" && this.selections.length >= 3) ||
+      (this.config.selectionMode === "torsion" && this.selections.length >= 4)
     ) {
       // too many selected for current mode
       return;
@@ -175,8 +216,8 @@ export class MolView {
 
     if (
       this.selections.length > 0 &&
-      (Configuration.selectionMode === Constants.SELECTIONMODE_ROTATION ||
-        Configuration.selectionMode === Constants.SELECTIONMODE_TORSION)
+      (this.config.selectionMode === "rotation" ||
+        this.config.selectionMode === "torsion")
     ) {
       // check that requested selected atom is neighbor of existing selection before growing selection
       const neighbors: RenderableObject[] = this.molecule.getNeighbors(selObj);
@@ -217,17 +258,17 @@ export class MolView {
   }
 
   private updateInfo(): void {
-    switch (Configuration.selectionMode) {
-      case Constants.SELECTIONMODE_IDENTIFY:
+    switch (this.config.selectionMode) {
+      case "identify":
         this.displayIdentify();
         break;
-      case Constants.SELECTIONMODE_DISTANCE:
+      case "distance":
         this.displayDistance();
         break;
-      case Constants.SELECTIONMODE_ROTATION:
+      case "rotation":
         this.displayRotation();
         break;
-      case Constants.SELECTIONMODE_TORSION:
+      case "torsion":
         this.displayTorsion();
         break;
     }
@@ -235,30 +276,30 @@ export class MolView {
 
   private displayIdentify(): void {
     if (this.selections.length < 1) {
-      this.onInfoUpdated({atoms: [...this.selections], message: Messages.INSTRUCT_IDENTIFY});
+      this.config.onInfoUpdated({ atoms: [...this.selections], message: Messages.INSTRUCT_IDENTIFY });
       return;
     }
     const a: Atom = this.selections[0];
     const text: string = `${a.name} (${a.element})`;
 
-    this.onInfoUpdated({atoms: [...this.selections], message: text});
+    this.config.onInfoUpdated({ atoms: [...this.selections], message: text });
   }
 
   private displayDistance(): void {
     if (this.selections.length < 2) {
-      this.onInfoUpdated({atoms: [...this.selections], message: Messages.INSTRUCT_DISTANCE});
+      this.config.onInfoUpdated({ atoms: [...this.selections], message: Messages.INSTRUCT_DISTANCE });
       return;
     }
     const d: number = this.selections[0].loc.distanceTo(this.selections[1].loc);
     const text: string = `${d.toFixed(4)} nm
 ${this.selections[0].element} - ${this.selections[1].element}`;
 
-    this.onInfoUpdated({atoms: this.selections.slice(0, 2), message: text, distance: d});
+    this.config.onInfoUpdated({ atoms: this.selections.slice(0, 2), message: text, distance: d });
   }
 
   private displayRotation(): void {
     if (this.selections.length < 3) {
-      this.onInfoUpdated({atoms: [...this.selections], message: Messages.INSTRUCT_ROTATION});
+      this.config.onInfoUpdated({ atoms: [...this.selections], message: Messages.INSTRUCT_ROTATION });
       return;
     }
     const v: Vector3 = new Vector3().subVectors(this.selections[0].loc, this.selections[1].loc);
@@ -266,7 +307,7 @@ ${this.selections[0].element} - ${this.selections[1].element}`;
     const ang: number = Utility.r2d(v.angleTo(w));
 
     if (ang === null || Number.isNaN(ang)) {
-      this.onInfoUpdated({
+      this.config.onInfoUpdated({
         atoms: [...this.selections],
         message: "Invalid atoms selected. Please select a chain of 3 atoms.",
       });
@@ -277,12 +318,12 @@ ${this.selections[0].element} - ${this.selections[1].element}`;
       `${ang.toFixed(4)} degrees
 ${this.selections[0].element} - ${this.selections[1].element} - ${this.selections[2].element}`;
 
-    this.onInfoUpdated({atoms: this.selections.slice(0, 3), message: text, rotationAngle: ang});
+    this.config.onInfoUpdated({ atoms: this.selections.slice(0, 3), message: text, rotationAngle: ang });
   }
 
   private displayTorsion(): void {
     if (this.selections.length < 4) {
-      this.onInfoUpdated({atoms: [...this.selections], message: Messages.INSTRUCT_TORSION});
+      this.config.onInfoUpdated({ atoms: [...this.selections], message: Messages.INSTRUCT_TORSION });
       return;
     }
     const u: Vector3 = new Vector3().subVectors(this.selections[1].loc, this.selections[0].loc);
@@ -292,7 +333,7 @@ ${this.selections[0].element} - ${this.selections[1].element} - ${this.selection
     const vXw: Vector3 = v.cross(w);
     const ang: number = uXv && vXw ? Utility.r2d(uXv.angleTo(vXw)) : Number.NaN;
     if (ang === null || Number.isNaN(ang)) {
-      this.onInfoUpdated({
+      this.config.onInfoUpdated({
         atoms: [...this.selections],
         message: "Invalid atoms selected. Please select a chain of 4 atoms.",
       });
@@ -303,11 +344,11 @@ ${this.selections[0].element} - ${this.selections[1].element} - ${this.selection
       `${ang.toFixed(4)} degrees
 ${this.selections[0].element} - ${this.selections[1].element} - ${this.selections[2].element} - ${this.selections[3].element}`;
 
-    this.onInfoUpdated({atoms: this.selections.slice(0, 4), message: text, torsionAngle: ang});
+    this.config.onInfoUpdated({ atoms: this.selections.slice(0, 4), message: text, torsionAngle: ang });
   }
 
   private clearDisplay(): void {
-    this.onInfoUpdated({atoms: []});
+    this.config.onInfoUpdated({ atoms: [] });
   }
 }
 

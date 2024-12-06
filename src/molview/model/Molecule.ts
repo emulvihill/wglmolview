@@ -1,11 +1,20 @@
-﻿import {Vector3} from "three";
-import {Configuration} from "../Configuration";
-import {Constants} from "../Constants";
-import type {IMolRenderer} from "../renderer/IMolRenderer";
-import {Atom} from "./Atom";
-import {Bond} from "./Bond";
-import type {MoleculeInitializer} from "./MoleculeInitializer";
-import {RenderableObject} from "./RenderableObject";
+﻿import { Vector3 } from "three";
+import type { IMolRenderer } from "../renderer/IMolRenderer";
+import { Atom } from "./Atom";
+import { Bond } from "./Bond";
+import { RenderableObject } from "./RenderableObject";
+import { MolViewColorMode, MolViewRenderMode } from "../MolView";
+
+export interface MoleculeInitializer {
+  objects: Array<Atom | Bond>;
+  title: string;
+  header: object;
+  compound: object;
+}
+
+export interface MoleculeConfiguration {
+  renderMode: MolViewRenderMode;
+}
 
 /**
  * Renderable Molecule
@@ -17,8 +26,9 @@ export class Molecule extends RenderableObject {
   private residueSequence: object;
   private objects: Array<Atom | Bond>;
   private selections: RenderableObject[];
+  private config: MoleculeConfiguration;
 
-  constructor(init: MoleculeInitializer) {
+  constructor(init: MoleculeInitializer, config: MoleculeConfiguration) {
     super();
 
     this.objects = init.objects;
@@ -27,6 +37,7 @@ export class Molecule extends RenderableObject {
     this.compound = init.compound;
     this.selections = [];
     this.residueSequence = {};
+    this.config = config;
   }
 
   public get numAtoms(): number {
@@ -43,8 +54,8 @@ export class Molecule extends RenderableObject {
       .filter((o) => {
         // We filter bonds in space-fill mode and atoms in sticks mode
         return !(
-          (Configuration.renderMode === Constants.RENDERMODE_STICKS && o instanceof Atom) ||
-          (Configuration.renderMode === Constants.RENDERMODE_SPACE_FILL && o instanceof Bond)
+          (this.config.renderMode === "sticks" && o instanceof Atom) ||
+          (this.config.renderMode === "space_fill" && o instanceof Bond)
         );
       })
       .forEach((o) => o.render(renderer));
@@ -80,7 +91,7 @@ export class Molecule extends RenderableObject {
     return atom1.bonds.find((b) => b.atoms[0] === atom2 || b.atoms[1] === atom2);
   }
 
-  public setColorMode(m: string): void {
+  public setColorMode(m: MolViewColorMode): void {
     this.objects.forEach((o) => o.setColorMode(m));
   }
 

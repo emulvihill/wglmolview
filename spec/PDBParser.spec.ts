@@ -1,32 +1,30 @@
-import {Molecule} from "../src/molview/model/Molecule";
-import {PDBParser} from "../src/molview/PDBParser";
-import {beforeAll, describe, expect, it} from "vitest";
+import { Molecule } from "../src/molview/model/Molecule";
+import { Configuration, defaultConfiguration } from "../src/molview/MolView";
+import { PDBParser } from "../src/molview/PDBParser";
+import { beforeAll, describe, expect, it } from "vitest";
+import { resolve } from "path";
+import { readFileSync } from "fs";
 // @vitest-environment jsdom
 
 describe("PDBParser", () => {
 
     let pdbData: string;
+    let config: Configuration;
 
-    beforeAll(() => {
+    beforeAll(async () => {
+        // Read the file contents into pdbData
+        const filePath = resolve(__dirname, "./data/ala.pdb");
+        pdbData = readFileSync(filePath, "utf-8");
+
         // need dom elements to exist
         document.createElement("wglContent");
         document.createElement("wglInfo");
-        (window as any).molview_config =  {
-            pdbUrl: "base/spec/data/ala.pdb",
+        config = Object.assign({}, defaultConfiguration, {
             domElement: "wglContent",
-            infoElement: "wglInfo"
-        };
-
-        fetch("base/spec/data/ala.pdb")
-            .then(
-                (response: Response) => {
-                    response.text()
-                        .then((data) => {
-                            pdbData = data;
-                            console.log(pdbData);
-                        });
-                });
-    }, 10000);
+            infoElement: "wglInfo",
+            pdbData: pdbData
+        });
+    });
 
     it("creates parser", () => {
         const parser = new PDBParser();
@@ -34,7 +32,7 @@ describe("PDBParser", () => {
     });
 
     it("parses ala.pdb", () => {
-        const mol: Molecule = PDBParser.parsePDB(pdbData);
+        const mol: Molecule = PDBParser.parsePDB(pdbData, config);
         expect(mol).toBeTruthy();
         expect(mol.numAtoms).toEqual(13);
         expect(mol.numBonds).toEqual(13);

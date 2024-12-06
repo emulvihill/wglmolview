@@ -1,14 +1,15 @@
-import type {RenderableObject} from "../model/RenderableObject";
+import type { RenderableObject } from "../model/RenderableObject";
+import { Configuration } from "../MolView";
 
 /**
  * Interface for graphics rendering API
  * Extend this class to display molecules using a specific API (WebGL, etc)
  */
 export interface IMolRenderer {
-  
+
   getName(): string;
 
-  init(domElement: HTMLElement): void;
+  init(domElement: HTMLElement, configuration: Configuration): void;
 
   reset(): void;
 

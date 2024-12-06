@@ -1,12 +1,36 @@
-﻿import {Vector3} from "three";
-import {AminoAcidData} from "../AminoAcidData";
-import {Configuration} from "../Configuration";
-import {Constants} from "../Constants";
-import {ElementData} from "../ElementData";
-import type {IMolRenderer} from "../renderer/IMolRenderer";
-import type {AtomInitializer} from "./AtomInitializer";
-import type {Bond} from "./Bond";
-import {RenderableObject} from "./RenderableObject";
+﻿import { Vector3 } from "three";
+import { AminoAcidData } from "../AminoAcidData";
+import { ElementData } from "../ElementData";
+import type { IMolRenderer } from "../renderer/IMolRenderer";
+import type { Bond } from "./Bond";
+import { RenderableObject } from "./RenderableObject";
+import { MolViewAtomRadiusMode, MolViewColorMode } from "../MolView";
+
+export interface AtomInitializer {
+  altLoc: number;
+  chainId: number;
+  charge: number;
+  color?: number;
+  element2: string;
+  element: string;
+  iCode: string;
+  id: string;
+  occupancy: string;
+  resName: string;
+  resSeq: string;
+  segId: number;
+  serial: number;
+  tempFactor: number;
+  x: number;
+  y: number;
+  z: number;
+}
+
+export interface AtomConfiguration {
+  colorMode: MolViewColorMode;
+  radiusMode: MolViewAtomRadiusMode;
+  radiusScale: number;
+}
 
 /**
  * Renderable Atom
@@ -30,7 +54,7 @@ export class Atom extends RenderableObject {
   private iCode: string;
   private occupancy: string;
 
-  constructor(init: AtomInitializer) {
+  constructor(init: AtomInitializer, config: AtomConfiguration) {
     super();
     this.elementData = ElementData.getData(init.element);
     if (!this.elementData) {
@@ -54,23 +78,25 @@ export class Atom extends RenderableObject {
     this.name = this.elementData.name;
     this.color = init.color || this.elementData.color;
 
-    const radiusScale: number = Configuration.atomRadiusScale;
+    const radiusScale: number = config.radiusScale;
     const hRadius = ElementData.getData("H").radius;
 
-    switch (Configuration.atomRadiusMode) {
-      case Constants.ATOM_RADIUS_ACCURATE:
+    switch (config.radiusMode) {
+      case "accurate":
         this.radius = radiusScale * this.elementData.radius;
         break;
-      case Constants.ATOM_RADIUS_REDUCED:
+      case "reduced":
         this.radius =
           radiusScale *
-          (Constants.ATOM_RADIUS_REDUCED_SCALE * this.elementData.radius +
-            (1 - Constants.ATOM_RADIUS_REDUCED_SCALE) * hRadius);
+          (config.radiusScale * this.elementData.radius +
+            (1 - config.radiusScale) * hRadius);
         break;
-      case Constants.ATOM_RADIUS_UNIFORM:
+      case "uniform":
       default:
         this.radius = radiusScale * hRadius;
     }
+
+    this.setColorMode(config.colorMode);
 
     this.charge = 0;
     this._bonds = [];
@@ -105,13 +131,13 @@ export class Atom extends RenderableObject {
     renderer.addRenderableObject(this);
   }
 
-  public setColorMode(colorMode: string): void {
+  public setColorMode(colorMode: MolViewColorMode): void {
     switch (colorMode) {
-      case Constants.COLORMODE_CPK: // i.e. "element color"
+      case "cpk": // i.e. "element color"
         this.color = this.elementData.color || ElementData.getData("C").color;
         break;
 
-      case Constants.COLORMODE_AMINO_ACID: {
+      case "amino_acid": {
         const aaData = AminoAcidData.getData(this.resName).color;
         this.color = aaData ? aaData : 0xcccccc;
         break;
