@@ -74,15 +74,16 @@ export class ThreeJsRenderer implements IMolRenderer {
     const aspect = w / h;
     this.webGLRenderer = new WebGLRenderer();
     this.webGLRenderer.setPixelRatio(ThreeJsRenderer.ANTI_ALIAS);
-    this.camera = new PerspectiveCamera(ThreeJsRenderer.VIEW_ANGLE, aspect, ThreeJsRenderer.NEAR, ThreeJsRenderer.FAR);
     this.scene = new Scene();
 
-    // add the camera to the scene
-    this.scene.add(this.camera);
+    this.camera = new PerspectiveCamera(ThreeJsRenderer.VIEW_ANGLE, aspect, ThreeJsRenderer.NEAR, ThreeJsRenderer.FAR);
 
     // the camera starts at 0,0,0
     // so pull it back
     this.camera.position.z = 1000;
+
+    // add the camera to the scene
+    this.scene.add(this.camera);
 
     // start the renderer
     this.webGLRenderer.setSize(w, h);
@@ -97,8 +98,12 @@ export class ThreeJsRenderer implements IMolRenderer {
     this.domElement.appendChild(this.webGLRenderer.domElement);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.controls = new TrackballControls(this.camera, this.webGLRenderer.domElement as any);
-    this.controls.rotateSpeed = 2.5;
+    const controls = new TrackballControls(this.camera, this.webGLRenderer.domElement as any);
+    controls.rotateSpeed = 2.5;
+    controls.rotationHorizontal = configuration.rotationHorizontal;
+    controls.rotationVertical = configuration.rotationVertical;
+    this.controls = controls;
+
     window.addEventListener(
       "resize",
       () => {
@@ -125,17 +130,18 @@ export class ThreeJsRenderer implements IMolRenderer {
   }
 
   addRenderableObject(modelObject: RenderableObject): void {
-    let vo: ViewObject | null;
+    let vo: ViewObject;
 
     if (modelObject instanceof Atom) {
       vo = this.renderAtom(modelObject);
-      vo.modelObject = modelObject;
-      this.objects.push(vo);
     } else if (modelObject instanceof Bond) {
       vo = this.renderBond(modelObject);
-      vo.modelObject = modelObject;
-      this.objects.push(vo);
+    } else {
+      throw new Error("Unsupported model object type");
     }
+
+    vo.modelObject = modelObject;
+    this.objects.push(vo);
   }
 
   select(modelObject: RenderableObject): void {

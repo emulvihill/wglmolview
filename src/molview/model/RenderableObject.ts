@@ -1,6 +1,6 @@
-import type {Vector3} from "three";
-import type {IMolRenderer} from "../renderer/IMolRenderer";
-import type {ViewObject} from "../renderer/ViewObject";
+import type { Vector3 } from "three";
+import type { IMolRenderer } from "../renderer/IMolRenderer";
+import type { ViewObject } from "../renderer/ViewObject";
 
 /**
  * Base 3D Renderable, any WebGL objects should extend this and add specific properties

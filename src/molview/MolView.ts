@@ -13,7 +13,7 @@ import { ThreeJsRenderer } from "./renderer/ThreeJsRenderer";
  */
 export type MolViewAtomRadiusMode = "accurate" | "reduced" | "uniform";
 export type MolViewColorMode = "cpk" | "amino_acid";
-export type MolViewSelectionMode = "identify" | "distance" | "rotation" | "torsion";
+export type MolViewSelectionMode = "none" | "identify" | "distance" | "rotation" | "torsion";
 export type MolViewRenderMode = "ball_and_stick" | "space_fill" | "sticks";
 
 export class MolViewConstants {
@@ -40,6 +40,8 @@ export interface Configuration {
   selectionMode: MolViewSelectionMode;
   atomRadiusMode: MolViewAtomRadiusMode;
   atomRadiusScale: number;
+  rotationVertical: number;
+  rotationHorizontal: number;
   zoom: number;
   selectable: boolean;
   autoCenter: boolean;
@@ -53,11 +55,13 @@ export interface Configuration {
 export const defaultConfiguration: Configuration = {
   colorMode: "cpk",
   renderMode: "ball_and_stick",
-  selectionMode: "identify",
+  selectionMode: "none",
   atomRadiusMode: "reduced",
   atomRadiusScale: 1.0,
   selectable: true,
   zoom: 1.0,
+  rotationVertical: 0,
+  rotationHorizontal: 0,
   autoCenter: true,
   pdbUrl: undefined,
   pdbData: undefined,
@@ -164,6 +168,7 @@ export class MolView {
 
   private handleSelect(event: MouseEvent): void {
     if (!this.molecule || !this.config.selectable) {
+      console.info("Molecule not loaded or not selectable");
       return;
     }
 

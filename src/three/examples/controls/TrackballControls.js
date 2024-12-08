@@ -114,6 +114,10 @@ class TrackballControls extends Controls {
     this._up0 = this.object.up.clone();
     this._zoom0 = this.object.zoom;
 
+    // EM additions
+    this.rotationVertical = 0;
+    this.rotationHorizontal = 0;
+
     if (domElement !== null) {
 
       this.connect();
@@ -333,6 +337,16 @@ class TrackballControls extends Controls {
       this._eye.applyQuaternion(_quaternion);
       this.object.up.applyQuaternion(_quaternion);
 
+    } else if (this.rotationHorizontal || this.rotationVertical) {
+
+      this._rotationDirection = new Vector3(0.001 * this.rotationHorizontal, 0.001 * this.rotationVertical, 0);
+      this._rotationAngle = this._rotationDirection.length();
+      this._rotationAxis = new Vector3().crossVectors(this._rotationDirection, this._eye).normalize();
+
+      this._eye.copy(this.object.position);
+      _quaternion.setFromAxisAngle(this._rotationAxis, this._rotationAngle);
+      this._eye.applyQuaternion(_quaternion);
+      this.object.up.applyQuaternion(_quaternion);
     }
 
     this._movePrev.copy(this._moveCurr);
