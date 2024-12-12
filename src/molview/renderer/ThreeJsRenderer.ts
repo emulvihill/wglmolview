@@ -129,13 +129,13 @@ export class ThreeJsRenderer implements IMolRenderer {
     this.selections = [];
   }
 
-  addRenderableObject(modelObject: RenderableObject): void {
+  async addRenderableObject(modelObject: RenderableObject): Promise<void> {
     let vo: ViewObject;
 
     if (modelObject instanceof Atom) {
-      vo = this.renderAtom(modelObject);
+      vo = await this.renderAtom(modelObject);
     } else if (modelObject instanceof Bond) {
-      vo = this.renderBond(modelObject);
+      vo = await this.renderBond(modelObject);
     } else {
       throw new Error("Unsupported model object type");
     }
@@ -144,7 +144,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     this.objects.push(vo);
   }
 
-  select(modelObject: RenderableObject): void {
+  async select(modelObject: RenderableObject): Promise<void> {
     const vo: ViewObject = modelObject.viewObject;
 
     if (!vo) {
@@ -153,16 +153,16 @@ export class ThreeJsRenderer implements IMolRenderer {
 
     for (const sel of this.selections) {
       if (sel.modelObject === modelObject) {
-        // we've already selected.. unselect
+        // we've already selected... unselect
         this.deselect(modelObject);
         return;
       }
     }
 
     if (modelObject instanceof Atom) {
-      this.selections.push(this.renderAtomSelection(modelObject));
+      this.selections.push(await this.renderAtomSelection(modelObject));
     } else if (modelObject instanceof Bond) {
-      this.selections.push(this.renderBondSelection(modelObject));
+      this.selections.push(await this.renderBondSelection(modelObject));
     }
   }
 
@@ -225,7 +225,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     });
   }
 
-  private renderAtom(modelObject: Atom): ViewObject {
+  private async renderAtom(modelObject: Atom): Promise<ViewObject> {
     // determine the sphere geometry
     const radius = this.radiusConversion(modelObject.radius);
     const segments = 24;
@@ -246,7 +246,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     return viewObject;
   }
 
-  private renderBond(modelObject: Bond): ViewObject {
+  private async renderBond(modelObject: Bond): Promise<ViewObject> {
     const tubes: ViewObject[] = [];
 
     // const m: number[] = this.getBondMetrics(modelObject, Configuration.renderMode);
@@ -314,7 +314,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     return viewObject;
   }
 
-  private renderAtomSelection(modelObject: Atom): ViewObject {
+  private async renderAtomSelection(modelObject: Atom): Promise<ViewObject> {
 
     // set up the sphere vars
     const radius = 1.1 * this.radiusConversion(modelObject.radius);
@@ -341,7 +341,7 @@ export class ThreeJsRenderer implements IMolRenderer {
     return viewObject;
   }
 
-  private renderBondSelection(bond: Bond): ViewObject {
+  private async renderBondSelection(bond: Bond): Promise<ViewObject> {
     // const m: number[] = this.getBondMetrics(bond, mode);
     const selMaterial: MeshBasicMaterial = new MeshBasicMaterial({
       color: ThreeJsRenderer.SELECTION_COLOR,

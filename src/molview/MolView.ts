@@ -163,7 +163,7 @@ export class MolView {
     this.molecule.render(this.renderer);
 
     // draw the molecule on screen
-    this.renderer.render();
+    setTimeout(() => this.renderer.render(), 50);
   }
 
   private handleSelect(event: MouseEvent): void {
@@ -180,7 +180,7 @@ export class MolView {
     const index: number = this.selections.indexOf(selObj);
 
     if (index > -1) {
-      // already selected so deselect	if possible
+      // already selected so deselect if possible
       if (index === 0) {
         this.renderer.deselect(selObj);
         if (this.selections.length >= 2) {
